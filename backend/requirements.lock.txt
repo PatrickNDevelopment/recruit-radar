@@ -1,0 +1,11 @@
+alembic==1.20.0
+fastapi==0.143.0
+httpx==0.28.1
+mypy==2.4.0
+pydantic==2.14.1
+pydantic_core==2.50.1
+pytest==9.1.1
+ruff==0.17.0
+SQLAlchemy==2.1.4
+starlette==1.8.0
+uvicorn==0.54.0

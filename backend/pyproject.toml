@@ -1,0 +1,29 @@
+﻿[project]
+name = "recruit-radar-backend"
+version = "0.1.0"
+description = "RecruitRadar backend: normalized job-posting snapshots, identity resolution, refresh history"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "sqlalchemy",
+  "alembic",
+  "pydantic",
+  "httpx",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
