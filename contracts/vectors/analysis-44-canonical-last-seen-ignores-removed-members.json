@@ -1,0 +1,372 @@
+{
+  "name": "canonical-last-seen-ignores-removed-members",
+  "description": "A canonical role's last_seen is the max over its ACTIVE members only. 'Optics Engineer' was last listed by greenhouse on 2026-09-10 but that member has been removed; the csv member (active, last listed 2026-09-05) keeps the role alive, so last_seen is 2026-09-05 and freshness uses 38 days, not 33. 'Legacy Analyst' has no active member: last_seen is then the max over ALL members (2026-09-20) and removed_at is the LATEST member removal (2026-10-08, not 2026-10-05). Display fields are identical across members so the displayed values do not depend on which member is chosen.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "g1",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "1",
+            "company_name": "Prism Labs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "9",
+            "company_name": "Prism Labs",
+            "title": "Legacy Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "c1",
+        "source_kind": "csv",
+        "source_ref": "prism-sheet",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "prism-sheet",
+            "source_posting_id": null,
+            "company_name": "Prism Labs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "g2",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "observed_at": "2026-09-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "1",
+            "company_name": "Prism Labs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "9",
+            "company_name": "Prism Labs",
+            "title": "Legacy Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "l1",
+        "source_kind": "lever",
+        "source_ref": "prism",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "prism",
+            "source_posting_id": "L9",
+            "company_name": "Prism Labs",
+            "title": "Legacy Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "g3",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "full",
+        "postings": []
+      },
+      {
+        "snapshot_id": "l2",
+        "source_kind": "lever",
+        "source_ref": "prism",
+        "observed_at": "2026-10-08T00:00:00Z",
+        "mode": "full",
+        "postings": []
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_2d5ca8e9242f",
+        "key": "prism labs",
+        "name": "Prism Labs",
+        "aliases": ["Prism Labs"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-05T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 1,
+        "score": 369,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 200,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 3,
+              "net": -3,
+              "span_days": 37,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 415,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 38
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_524703accb14",
+        "company_id": "c_2d5ca8e9242f",
+        "title": "Optics Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "prism-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-05T00:00:00Z",
+            "last_seen": "2026-09-05T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b1f154ae995a",
+        "company_id": "c_2d5ca8e9242f",
+        "title": "Legacy Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-08T00:00:00Z",
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "prism",
+            "source_posting_id": "9",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "prism",
+            "source_posting_id": "L9",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_524703accb14",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_b1f154ae995a",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "title": "Legacy Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-09-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_524703accb14",
+        "source_kind": "csv",
+        "source_ref": "prism-sheet",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_b1f154ae995a",
+        "source_kind": "lever",
+        "source_ref": "prism",
+        "title": "Legacy Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_524703accb14",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_b1f154ae995a",
+        "source_kind": "greenhouse",
+        "source_ref": "prism",
+        "title": "Legacy Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-08T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_2d5ca8e9242f",
+        "role_id": "r_b1f154ae995a",
+        "source_kind": "lever",
+        "source_ref": "prism",
+        "title": "Legacy Analyst",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 6,
+      "postings_observed": 6,
+      "companies": 1,
+      "active_roles": 1
+    }
+  }
+}

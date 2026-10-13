@@ -1,0 +1,526 @@
+{
+  "name": "change-window-30d-edges",
+  "description": "as_of is 2026-10-13T12:00:00Z so the window is (2026-09-13T12:00:00Z, as_of]. The 'added' event at exactly 2026-09-13T12:00:00Z is OUT (strict >), the one one second later is IN, and the `removed` event at exactly as_of is IN: added 1, removed 1, net 0 => 500. A snapshot observed AT as_of is processed (only observed_at > as_of is ignored). Span is 54 days (>= 45) so first_seen ages feed urgency: two roles first seen 2026-08-20 are 54 days old (aged), the two new ones are not.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "observed_at": "2026-08-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "1",
+            "company_name": "Marsh",
+            "title": "Engineer One",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "2",
+            "company_name": "Marsh",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "3",
+            "company_name": "Marsh",
+            "title": "Engineer Three",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "observed_at": "2026-09-13T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "1",
+            "company_name": "Marsh",
+            "title": "Engineer One",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "2",
+            "company_name": "Marsh",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "3",
+            "company_name": "Marsh",
+            "title": "Engineer Three",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "4",
+            "company_name": "Marsh",
+            "title": "Engineer Four",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "observed_at": "2026-09-13T12:00:01Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "1",
+            "company_name": "Marsh",
+            "title": "Engineer One",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "2",
+            "company_name": "Marsh",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "3",
+            "company_name": "Marsh",
+            "title": "Engineer Three",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "4",
+            "company_name": "Marsh",
+            "title": "Engineer Four",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "5",
+            "company_name": "Marsh",
+            "title": "Engineer Five",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "observed_at": "2026-10-13T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "1",
+            "company_name": "Marsh",
+            "title": "Engineer One",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "2",
+            "company_name": "Marsh",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "4",
+            "company_name": "Marsh",
+            "title": "Engineer Four",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "5",
+            "company_name": "Marsh",
+            "title": "Engineer Five",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_428e626f22d0",
+        "key": "marsh",
+        "name": "Marsh",
+        "aliases": ["Marsh"],
+        "first_seen": "2026-08-20T00:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": null,
+        "removed_roles": 1,
+        "score": 733,
+        "coverage": 70,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 690,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 1,
+              "net": 0,
+              "span_days": 54,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "aged": 2,
+              "known": 4,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 0
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_e87ee3ea0218",
+        "company_id": "c_428e626f22d0",
+        "title": "Engineer Two",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-20T00:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 54,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-20T00:00:00Z",
+            "last_seen": "2026-10-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f7a153b7577a",
+        "company_id": "c_428e626f22d0",
+        "title": "Engineer One",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-20T00:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 54,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-20T00:00:00Z",
+            "last_seen": "2026-10-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f461f8c9a318",
+        "company_id": "c_428e626f22d0",
+        "title": "Engineer Four",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-13T12:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 30,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "4",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-13T12:00:00Z",
+            "last_seen": "2026-10-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_9b6abdc1e92a",
+        "company_id": "c_428e626f22d0",
+        "title": "Engineer Five",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-13T12:00:01Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 29,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "5",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-13T12:00:01Z",
+            "last_seen": "2026-10-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_783ded48b3a0",
+        "company_id": "c_428e626f22d0",
+        "title": "Engineer Three",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-20T00:00:00Z",
+        "last_seen": "2026-09-13T12:00:01Z",
+        "removed_at": "2026-10-13T12:00:00Z",
+        "relevant": null,
+        "age_days": 54,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "marsh",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-20T00:00:00Z",
+            "last_seen": "2026-09-13T12:00:01Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-08-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_f7a153b7577a",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer One",
+        "fields": null
+      },
+      {
+        "at": "2026-08-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_e87ee3ea0218",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer Two",
+        "fields": null
+      },
+      {
+        "at": "2026-08-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_783ded48b3a0",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer Three",
+        "fields": null
+      },
+      {
+        "at": "2026-09-13T12:00:00Z",
+        "type": "added",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_f461f8c9a318",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer Four",
+        "fields": null
+      },
+      {
+        "at": "2026-09-13T12:00:01Z",
+        "type": "added",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_9b6abdc1e92a",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer Five",
+        "fields": null
+      },
+      {
+        "at": "2026-10-13T12:00:00Z",
+        "type": "removed",
+        "company_id": "c_428e626f22d0",
+        "role_id": "r_783ded48b3a0",
+        "source_kind": "greenhouse",
+        "source_ref": "marsh",
+        "title": "Engineer Three",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 16,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

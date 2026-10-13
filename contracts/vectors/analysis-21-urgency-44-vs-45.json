@@ -1,0 +1,213 @@
+{
+  "name": "urgency-44-vs-45",
+  "description": "as_of is exactly midnight so ages are exact: posted_at 2026-08-30 is 44 days (NOT aged), 2026-08-29 is 45 days (aged, threshold is >=). aged 1 of known 2 => 500.",
+  "input": {
+    "as_of": "2026-10-13T00:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer"],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "tern",
+        "observed_at": "2026-10-12T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tern",
+            "source_posting_id": "1",
+            "company_name": "Tern Analytics",
+            "title": "Platform Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-08-29"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tern",
+            "source_posting_id": "2",
+            "company_name": "Tern Analytics",
+            "title": "Data Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-08-30"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T00:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_1b842b5ac322",
+        "key": "tern analytics",
+        "name": "Tern Analytics",
+        "aliases": ["Tern Analytics"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": 2,
+        "removed_roles": 0,
+        "score": 819,
+        "coverage": 85,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 2,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "aged": 1,
+              "known": 2,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_1b74c8a7f146",
+        "company_id": "c_1b842b5ac322",
+        "title": "Platform Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-08-29",
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 45,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tern",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_ee0e0b0fcacf",
+        "company_id": "c_1b842b5ac322",
+        "title": "Data Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-08-30",
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 44,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tern",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1b842b5ac322",
+        "role_id": "r_1b74c8a7f146",
+        "source_kind": "greenhouse",
+        "source_ref": "tern",
+        "title": "Platform Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1b842b5ac322",
+        "role_id": "r_ee0e0b0fcacf",
+        "source_kind": "greenhouse",
+        "source_ref": "tern",
+        "title": "Data Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 1,
+      "postings_observed": 2,
+      "companies": 1,
+      "active_roles": 2
+    }
+  }
+}

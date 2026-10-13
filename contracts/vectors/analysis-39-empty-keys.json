@@ -1,0 +1,205 @@
+{
+  "name": "empty-keys",
+  "description": "Names/titles/locations made only of punctuation normalize to the empty string and are still valid keys: company key '' (company_id c_e3b0c44298fc = sha12('')), title_key '' and location_key '' (also what a null location gives), so '!!!' and '***' are one company and the two postings are one role. No keyword can match an empty title, so the role is not relevant.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer"],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "blank",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "blank",
+            "source_posting_id": "1",
+            "company_name": "!!!",
+            "title": "(Remote)",
+            "location": "???",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "blank-list",
+        "observed_at": "2026-10-06T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "blank-list",
+            "source_posting_id": null,
+            "company_name": "***",
+            "title": "[Hybrid]",
+            "location": null,
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_e3b0c44298fc",
+        "key": "",
+        "name": "!!!",
+        "aliases": ["!!!", "***"],
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": 0,
+        "removed_roles": 0,
+        "score": 167,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 0,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 0
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_scope_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": null,
+            "reason_code": "no_scope_roles",
+            "inputs": {
+              "scope_roles": 0,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 7
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_380ea445e378",
+        "company_id": "c_e3b0c44298fc",
+        "title": "[Hybrid]",
+        "location": null,
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 8,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "blank-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-06T00:00:00Z",
+            "last_seen": "2026-10-06T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "blank",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_e3b0c44298fc",
+        "role_id": "r_380ea445e378",
+        "source_kind": "greenhouse",
+        "source_ref": "blank",
+        "title": "(Remote)",
+        "fields": null
+      },
+      {
+        "at": "2026-10-06T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_e3b0c44298fc",
+        "role_id": "r_380ea445e378",
+        "source_kind": "csv",
+        "source_ref": "blank-list",
+        "title": "[Hybrid]",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 2,
+      "companies": 1,
+      "active_roles": 1
+    }
+  }
+}

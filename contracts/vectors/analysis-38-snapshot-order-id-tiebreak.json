@@ -1,0 +1,504 @@
+{
+  "name": "snapshot-order-id-tiebreak",
+  "description": "Snapshots are processed by (observed_at, snapshot_id) with string order: 's10' < 's2' < 'snap-a' < 'snap-b' even though they are listed differently and 's10' is numerically larger than 's2'. 'snap-a' (processed first) is the csv baseline so 'Fitter' in 'snap-b' is `added`; the reverse order would make both rows baselines.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "beta",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "beta",
+            "source_posting_id": "1",
+            "company_name": "Beta Works",
+            "title": "Welder",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s10",
+        "source_kind": "greenhouse",
+        "source_ref": "alpha",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "alpha",
+            "source_posting_id": "1",
+            "company_name": "Alpha Works",
+            "title": "Painter",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "snap-b",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Gamma Works",
+            "title": "Rigger",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Gamma Works",
+            "title": "Fitter",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "snap-a",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Gamma Works",
+            "title": "Rigger",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_feb622fdd413",
+        "key": "alpha works",
+        "name": "Alpha Works",
+        "aliases": ["Alpha Works"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 668,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_dbe02bfec625",
+        "key": "beta works",
+        "name": "Beta Works",
+        "aliases": ["Beta Works"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 668,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_a3b609486d60",
+        "key": "gamma works",
+        "name": "Gamma Works",
+        "aliases": ["Gamma Works"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 615,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_6eb229f870f4",
+        "company_id": "c_feb622fdd413",
+        "title": "Painter",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "alpha",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_82be1a8b209d",
+        "company_id": "c_dbe02bfec625",
+        "title": "Welder",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "beta",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_bab5da028990",
+        "company_id": "c_a3b609486d60",
+        "title": "Rigger",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_d966c00eb5ae",
+        "company_id": "c_a3b609486d60",
+        "title": "Fitter",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_feb622fdd413",
+        "role_id": "r_6eb229f870f4",
+        "source_kind": "greenhouse",
+        "source_ref": "alpha",
+        "title": "Painter",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_dbe02bfec625",
+        "role_id": "r_82be1a8b209d",
+        "source_kind": "greenhouse",
+        "source_ref": "beta",
+        "title": "Welder",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_a3b609486d60",
+        "role_id": "r_bab5da028990",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Rigger",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "added",
+        "company_id": "c_a3b609486d60",
+        "role_id": "r_d966c00eb5ae",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Fitter",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 5,
+      "companies": 3,
+      "active_roles": 4
+    }
+  }
+}

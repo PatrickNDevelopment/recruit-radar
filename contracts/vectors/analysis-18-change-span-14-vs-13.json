@@ -1,0 +1,438 @@
+{
+  "name": "change-span-14-vs-13",
+  "description": "History needs a span of at least 14 whole days between the first and last full snapshot of the company's sources. 'Xray Xylem': 2026-09-01T00:00:00Z -> 2026-09-15T00:00:00Z = 14 days: change is computed (+1 => 600). 'Yankee Yards': 2026-09-01T00:00:00Z -> 2026-09-14T23:59:59Z = 13 days 23:59:59 = 13: insufficient_history with span_days 13.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "x1",
+        "source_kind": "greenhouse",
+        "source_ref": "xray",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "xray",
+            "source_posting_id": "1",
+            "company_name": "Xray Xylem",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "x2",
+        "source_kind": "greenhouse",
+        "source_ref": "xray",
+        "observed_at": "2026-09-15T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "xray",
+            "source_posting_id": "1",
+            "company_name": "Xray Xylem",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "xray",
+            "source_posting_id": "2",
+            "company_name": "Xray Xylem",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "y1",
+        "source_kind": "greenhouse",
+        "source_ref": "yankee",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "yankee",
+            "source_posting_id": "1",
+            "company_name": "Yankee Yards",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "y2",
+        "source_kind": "greenhouse",
+        "source_ref": "yankee",
+        "observed_at": "2026-09-14T23:59:59Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "yankee",
+            "source_posting_id": "1",
+            "company_name": "Yankee Yards",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "yankee",
+            "source_posting_id": "2",
+            "company_name": "Yankee Yards",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_188202a6159a",
+        "key": "yankee yards",
+        "name": "Yankee Yards",
+        "aliases": ["Yankee Yards"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 681,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": 13,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 604,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 28
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_f7ae755c6df7",
+        "key": "xray xylem",
+        "name": "Xray Xylem",
+        "aliases": ["Xray Xylem"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 661,
+        "coverage": 60,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 0,
+              "net": 1,
+              "span_days": 14,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 604,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 28
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_49aa1bc4a395",
+        "company_id": "c_188202a6159a",
+        "title": "Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "yankee",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-14T23:59:59Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_cb1eb6b02452",
+        "company_id": "c_188202a6159a",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-14T23:59:59Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 28,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "yankee",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-14T23:59:59Z",
+            "last_seen": "2026-09-14T23:59:59Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_95484f8ddf63",
+        "company_id": "c_f7ae755c6df7",
+        "title": "Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "xray",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_ed0fe018eb73",
+        "company_id": "c_f7ae755c6df7",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-15T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 28,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "xray",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-15T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f7ae755c6df7",
+        "role_id": "r_95484f8ddf63",
+        "source_kind": "greenhouse",
+        "source_ref": "xray",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_188202a6159a",
+        "role_id": "r_49aa1bc4a395",
+        "source_kind": "greenhouse",
+        "source_ref": "yankee",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-14T23:59:59Z",
+        "type": "added",
+        "company_id": "c_188202a6159a",
+        "role_id": "r_cb1eb6b02452",
+        "source_kind": "greenhouse",
+        "source_ref": "yankee",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-15T00:00:00Z",
+        "type": "added",
+        "company_id": "c_f7ae755c6df7",
+        "role_id": "r_ed0fe018eb73",
+        "source_kind": "greenhouse",
+        "source_ref": "xray",
+        "title": "Designer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 6,
+      "companies": 2,
+      "active_roles": 4
+    }
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "name": "no-scope-roles",
+  "description": "Keywords are configured but no active role matches: scope is empty, so role_relevance=0 and volume=0 are real zeros (counted in coverage) while urgency and source_confidence are null with no_scope_roles and their other inputs are the empty-set counts. Change is still computed (span 15): baselines only => 500.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer"],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "plum",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "1",
+            "company_name": "Plum Row",
+            "title": "Marketing Manager",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "2",
+            "company_name": "Plum Row",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "plum",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "1",
+            "company_name": "Plum Row",
+            "title": "Marketing Manager",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "2",
+            "company_name": "Plum Row",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_d29707dde98f",
+        "key": "plum row",
+        "name": "Plum Row",
+        "aliases": ["Plum Row"],
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": 0,
+        "removed_roles": 0,
+        "score": 231,
+        "coverage": 75,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 0,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 0
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 0,
+              "net": 0,
+              "span_days": 15,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_scope_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": null,
+            "reason_code": "no_scope_roles",
+            "inputs": {
+              "scope_roles": 0,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 981,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 8
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_3f4dedcdaf6e",
+        "company_id": "c_d29707dde98f",
+        "title": "Marketing Manager",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_a262200b6fa3",
+        "company_id": "c_d29707dde98f",
+        "title": "Sales Lead",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "plum",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_d29707dde98f",
+        "role_id": "r_3f4dedcdaf6e",
+        "source_kind": "greenhouse",
+        "source_ref": "plum",
+        "title": "Marketing Manager",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_d29707dde98f",
+        "role_id": "r_a262200b6fa3",
+        "source_kind": "greenhouse",
+        "source_ref": "plum",
+        "title": "Sales Lead",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 4,
+      "companies": 1,
+      "active_roles": 2
+    }
+  }
+}

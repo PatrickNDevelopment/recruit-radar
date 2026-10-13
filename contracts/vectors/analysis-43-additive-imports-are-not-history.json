@@ -1,0 +1,253 @@
+{
+  "name": "additive-imports-are-not-history",
+  "description": "T counts only FULL snapshots. 'Lumen' has one greenhouse full snapshot (2026-08-01) and a csv import 65 days later: there is a single full snapshot, so `change` is insufficient_history with span_days null and the 45-day span rule cannot age the undated roles (no_dated_roles), even though 65 days separate the first and last snapshot of any kind.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "g1",
+        "source_kind": "greenhouse",
+        "source_ref": "lumen",
+        "observed_at": "2026-08-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "lumen",
+            "source_posting_id": "1",
+            "company_name": "Lumen",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "c1",
+        "source_kind": "csv",
+        "source_ref": "lumen-sheet",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "lumen-sheet",
+            "source_posting_id": null,
+            "company_name": "Lumen",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "lumen-sheet",
+            "source_posting_id": null,
+            "company_name": "Lumen",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_456f45fddc2e",
+        "key": "lumen",
+        "name": "Lumen",
+        "aliases": ["Lumen"],
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 698,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 800,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 981,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 8
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_e4f02b66123d",
+        "company_id": "c_456f45fddc2e",
+        "title": "Optics Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "lumen-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "lumen",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-08-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_9ed4aa16583c",
+        "company_id": "c_456f45fddc2e",
+        "title": "Sales Lead",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 8,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "lumen-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_456f45fddc2e",
+        "role_id": "r_e4f02b66123d",
+        "source_kind": "greenhouse",
+        "source_ref": "lumen",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_456f45fddc2e",
+        "role_id": "r_e4f02b66123d",
+        "source_kind": "csv",
+        "source_ref": "lumen-sheet",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_456f45fddc2e",
+        "role_id": "r_9ed4aa16583c",
+        "source_kind": "csv",
+        "source_ref": "lumen-sheet",
+        "title": "Sales Lead",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 3,
+      "companies": 1,
+      "active_roles": 2
+    }
+  }
+}

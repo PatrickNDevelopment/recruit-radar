@@ -1,0 +1,445 @@
+{
+  "name": "earliest-posting-names-company",
+  "description": "Display name is the raw name of the EARLIEST observed posting, not the smallest: 'Zenith Labs Inc' (csv, 2026-09-01) beats the lexicographically smaller 'Zenith Labs' seen later. Separately 'KAPPA WORKS' and 'Kappa Works' are observed at the same instant, so the tie goes to the smallest raw name by code point ('KAPPA WORKS': 'A' < 'a').",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "csv",
+        "source_ref": "older",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "older",
+            "source_posting_id": null,
+            "company_name": "Zenith Labs Inc",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "zenith",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "zenith",
+            "source_posting_id": "7",
+            "company_name": "Zenith Labs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "zenith",
+            "source_posting_id": "8",
+            "company_name": "Zenith Labs",
+            "title": "Lab Manager",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "csv",
+        "source_ref": "kappa-1",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "kappa-1",
+            "source_posting_id": null,
+            "company_name": "Kappa Works",
+            "title": "Estimator",
+            "location": "Tulsa",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "csv",
+        "source_ref": "kappa-2",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "kappa-2",
+            "source_posting_id": null,
+            "company_name": "KAPPA WORKS",
+            "title": "Foreman",
+            "location": "Tulsa",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_3c58752dcad1",
+        "key": "zenith labs",
+        "name": "Zenith Labs Inc",
+        "aliases": ["Zenith Labs", "Zenith Labs Inc"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 702,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 698,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 23
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_f34e6b010862",
+        "key": "kappa works",
+        "name": "KAPPA WORKS",
+        "aliases": ["KAPPA WORKS", "Kappa Works"],
+        "first_seen": "2026-09-05T00:00:00Z",
+        "last_seen": "2026-09-05T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 506,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 415,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 38
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_5876ff096f74",
+        "company_id": "c_3c58752dcad1",
+        "title": "Optics Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "older",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "zenith",
+            "source_posting_id": "7",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_cf3d4c5261c3",
+        "company_id": "c_3c58752dcad1",
+        "title": "Lab Manager",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "zenith",
+            "source_posting_id": "8",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_1333d59e41a9",
+        "company_id": "c_f34e6b010862",
+        "title": "Estimator",
+        "location": "Tulsa",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-05T00:00:00Z",
+        "last_seen": "2026-09-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 38,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "kappa-1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-05T00:00:00Z",
+            "last_seen": "2026-09-05T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_e53ea6e4bb30",
+        "company_id": "c_f34e6b010862",
+        "title": "Foreman",
+        "location": "Tulsa",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-05T00:00:00Z",
+        "last_seen": "2026-09-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 38,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "kappa-2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-05T00:00:00Z",
+            "last_seen": "2026-09-05T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3c58752dcad1",
+        "role_id": "r_5876ff096f74",
+        "source_kind": "csv",
+        "source_ref": "older",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f34e6b010862",
+        "role_id": "r_1333d59e41a9",
+        "source_kind": "csv",
+        "source_ref": "kappa-1",
+        "title": "Estimator",
+        "fields": null
+      },
+      {
+        "at": "2026-09-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f34e6b010862",
+        "role_id": "r_e53ea6e4bb30",
+        "source_kind": "csv",
+        "source_ref": "kappa-2",
+        "title": "Foreman",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3c58752dcad1",
+        "role_id": "r_5876ff096f74",
+        "source_kind": "greenhouse",
+        "source_ref": "zenith",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3c58752dcad1",
+        "role_id": "r_cf3d4c5261c3",
+        "source_kind": "greenhouse",
+        "source_ref": "zenith",
+        "title": "Lab Manager",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 5,
+      "companies": 2,
+      "active_roles": 4
+    }
+  }
+}

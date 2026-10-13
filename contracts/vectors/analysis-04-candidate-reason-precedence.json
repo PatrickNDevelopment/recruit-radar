@@ -1,0 +1,1135 @@
+{
+  "name": "candidate-reason-precedence",
+  "description": "When several candidate tests hold the FIRST in the order spacing_variant, token_overlap, near_typo is reported. Pair 1 is spacing_variant although it is also near_typo (distance 1) and 75% token overlap (9 of 12). Pair 2 is token_overlap (6 of 8 = 75%) although also near_typo. Pair 3 is token_overlap at 7 of 9 (77.8%). Pair 4 ('Victor Whiskey' vs '... Yankee', 2 of 3 = 66.7%) is not a candidate.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s-p1",
+        "source_kind": "csv",
+        "source_ref": "p1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "p1",
+            "source_posting_id": null,
+            "company_name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota X Y",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-p2",
+        "source_kind": "csv",
+        "source_ref": "p2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "p2",
+            "source_posting_id": null,
+            "company_name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota XY",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-q1",
+        "source_kind": "csv",
+        "source_ref": "q1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "q1",
+            "source_posting_id": null,
+            "company_name": "Ab Cd Ef Gh Ij Kl Mn",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-q2",
+        "source_kind": "csv",
+        "source_ref": "q2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "q2",
+            "source_posting_id": null,
+            "company_name": "Ab Cd Ef Gh Ij Kl Mo",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-d1",
+        "source_kind": "csv",
+        "source_ref": "d1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "d1",
+            "source_posting_id": null,
+            "company_name": "Delta Echo Foxtrot Golf Hotel India Juliet Kilo",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-d2",
+        "source_kind": "csv",
+        "source_ref": "d2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "d2",
+            "source_posting_id": null,
+            "company_name": "Delta Echo Foxtrot Golf Hotel India Juliet Lima",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-v1",
+        "source_kind": "csv",
+        "source_ref": "v1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "v1",
+            "source_posting_id": null,
+            "company_name": "Victor Whiskey",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-v2",
+        "source_kind": "csv",
+        "source_ref": "v2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "v2",
+            "source_posting_id": null,
+            "company_name": "Victor Whiskey Yankee",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_c5e3676dc73a",
+        "key": "ab cd ef gh ij kl mn",
+        "name": "Ab Cd Ef Gh Ij Kl Mn",
+        "aliases": ["Ab Cd Ef Gh Ij Kl Mn"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_6d196b03d499",
+        "key": "ab cd ef gh ij kl mo",
+        "name": "Ab Cd Ef Gh Ij Kl Mo",
+        "aliases": ["Ab Cd Ef Gh Ij Kl Mo"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_09128345a2e3",
+        "key": "alpha beta gamma delta epsilon zeta eta theta iota x y",
+        "name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota X Y",
+        "aliases": ["Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota X Y"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_024c6216bd04",
+        "key": "alpha beta gamma delta epsilon zeta eta theta iota xy",
+        "name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota XY",
+        "aliases": ["Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota XY"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_63f7ab1251ef",
+        "key": "delta echo foxtrot golf hotel india juliet kilo",
+        "name": "Delta Echo Foxtrot Golf Hotel India Juliet Kilo",
+        "aliases": ["Delta Echo Foxtrot Golf Hotel India Juliet Kilo"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 5,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_4b0b751ee69d",
+        "key": "delta echo foxtrot golf hotel india juliet lima",
+        "name": "Delta Echo Foxtrot Golf Hotel India Juliet Lima",
+        "aliases": ["Delta Echo Foxtrot Golf Hotel India Juliet Lima"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 6,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_2a4efc61225e",
+        "key": "victor whiskey",
+        "name": "Victor Whiskey",
+        "aliases": ["Victor Whiskey"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 7,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_3fe6ac730a91",
+        "key": "victor whiskey yankee",
+        "name": "Victor Whiskey Yankee",
+        "aliases": ["Victor Whiskey Yankee"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 8,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_e33da7f0cf91",
+        "company_id": "c_c5e3676dc73a",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "q1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_adcd5a9c0395",
+        "company_id": "c_6d196b03d499",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "q2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_feb8f683d71a",
+        "company_id": "c_09128345a2e3",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "p1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_565cdbc110dd",
+        "company_id": "c_024c6216bd04",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "p2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_34b75283f750",
+        "company_id": "c_63f7ab1251ef",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "d1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b8b2739d2733",
+        "company_id": "c_4b0b751ee69d",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "d2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_545804de3d2e",
+        "company_id": "c_2a4efc61225e",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "v1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_761bf3d8798b",
+        "company_id": "c_3fe6ac730a91",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "v2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_63f7ab1251ef",
+        "role_id": "r_34b75283f750",
+        "source_kind": "csv",
+        "source_ref": "d1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_4b0b751ee69d",
+        "role_id": "r_b8b2739d2733",
+        "source_kind": "csv",
+        "source_ref": "d2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_09128345a2e3",
+        "role_id": "r_feb8f683d71a",
+        "source_kind": "csv",
+        "source_ref": "p1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_024c6216bd04",
+        "role_id": "r_565cdbc110dd",
+        "source_kind": "csv",
+        "source_ref": "p2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_c5e3676dc73a",
+        "role_id": "r_e33da7f0cf91",
+        "source_kind": "csv",
+        "source_ref": "q1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_6d196b03d499",
+        "role_id": "r_adcd5a9c0395",
+        "source_kind": "csv",
+        "source_ref": "q2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2a4efc61225e",
+        "role_id": "r_545804de3d2e",
+        "source_kind": "csv",
+        "source_ref": "v1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3fe6ac730a91",
+        "role_id": "r_761bf3d8798b",
+        "source_kind": "csv",
+        "source_ref": "v2",
+        "title": "Planner",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [
+      {
+        "candidate_id": "51ed326c09ec",
+        "a_key": "alpha beta gamma delta epsilon zeta eta theta iota x y",
+        "b_key": "alpha beta gamma delta epsilon zeta eta theta iota xy",
+        "a_name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota X Y",
+        "b_name": "Alpha Beta Gamma Delta Epsilon Zeta Eta Theta Iota XY",
+        "reason": "spacing_variant"
+      },
+      {
+        "candidate_id": "997ccf6b5a15",
+        "a_key": "ab cd ef gh ij kl mn",
+        "b_key": "ab cd ef gh ij kl mo",
+        "a_name": "Ab Cd Ef Gh Ij Kl Mn",
+        "b_name": "Ab Cd Ef Gh Ij Kl Mo",
+        "reason": "token_overlap"
+      },
+      {
+        "candidate_id": "3c74a5a877b3",
+        "a_key": "delta echo foxtrot golf hotel india juliet kilo",
+        "b_key": "delta echo foxtrot golf hotel india juliet lima",
+        "a_name": "Delta Echo Foxtrot Golf Hotel India Juliet Kilo",
+        "b_name": "Delta Echo Foxtrot Golf Hotel India Juliet Lima",
+        "reason": "token_overlap"
+      }
+    ],
+    "stats": {
+      "snapshots": 8,
+      "postings_observed": 8,
+      "companies": 8,
+      "active_roles": 8
+    }
+  }
+}

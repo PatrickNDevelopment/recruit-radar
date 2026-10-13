@@ -1,0 +1,477 @@
+{
+  "name": "location-token-order-dedup",
+  "description": "location_key sorts unique tokens, so 'New York, NY', 'NY - New York' and 'NY, New York' from three ATS sources are one canonical role (displayed from the member seen last), and so are 'Z\u00fcrich, Switzerland' / 'Switzerland - Z\u00fcrich'. 'New York NY (Hybrid)' adds the token 'hybrid' and is a different role; so is 'Remote (US)' vs 'Remote'.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "geo",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "1",
+            "company_name": "Geo Services",
+            "title": "Support Engineer",
+            "location": "New York, NY",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "2",
+            "company_name": "Geo Services",
+            "title": "Account Manager",
+            "location": "Z\u00fcrich, Switzerland",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "3",
+            "company_name": "Geo Services",
+            "title": "Recruiter",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "lever",
+        "source_ref": "geo",
+        "observed_at": "2026-10-02T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L1",
+            "company_name": "Geo Services",
+            "title": "Support Engineer",
+            "location": "NY - New York",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L2",
+            "company_name": "Geo Services",
+            "title": "Account Manager",
+            "location": "Switzerland - Z\u00fcrich",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L3",
+            "company_name": "Geo Services",
+            "title": "Recruiter",
+            "location": "Remote (US)",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "ashby",
+        "source_ref": "geo",
+        "observed_at": "2026-10-03T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "geo",
+            "source_posting_id": "A1",
+            "company_name": "Geo Services",
+            "title": "Support Engineer",
+            "location": "NY, New York",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "csv",
+        "source_ref": "geo",
+        "observed_at": "2026-10-04T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "geo",
+            "source_posting_id": null,
+            "company_name": "Geo Services",
+            "title": "Support Engineer",
+            "location": "New York NY (Hybrid)",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_02a70b603ece",
+        "key": "geo services",
+        "name": "Geo Services",
+        "aliases": ["Geo Services"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-04T00:00:00Z",
+        "active_roles": 5,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 858,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 5
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 760,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 5
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": 2,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 920,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 5,
+              "corroborated": 2
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 962,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 9
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_262165c298e7",
+        "company_id": "c_02a70b603ece",
+        "title": "Support Engineer",
+        "location": "NY, New York",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "geo",
+            "source_posting_id": "A1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-03T00:00:00Z",
+            "last_seen": "2026-10-03T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_3976af9641d5",
+        "company_id": "c_02a70b603ece",
+        "title": "Account Manager",
+        "location": "Switzerland - Z\u00fcrich",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_a148fbbd46f7",
+        "company_id": "c_02a70b603ece",
+        "title": "Recruiter",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "geo",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_2ce6b046e2f0",
+        "company_id": "c_02a70b603ece",
+        "title": "Recruiter",
+        "location": "Remote (US)",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-02T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 11,
+        "observations": [
+          {
+            "source_kind": "lever",
+            "source_ref": "geo",
+            "source_posting_id": "L3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_1072b76ada3d",
+        "company_id": "c_02a70b603ece",
+        "title": "Support Engineer",
+        "location": "New York NY (Hybrid)",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-04T00:00:00Z",
+        "last_seen": "2026-10-04T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 9,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "geo",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-04T00:00:00Z",
+            "last_seen": "2026-10-04T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_262165c298e7",
+        "source_kind": "greenhouse",
+        "source_ref": "geo",
+        "title": "Support Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_3976af9641d5",
+        "source_kind": "greenhouse",
+        "source_ref": "geo",
+        "title": "Account Manager",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_a148fbbd46f7",
+        "source_kind": "greenhouse",
+        "source_ref": "geo",
+        "title": "Recruiter",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_262165c298e7",
+        "source_kind": "lever",
+        "source_ref": "geo",
+        "title": "Support Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_3976af9641d5",
+        "source_kind": "lever",
+        "source_ref": "geo",
+        "title": "Account Manager",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_2ce6b046e2f0",
+        "source_kind": "lever",
+        "source_ref": "geo",
+        "title": "Recruiter",
+        "fields": null
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_262165c298e7",
+        "source_kind": "ashby",
+        "source_ref": "geo",
+        "title": "Support Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_02a70b603ece",
+        "role_id": "r_1072b76ada3d",
+        "source_kind": "csv",
+        "source_ref": "geo",
+        "title": "Support Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 8,
+      "companies": 1,
+      "active_roles": 5
+    }
+  }
+}

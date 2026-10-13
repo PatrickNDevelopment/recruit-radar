@@ -1,0 +1,350 @@
+{
+  "name": "name-variants-collapse",
+  "description": "Acme / ACME Inc. / acme, inc / The Acme Corporation spelled differently in four sources (all observed at the same instant) collapse to ONE company keyed 'acme'. The display name is the lexicographically smallest raw name by code point (uppercase 'ACME Inc.' < 'Acme' < 'The ...' < 'acme, inc'). The three 'Backend Engineer' observations (locations 'Austin, TX' / 'TX - Austin' / 'Austin TX') are one canonical role.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s-gh",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-10-12T09:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1001",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Austin, TX",
+            "work_mode": "hybrid",
+            "department": "Engineering",
+            "url": "https://boards.example.test/acme/1001",
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1002",
+            "company_name": "Acme",
+            "title": "Product Designer",
+            "location": "Remote",
+            "work_mode": "remote",
+            "department": "Design",
+            "url": "https://boards.example.test/acme/1002",
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-csv-a",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "observed_at": "2026-10-12T09:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "company_name": "ACME Inc.",
+            "title": "Backend Engineer",
+            "location": "TX - Austin",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-man",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "observed_at": "2026-10-12T09:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "acme, inc",
+            "title": "Backend Engineer",
+            "location": "Austin TX",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-csv-b",
+        "source_kind": "csv",
+        "source_ref": "list-b",
+        "observed_at": "2026-10-12T09:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-b",
+            "source_posting_id": null,
+            "company_name": "The Acme Corporation",
+            "title": "Data Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "ACME Inc.",
+        "aliases": ["ACME Inc.", "Acme", "The Acme Corporation", "acme, inc"],
+        "first_seen": "2026-10-12T09:00:00Z",
+        "last_seen": "2026-10-12T09:00:00Z",
+        "active_roles": 3,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 778,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 3
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 867,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_0a1c0addcbb2",
+        "company_id": "c_822b33ad87c1",
+        "title": "Product Designer",
+        "location": "Remote",
+        "work_mode": "remote",
+        "department": "Design",
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T09:00:00Z",
+        "last_seen": "2026-10-12T09:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1002",
+            "url": "https://boards.example.test/acme/1002",
+            "status": "active",
+            "first_seen": "2026-10-12T09:00:00Z",
+            "last_seen": "2026-10-12T09:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_2a1f9d37e322",
+        "company_id": "c_822b33ad87c1",
+        "title": "Data Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T09:00:00Z",
+        "last_seen": "2026-10-12T09:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-b",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T09:00:00Z",
+            "last_seen": "2026-10-12T09:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_78a98864fabd",
+        "company_id": "c_822b33ad87c1",
+        "title": "Backend Engineer",
+        "location": "TX - Austin",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T09:00:00Z",
+        "last_seen": "2026-10-12T09:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T09:00:00Z",
+            "last_seen": "2026-10-12T09:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1001",
+            "url": "https://boards.example.test/acme/1001",
+            "status": "active",
+            "first_seen": "2026-10-12T09:00:00Z",
+            "last_seen": "2026-10-12T09:00:00Z"
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T09:00:00Z",
+            "last_seen": "2026-10-12T09:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T09:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_78a98864fabd",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T09:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_2a1f9d37e322",
+        "source_kind": "csv",
+        "source_ref": "list-b",
+        "title": "Data Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T09:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_78a98864fabd",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T09:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_0a1c0addcbb2",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Product Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T09:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_78a98864fabd",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Backend Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 5,
+      "companies": 1,
+      "active_roles": 3
+    }
+  }
+}

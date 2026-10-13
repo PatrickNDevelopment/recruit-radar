@@ -1,0 +1,408 @@
+{
+  "name": "merge-transitive-canonical-only-candidates",
+  "description": "merge('nova lab','nova labs') + merge('nova labs','novalabs') form one group (transitive) whose canonical key is the smallest member 'nova lab'. Candidates are computed between GROUP canonical keys only: the unmerged 'novalabz' is distance 1 from the non-canonical member 'novalabs' but distance 2 from the canonical 'nova lab', so no candidate is emitted.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [
+      {
+        "a_key": "nova lab",
+        "b_key": "nova labs",
+        "decision": "merge"
+      },
+      {
+        "a_key": "nova labs",
+        "b_key": "novalabs",
+        "decision": "merge"
+      }
+    ],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "nova",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "nova",
+            "source_posting_id": "1",
+            "company_name": "Nova Labs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "nova-sheet",
+        "observed_at": "2026-10-02T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "nova-sheet",
+            "source_posting_id": null,
+            "company_name": "NovaLabs",
+            "title": "Optics Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "observed_at": "2026-10-03T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Nova Lab",
+            "title": "Lab Technician",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "lever",
+        "source_ref": "novalabz",
+        "observed_at": "2026-10-04T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "novalabz",
+            "source_posting_id": "z1",
+            "company_name": "NovaLabz",
+            "title": "Glass Blower",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_0f1414bc2524",
+        "key": "novalabz",
+        "name": "NovaLabz",
+        "aliases": ["NovaLabz"],
+        "first_seen": "2026-10-04T00:00:00Z",
+        "last_seen": "2026-10-04T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 680,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 962,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 9
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_264eafc9406c",
+        "key": "nova lab",
+        "name": "Nova Labs",
+        "aliases": ["Nova Lab", "Nova Labs", "NovaLabs"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 656,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 700,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 943,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 10
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_6e2e8d4ce5ea",
+        "company_id": "c_0f1414bc2524",
+        "title": "Glass Blower",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-04T00:00:00Z",
+        "last_seen": "2026-10-04T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 9,
+        "observations": [
+          {
+            "source_kind": "lever",
+            "source_ref": "novalabz",
+            "source_posting_id": "z1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-04T00:00:00Z",
+            "last_seen": "2026-10-04T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_94e16d714fd4",
+        "company_id": "c_264eafc9406c",
+        "title": "Optics Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "nova-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "nova",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_c485a1332f92",
+        "company_id": "c_264eafc9406c",
+        "title": "Lab Technician",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-03T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 10,
+        "observations": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-03T00:00:00Z",
+            "last_seen": "2026-10-03T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_264eafc9406c",
+        "role_id": "r_94e16d714fd4",
+        "source_kind": "greenhouse",
+        "source_ref": "nova",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_264eafc9406c",
+        "role_id": "r_94e16d714fd4",
+        "source_kind": "csv",
+        "source_ref": "nova-sheet",
+        "title": "Optics Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_264eafc9406c",
+        "role_id": "r_c485a1332f92",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Lab Technician",
+        "fields": null
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_0f1414bc2524",
+        "role_id": "r_6e2e8d4ce5ea",
+        "source_kind": "lever",
+        "source_ref": "novalabz",
+        "title": "Glass Blower",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 4,
+      "companies": 2,
+      "active_roles": 3
+    }
+  }
+}

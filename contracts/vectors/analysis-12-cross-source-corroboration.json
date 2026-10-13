@@ -1,0 +1,389 @@
+{
+  "name": "cross-source-corroboration",
+  "description": "One real opening seen by several sources is ONE canonical role. 'Staff Engineer' (greenhouse 1000 + csv 600) is corroborated but capped at 1000; 'Sales Lead' (csv 600 + manual 400) is corroborated to 700 (best 600 + 100); 'QA Engineer' (greenhouse only) 1000; 'Ops Coordinator' (manual only) 400.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "11",
+            "company_name": "Acme",
+            "title": "Staff Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": "https://boards.example.test/11",
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "12",
+            "company_name": "Acme",
+            "title": "QA Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": "https://boards.example.test/12",
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "sheet",
+        "observed_at": "2026-10-02T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "sheet",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Staff Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "sheet",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "observed_at": "2026-10-03T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Ops Coordinator",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 775,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 690,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 775,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4,
+              "corroborated": 2
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 943,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 10
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_662aa52d169f",
+        "company_id": "c_822b33ad87c1",
+        "title": "Staff Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "11",
+            "url": "https://boards.example.test/11",
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_eb7bfeb63ee0",
+        "company_id": "c_822b33ad87c1",
+        "title": "QA Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "12",
+            "url": "https://boards.example.test/12",
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b9e9c68b2b03",
+        "company_id": "c_822b33ad87c1",
+        "title": "Sales Lead",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-02T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 11,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-03T00:00:00Z",
+            "last_seen": "2026-10-03T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b35d205c82f1",
+        "company_id": "c_822b33ad87c1",
+        "title": "Ops Coordinator",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-03T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 10,
+        "observations": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-03T00:00:00Z",
+            "last_seen": "2026-10-03T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_662aa52d169f",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Staff Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_eb7bfeb63ee0",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "QA Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_662aa52d169f",
+        "source_kind": "csv",
+        "source_ref": "sheet",
+        "title": "Staff Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_b9e9c68b2b03",
+        "source_kind": "csv",
+        "source_ref": "sheet",
+        "title": "Sales Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_b9e9c68b2b03",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Sales Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_b35d205c82f1",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Ops Coordinator",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 3,
+      "postings_observed": 6,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

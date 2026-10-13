@@ -1,0 +1,645 @@
+{
+  "name": "urgency-posted-at-vs-first-seen-span-rule",
+  "description": "A role with no posted_at is aged by first_seen ONLY when the company's full-snapshot span is >= 45 days. 'Pine Harbor' spans exactly 45 days: its undated role (first seen 73 days ago) counts as aged, a role with a recent posted_at (a re-listed posting) wins over its old first_seen (12 days), a new role is 28 days. 'Quartz Mill' spans 44d 23:59:59 = 44: its undated role is unknown (excluded from `known`), its dated one is aged. 'Raven Press' has a single snapshot: no span, no dated roles => no_dated_roles.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "p1",
+        "source_kind": "greenhouse",
+        "source_ref": "pine",
+        "observed_at": "2026-08-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "1",
+            "company_name": "Pine Harbor",
+            "title": "Engineer A",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "2",
+            "company_name": "Pine Harbor",
+            "title": "Engineer B",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-10-01"
+          }
+        ]
+      },
+      {
+        "snapshot_id": "p2",
+        "source_kind": "greenhouse",
+        "source_ref": "pine",
+        "observed_at": "2026-09-15T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "1",
+            "company_name": "Pine Harbor",
+            "title": "Engineer A",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "2",
+            "company_name": "Pine Harbor",
+            "title": "Engineer B",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-10-01"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "3",
+            "company_name": "Pine Harbor",
+            "title": "Engineer C",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "q1",
+        "source_kind": "greenhouse",
+        "source_ref": "quartz",
+        "observed_at": "2026-08-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "1",
+            "company_name": "Quartz Mill",
+            "title": "Engineer A",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-08-01"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "2",
+            "company_name": "Quartz Mill",
+            "title": "Engineer B",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "q2",
+        "source_kind": "greenhouse",
+        "source_ref": "quartz",
+        "observed_at": "2026-09-14T23:59:59Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "1",
+            "company_name": "Quartz Mill",
+            "title": "Engineer A",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-08-01"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "2",
+            "company_name": "Quartz Mill",
+            "title": "Engineer B",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "r1",
+        "source_kind": "greenhouse",
+        "source_ref": "raven",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "raven",
+            "source_posting_id": "1",
+            "company_name": "Raven Press",
+            "title": "Engineer A",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_ade411f619dd",
+        "key": "quartz mill",
+        "name": "Quartz Mill",
+        "aliases": ["Quartz Mill"],
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "active_roles": 2,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 688,
+        "coverage": 70,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 2
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 480,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 0,
+              "net": 0,
+              "span_days": 44,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "aged": 1,
+              "known": 1,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 2,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 604,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 28
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_e1467a973e5e",
+        "key": "raven press",
+        "name": "Raven Press",
+        "aliases": ["Raven Press"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 668,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_207e3ec3cfff",
+        "key": "pine harbor",
+        "name": "Pine Harbor",
+        "aliases": ["Pine Harbor"],
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "active_roles": 3,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 648,
+        "coverage": 70,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 3
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 0,
+              "net": 1,
+              "span_days": 45,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 333,
+            "reason_code": null,
+            "inputs": {
+              "aged": 1,
+              "known": 3,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 604,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 28
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_6144d1a2e42f",
+        "company_id": "c_ade411f619dd",
+        "title": "Engineer B",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-14T23:59:59Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6f7367dd4d67",
+        "company_id": "c_ade411f619dd",
+        "title": "Engineer A",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-08-01",
+        "status": "active",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-14T23:59:59Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "quartz",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-14T23:59:59Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b64d2ef901f6",
+        "company_id": "c_e1467a973e5e",
+        "title": "Engineer A",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "raven",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_574aa993e8ae",
+        "company_id": "c_207e3ec3cfff",
+        "title": "Engineer A",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_7572c35a4d96",
+        "company_id": "c_207e3ec3cfff",
+        "title": "Engineer B",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-10-01",
+        "status": "active",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f488be82f3f2",
+        "company_id": "c_207e3ec3cfff",
+        "title": "Engineer C",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-15T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 28,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pine",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-15T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_207e3ec3cfff",
+        "role_id": "r_574aa993e8ae",
+        "source_kind": "greenhouse",
+        "source_ref": "pine",
+        "title": "Engineer A",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_207e3ec3cfff",
+        "role_id": "r_7572c35a4d96",
+        "source_kind": "greenhouse",
+        "source_ref": "pine",
+        "title": "Engineer B",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_ade411f619dd",
+        "role_id": "r_6f7367dd4d67",
+        "source_kind": "greenhouse",
+        "source_ref": "quartz",
+        "title": "Engineer A",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_ade411f619dd",
+        "role_id": "r_6144d1a2e42f",
+        "source_kind": "greenhouse",
+        "source_ref": "quartz",
+        "title": "Engineer B",
+        "fields": null
+      },
+      {
+        "at": "2026-09-15T00:00:00Z",
+        "type": "added",
+        "company_id": "c_207e3ec3cfff",
+        "role_id": "r_f488be82f3f2",
+        "source_kind": "greenhouse",
+        "source_ref": "pine",
+        "title": "Engineer C",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_e1467a973e5e",
+        "role_id": "r_b64d2ef901f6",
+        "source_kind": "greenhouse",
+        "source_ref": "raven",
+        "title": "Engineer A",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 5,
+      "postings_observed": 10,
+      "companies": 3,
+      "active_roles": 6
+    }
+  }
+}

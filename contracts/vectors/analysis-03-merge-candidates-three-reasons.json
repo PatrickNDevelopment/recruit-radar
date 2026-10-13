@@ -1,0 +1,865 @@
+{
+  "name": "merge-candidates-three-reasons",
+  "description": "One candidate of each kind, never auto-merged: 'DoorDash' vs 'Door Dash' (spacing_variant), 'Blue Ocean Shipping Co' vs '... Group' (token_overlap at exactly 75%: 3 of 4 tokens) and 'Acme Robotics' vs 'Acme Robotic' (near_typo). Output order is by reason, then keys.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "1",
+            "company_name": "DoorDash",
+            "title": "Courier Operations Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "dd-list",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-list",
+            "source_posting_id": null,
+            "company_name": "Door Dash",
+            "title": "Data Scientist",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "lever",
+        "source_ref": "blue-ocean",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "blue-ocean",
+            "source_posting_id": "L1",
+            "company_name": "Blue Ocean Shipping Co",
+            "title": "Port Planner",
+            "location": "Rotterdam",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "ashby",
+        "source_ref": "blue-ocean-group",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "blue-ocean-group",
+            "source_posting_id": "A1",
+            "company_name": "Blue Ocean Shipping Group",
+            "title": "Fleet Analyst",
+            "location": "Hamburg",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s5",
+        "source_kind": "greenhouse",
+        "source_ref": "acme-robotics",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme-robotics",
+            "source_posting_id": "1",
+            "company_name": "Acme Robotics",
+            "title": "Firmware Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s6",
+        "source_kind": "csv",
+        "source_ref": "acme-list",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "acme-list",
+            "source_posting_id": null,
+            "company_name": "Acme Robotic",
+            "title": "Mechanical Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_c996eca407e2",
+        "key": "acme robotics",
+        "name": "Acme Robotics",
+        "aliases": ["Acme Robotics"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_f8799fcb532f",
+        "key": "blue ocean shipping",
+        "name": "Blue Ocean Shipping Co",
+        "aliases": ["Blue Ocean Shipping Co"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_f113b72edaad",
+        "key": "blue ocean shipping group",
+        "name": "Blue Ocean Shipping Group",
+        "aliases": ["Blue Ocean Shipping Group"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_b0126946c556",
+        "key": "doordash",
+        "name": "DoorDash",
+        "aliases": ["DoorDash"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_1d6589aeb9a9",
+        "key": "acme robotic",
+        "name": "Acme Robotic",
+        "aliases": ["Acme Robotic"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 5,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_007b690611a0",
+        "key": "door dash",
+        "name": "Door Dash",
+        "aliases": ["Door Dash"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 6,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_086917b6598c",
+        "company_id": "c_c996eca407e2",
+        "title": "Firmware Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme-robotics",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_a13e20647ef1",
+        "company_id": "c_f8799fcb532f",
+        "title": "Port Planner",
+        "location": "Rotterdam",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "lever",
+            "source_ref": "blue-ocean",
+            "source_posting_id": "L1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_05e8fc5c157a",
+        "company_id": "c_f113b72edaad",
+        "title": "Fleet Analyst",
+        "location": "Hamburg",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "blue-ocean-group",
+            "source_posting_id": "A1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_e75cfffe653e",
+        "company_id": "c_b0126946c556",
+        "title": "Courier Operations Lead",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_4c19d4050d52",
+        "company_id": "c_1d6589aeb9a9",
+        "title": "Mechanical Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "acme-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_68e92912f0bd",
+        "company_id": "c_007b690611a0",
+        "title": "Data Scientist",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_b0126946c556",
+        "role_id": "r_e75cfffe653e",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "title": "Courier Operations Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_68e92912f0bd",
+        "source_kind": "csv",
+        "source_ref": "dd-list",
+        "title": "Data Scientist",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f8799fcb532f",
+        "role_id": "r_a13e20647ef1",
+        "source_kind": "lever",
+        "source_ref": "blue-ocean",
+        "title": "Port Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f113b72edaad",
+        "role_id": "r_05e8fc5c157a",
+        "source_kind": "ashby",
+        "source_ref": "blue-ocean-group",
+        "title": "Fleet Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_c996eca407e2",
+        "role_id": "r_086917b6598c",
+        "source_kind": "greenhouse",
+        "source_ref": "acme-robotics",
+        "title": "Firmware Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1d6589aeb9a9",
+        "role_id": "r_4c19d4050d52",
+        "source_kind": "csv",
+        "source_ref": "acme-list",
+        "title": "Mechanical Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [
+      {
+        "candidate_id": "ab57d53a978a",
+        "a_key": "door dash",
+        "b_key": "doordash",
+        "a_name": "Door Dash",
+        "b_name": "DoorDash",
+        "reason": "spacing_variant"
+      },
+      {
+        "candidate_id": "5dda8a28b3a6",
+        "a_key": "blue ocean shipping",
+        "b_key": "blue ocean shipping group",
+        "a_name": "Blue Ocean Shipping Co",
+        "b_name": "Blue Ocean Shipping Group",
+        "reason": "token_overlap"
+      },
+      {
+        "candidate_id": "e9c738f08ae2",
+        "a_key": "acme robotic",
+        "b_key": "acme robotics",
+        "a_name": "Acme Robotic",
+        "b_name": "Acme Robotics",
+        "reason": "near_typo"
+      }
+    ],
+    "stats": {
+      "snapshots": 6,
+      "postings_observed": 6,
+      "companies": 6,
+      "active_roles": 6
+    }
+  }
+}

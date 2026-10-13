@@ -1,0 +1,309 @@
+{
+  "name": "candidate-code-point-order",
+  "description": "Two companies whose keys differ only in the last token: U+FE0F (variation selector, BMP) vs U+20000 (CJK ext. B, astral). By code point 'rocket <FE0F>' < 'rocket <20000>' so it is a_key; sorting by UTF-16 code units would reverse a_key/b_key, the candidate_id and the rank order (both companies score the same, so rank is decided by key).",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "rocket-a",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "rocket-a",
+            "source_posting_id": "1",
+            "company_name": "Rocket \u2764\ufe0f",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "rocket-b",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "rocket-b",
+            "source_posting_id": "1",
+            "company_name": "Rocket \ud840\udc00",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_534c7f0b7026",
+        "key": "rocket \ufe0f",
+        "name": "Rocket \u2764\ufe0f",
+        "aliases": ["Rocket \u2764\ufe0f"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_200f3c9c42cf",
+        "key": "rocket \ud840\udc00",
+        "name": "Rocket \ud840\udc00",
+        "aliases": ["Rocket \ud840\udc00"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_4cc8bb8db147",
+        "company_id": "c_534c7f0b7026",
+        "title": "Systems Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "rocket-a",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_370f98c06868",
+        "company_id": "c_200f3c9c42cf",
+        "title": "Systems Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "rocket-b",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_534c7f0b7026",
+        "role_id": "r_4cc8bb8db147",
+        "source_kind": "greenhouse",
+        "source_ref": "rocket-a",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_200f3c9c42cf",
+        "role_id": "r_370f98c06868",
+        "source_kind": "greenhouse",
+        "source_ref": "rocket-b",
+        "title": "Systems Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [
+      {
+        "candidate_id": "60885a685c0d",
+        "a_key": "rocket \ufe0f",
+        "b_key": "rocket \ud840\udc00",
+        "a_name": "Rocket \u2764\ufe0f",
+        "b_name": "Rocket \ud840\udc00",
+        "reason": "near_typo"
+      }
+    ],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 2,
+      "companies": 2,
+      "active_roles": 2
+    }
+  }
+}

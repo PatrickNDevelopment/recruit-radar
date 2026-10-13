@@ -1,0 +1,376 @@
+{
+  "name": "all-roles-removed",
+  "description": "A company whose every role has been removed has no active roles: all six components are null with no_active_roles, score null, coverage 0, rank null, last_seen null, and it sorts AFTER ranked companies. change.inputs.span_days is still computed (19) because the source has two full snapshots. The roles are listed in the order 2, 1; the empty full snapshot removes them in ascending source role key order (1, 2), not in listing order.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "g1",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "ghost",
+            "source_posting_id": "2",
+            "company_name": "Ghost Kitchen Co",
+            "title": "Dishwasher",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "ghost",
+            "source_posting_id": "1",
+            "company_name": "Ghost Kitchen Co",
+            "title": "Chef",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "g2",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": []
+      },
+      {
+        "snapshot_id": "l1",
+        "source_kind": "greenhouse",
+        "source_ref": "liveoak",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "liveoak",
+            "source_posting_id": "1",
+            "company_name": "Live Oak",
+            "title": "Arborist",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_e44d10f24970",
+        "key": "live oak",
+        "name": "Live Oak",
+        "aliases": ["Live Oak"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_8d195f3a5d5e",
+        "key": "ghost kitchen",
+        "name": "Ghost Kitchen Co",
+        "aliases": ["Ghost Kitchen Co"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": null,
+        "active_roles": 0,
+        "relevant_roles": null,
+        "removed_roles": 2,
+        "score": null,
+        "coverage": 0,
+        "rank": null,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "relevant": null,
+              "active": 0
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "scope_roles": 0
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": 19,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "aged": null,
+              "known": null,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "scope_roles": 0,
+              "corroborated": null
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_active_roles",
+            "inputs": {
+              "days_since_last_seen": null
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_299b7f5a6247",
+        "company_id": "c_e44d10f24970",
+        "title": "Arborist",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "liveoak",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_75a084b1d500",
+        "company_id": "c_8d195f3a5d5e",
+        "title": "Dishwasher",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-01T00:00:00Z",
+        "removed_at": "2026-09-20T00:00:00Z",
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "ghost",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_a55d9e973040",
+        "company_id": "c_8d195f3a5d5e",
+        "title": "Chef",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-01T00:00:00Z",
+        "removed_at": "2026-09-20T00:00:00Z",
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "ghost",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_8d195f3a5d5e",
+        "role_id": "r_75a084b1d500",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "title": "Dishwasher",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_8d195f3a5d5e",
+        "role_id": "r_a55d9e973040",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "title": "Chef",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_8d195f3a5d5e",
+        "role_id": "r_a55d9e973040",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "title": "Chef",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_8d195f3a5d5e",
+        "role_id": "r_75a084b1d500",
+        "source_kind": "greenhouse",
+        "source_ref": "ghost",
+        "title": "Dishwasher",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_e44d10f24970",
+        "role_id": "r_299b7f5a6247",
+        "source_kind": "greenhouse",
+        "source_ref": "liveoak",
+        "title": "Arborist",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 3,
+      "postings_observed": 3,
+      "companies": 2,
+      "active_roles": 1
+    }
+  }
+}

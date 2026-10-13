@@ -1,0 +1,1945 @@
+{
+  "name": "near-typo-boundaries",
+  "description": "near_typo needs BOTH keys >= 6 code points and Levenshtein <= 1. 'Nordic'/'Nordik' and 'Quantum'/'Quantom' qualify; 'Google'/'Gogle' (6 vs 5 code points), 'Hooli'/'Hoolie' (5 vs 6) do not; 'Initech'/'Intiech' is a transposition = distance 2 (Levenshtein, not Damerau). Astral CJK keys: six code points (12 UTF-16 units) differing in ONE code point qualify even though both surrogates differ; five code points (10 units) differing in one low surrogate do NOT qualify (length is counted in code points).",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s-n1",
+        "source_kind": "csv",
+        "source_ref": "n1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "n1",
+            "source_posting_id": null,
+            "company_name": "Nordic",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-n2",
+        "source_kind": "csv",
+        "source_ref": "n2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "n2",
+            "source_posting_id": null,
+            "company_name": "Nordik",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-g1",
+        "source_kind": "csv",
+        "source_ref": "g1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "g1",
+            "source_posting_id": null,
+            "company_name": "Google",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-g2",
+        "source_kind": "csv",
+        "source_ref": "g2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "g2",
+            "source_posting_id": null,
+            "company_name": "Gogle",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-u1",
+        "source_kind": "csv",
+        "source_ref": "u1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "u1",
+            "source_posting_id": null,
+            "company_name": "Quantum",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-u2",
+        "source_kind": "csv",
+        "source_ref": "u2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "u2",
+            "source_posting_id": null,
+            "company_name": "Quantom",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-i1",
+        "source_kind": "csv",
+        "source_ref": "i1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "i1",
+            "source_posting_id": null,
+            "company_name": "Initech",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-i2",
+        "source_kind": "csv",
+        "source_ref": "i2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "i2",
+            "source_posting_id": null,
+            "company_name": "Intiech",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-h1",
+        "source_kind": "csv",
+        "source_ref": "h1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "h1",
+            "source_posting_id": null,
+            "company_name": "Hooli",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-h2",
+        "source_kind": "csv",
+        "source_ref": "h2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "h2",
+            "source_posting_id": null,
+            "company_name": "Hoolie",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-k1",
+        "source_kind": "csv",
+        "source_ref": "k1",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k1",
+            "source_posting_id": null,
+            "company_name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-k2",
+        "source_kind": "csv",
+        "source_ref": "k2",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k2",
+            "source_posting_id": null,
+            "company_name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-k3",
+        "source_kind": "csv",
+        "source_ref": "k3",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k3",
+            "source_posting_id": null,
+            "company_name": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc14",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s-k4",
+        "source_kind": "csv",
+        "source_ref": "k4",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k4",
+            "source_posting_id": null,
+            "company_name": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc15",
+            "title": "Planner",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_6313f4c7def0",
+        "key": "gogle",
+        "name": "Gogle",
+        "aliases": ["Gogle"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_bbdefa2950f4",
+        "key": "google",
+        "name": "Google",
+        "aliases": ["Google"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_cb00c5a95d27",
+        "key": "hooli",
+        "name": "Hooli",
+        "aliases": ["Hooli"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_55418ea55074",
+        "key": "hoolie",
+        "name": "Hoolie",
+        "aliases": ["Hoolie"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_4cdc1a4207f4",
+        "key": "initech",
+        "name": "Initech",
+        "aliases": ["Initech"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 5,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_315664ffc379",
+        "key": "intiech",
+        "name": "Intiech",
+        "aliases": ["Intiech"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 6,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_f539f4a1aef8",
+        "key": "nordic",
+        "name": "Nordic",
+        "aliases": ["Nordic"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 7,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_5cc461d5fcd4",
+        "key": "nordik",
+        "name": "Nordik",
+        "aliases": ["Nordik"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 8,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_c9d95b815932",
+        "key": "quantom",
+        "name": "Quantom",
+        "aliases": ["Quantom"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 9,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_8fb7cf7a4699",
+        "key": "quantum",
+        "name": "Quantum",
+        "aliases": ["Quantum"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 10,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_98d026b96b89",
+        "key": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05",
+        "name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05",
+        "aliases": ["\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 11,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_1f234a7b4ae1",
+        "key": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06",
+        "name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06",
+        "aliases": ["\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 12,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_bf0d74f23dfc",
+        "key": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc14",
+        "name": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc14",
+        "aliases": ["\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc14"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 13,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_1470b453906f",
+        "key": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc15",
+        "name": "\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc15",
+        "aliases": ["\ud840\udc10\ud840\udc11\ud840\udc12\ud840\udc13\ud840\udc15"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 14,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_c41456286f2a",
+        "company_id": "c_6313f4c7def0",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "g2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_335505a12d4e",
+        "company_id": "c_bbdefa2950f4",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "g1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_3f4935c25ce3",
+        "company_id": "c_cb00c5a95d27",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "h1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_824dea838bd8",
+        "company_id": "c_55418ea55074",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "h2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_1b5b09543b37",
+        "company_id": "c_4cdc1a4207f4",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "i1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_e4aa1f69fd8d",
+        "company_id": "c_315664ffc379",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "i2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_43047a5a34f9",
+        "company_id": "c_f539f4a1aef8",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "n1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_d39715d928e8",
+        "company_id": "c_5cc461d5fcd4",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "n2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b26ac0073562",
+        "company_id": "c_c9d95b815932",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "u2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_42d7b339ddcd",
+        "company_id": "c_8fb7cf7a4699",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "u1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_e581e78b77b6",
+        "company_id": "c_98d026b96b89",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k1",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_885b769ad0bf",
+        "company_id": "c_1f234a7b4ae1",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k2",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_7816a0c45a2e",
+        "company_id": "c_bf0d74f23dfc",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k3",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_fff30f724f9f",
+        "company_id": "c_1470b453906f",
+        "title": "Planner",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "k4",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_bbdefa2950f4",
+        "role_id": "r_335505a12d4e",
+        "source_kind": "csv",
+        "source_ref": "g1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_6313f4c7def0",
+        "role_id": "r_c41456286f2a",
+        "source_kind": "csv",
+        "source_ref": "g2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_cb00c5a95d27",
+        "role_id": "r_3f4935c25ce3",
+        "source_kind": "csv",
+        "source_ref": "h1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_55418ea55074",
+        "role_id": "r_824dea838bd8",
+        "source_kind": "csv",
+        "source_ref": "h2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_4cdc1a4207f4",
+        "role_id": "r_1b5b09543b37",
+        "source_kind": "csv",
+        "source_ref": "i1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_315664ffc379",
+        "role_id": "r_e4aa1f69fd8d",
+        "source_kind": "csv",
+        "source_ref": "i2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_98d026b96b89",
+        "role_id": "r_e581e78b77b6",
+        "source_kind": "csv",
+        "source_ref": "k1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1f234a7b4ae1",
+        "role_id": "r_885b769ad0bf",
+        "source_kind": "csv",
+        "source_ref": "k2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_bf0d74f23dfc",
+        "role_id": "r_7816a0c45a2e",
+        "source_kind": "csv",
+        "source_ref": "k3",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1470b453906f",
+        "role_id": "r_fff30f724f9f",
+        "source_kind": "csv",
+        "source_ref": "k4",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_f539f4a1aef8",
+        "role_id": "r_43047a5a34f9",
+        "source_kind": "csv",
+        "source_ref": "n1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_5cc461d5fcd4",
+        "role_id": "r_d39715d928e8",
+        "source_kind": "csv",
+        "source_ref": "n2",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_8fb7cf7a4699",
+        "role_id": "r_42d7b339ddcd",
+        "source_kind": "csv",
+        "source_ref": "u1",
+        "title": "Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_c9d95b815932",
+        "role_id": "r_b26ac0073562",
+        "source_kind": "csv",
+        "source_ref": "u2",
+        "title": "Planner",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [
+      {
+        "candidate_id": "17923870c089",
+        "a_key": "nordic",
+        "b_key": "nordik",
+        "a_name": "Nordic",
+        "b_name": "Nordik",
+        "reason": "near_typo"
+      },
+      {
+        "candidate_id": "f5ccca444313",
+        "a_key": "quantom",
+        "b_key": "quantum",
+        "a_name": "Quantom",
+        "b_name": "Quantum",
+        "reason": "near_typo"
+      },
+      {
+        "candidate_id": "c63a6c785fdd",
+        "a_key": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05",
+        "b_key": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06",
+        "a_name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud840\udc05",
+        "b_name": "\ud840\udc00\ud840\udc01\ud840\udc02\ud840\udc03\ud840\udc04\ud844\udc06",
+        "reason": "near_typo"
+      }
+    ],
+    "stats": {
+      "snapshots": 14,
+      "postings_observed": 14,
+      "companies": 14,
+      "active_roles": 14
+    }
+  }
+}

@@ -1,0 +1,318 @@
+{
+  "name": "removal-then-reappearance",
+  "description": "Full snapshots: role 2 is removed, comes back (`reappeared`, first_seen preserved, removed_at cleared) and is removed again. It ends removed with last_seen at its last listing, not at removal time. Only the reappearance and the second removal fall inside the 30-day change window: net 0.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Frontend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Frontend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 1,
+        "score": 626,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 1,
+              "net": 0,
+              "span_days": 30,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_f27b6bca26e9",
+        "company_id": "c_822b33ad87c1",
+        "title": "Backend Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_960dfc1229eb",
+        "company_id": "c_822b33ad87c1",
+        "title": "Frontend Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-01T00:00:00Z",
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_f27b6bca26e9",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_960dfc1229eb",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Frontend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_960dfc1229eb",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Frontend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "reappeared",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_960dfc1229eb",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Frontend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_960dfc1229eb",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Frontend Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 6,
+      "companies": 1,
+      "active_roles": 1
+    }
+  }
+}

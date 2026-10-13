@@ -1,0 +1,534 @@
+{
+  "name": "title-key-brackets-dedup",
+  "description": "title_key strips ( ) and [ ] segments (nested, repeatedly) before normalizing, so 'Software Engineer (Remote)', '[US]' and the bare title are one role; 'Data Engineer (Remote (US))' joins 'Data Engineer'. An UNBALANCED '(Remote' is not removed ('platform engineer remote' is a different role) and FULLWIDTH brackets are not removed either ('designer remote'). The displayed title is the member seen last.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "bw",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "1",
+            "company_name": "Bracket Works",
+            "title": "Software Engineer (Remote)",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "3",
+            "company_name": "Bracket Works",
+            "title": "Platform Engineer (Remote",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "4",
+            "company_name": "Bracket Works",
+            "title": "Designer\uff08Remote\uff09",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "bw-list",
+        "observed_at": "2026-10-02T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "company_name": "Bracket Works",
+            "title": "Software Engineer [US]",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "company_name": "Bracket Works",
+            "title": "Platform Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "company_name": "Bracket Works",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "observed_at": "2026-10-03T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Bracket Works",
+            "title": "Software Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "lever",
+        "source_ref": "bw",
+        "observed_at": "2026-10-04T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "bw",
+            "source_posting_id": "L2",
+            "company_name": "Bracket Works",
+            "title": "Data Engineer (Remote (US))",
+            "location": "Berlin",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s5",
+        "source_kind": "ashby",
+        "source_ref": "bw",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "bw",
+            "source_posting_id": "A2",
+            "company_name": "Bracket Works",
+            "title": "Data Engineer",
+            "location": "Berlin",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_44a3c138834e",
+        "key": "bracket works",
+        "name": "Bracket Works",
+        "aliases": ["Bracket Works"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "active_roles": 6,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 871,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 6
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 820,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 6
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": 4,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 867,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 6,
+              "corroborated": 2
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 981,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 8
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_70cb677cd798",
+        "company_id": "c_44a3c138834e",
+        "title": "Designer\uff08Remote\uff09",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "4",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_776000febdde",
+        "company_id": "c_44a3c138834e",
+        "title": "Platform Engineer (Remote",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f0276da387d8",
+        "company_id": "c_44a3c138834e",
+        "title": "Software Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-03T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "bw",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-03T00:00:00Z",
+            "last_seen": "2026-10-03T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_42bcf30d1876",
+        "company_id": "c_44a3c138834e",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-02T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 11,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_d66b1652e521",
+        "company_id": "c_44a3c138834e",
+        "title": "Platform Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-02T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 11,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "bw-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_7b73433ad0d2",
+        "company_id": "c_44a3c138834e",
+        "title": "Data Engineer",
+        "location": "Berlin",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-04T00:00:00Z",
+        "last_seen": "2026-10-05T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 9,
+        "observations": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "bw",
+            "source_posting_id": "A2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "bw",
+            "source_posting_id": "L2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-04T00:00:00Z",
+            "last_seen": "2026-10-04T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_f0276da387d8",
+        "source_kind": "greenhouse",
+        "source_ref": "bw",
+        "title": "Software Engineer (Remote)",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_776000febdde",
+        "source_kind": "greenhouse",
+        "source_ref": "bw",
+        "title": "Platform Engineer (Remote",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_70cb677cd798",
+        "source_kind": "greenhouse",
+        "source_ref": "bw",
+        "title": "Designer\uff08Remote\uff09",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_f0276da387d8",
+        "source_kind": "csv",
+        "source_ref": "bw-list",
+        "title": "Software Engineer [US]",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_d66b1652e521",
+        "source_kind": "csv",
+        "source_ref": "bw-list",
+        "title": "Platform Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_42bcf30d1876",
+        "source_kind": "csv",
+        "source_ref": "bw-list",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_f0276da387d8",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Software Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_7b73433ad0d2",
+        "source_kind": "lever",
+        "source_ref": "bw",
+        "title": "Data Engineer (Remote (US))",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_44a3c138834e",
+        "role_id": "r_7b73433ad0d2",
+        "source_kind": "ashby",
+        "source_ref": "bw",
+        "title": "Data Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 5,
+      "postings_observed": 9,
+      "companies": 1,
+      "active_roles": 6
+    }
+  }
+}

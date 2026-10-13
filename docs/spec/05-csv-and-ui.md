@@ -1,6 +1,7 @@
 # 05 — CSV format, UI screens, journeys, honesty copy
 
 ## CSV (import and export are symmetric)
+
 UTF-8, RFC 4180 (quotes, embedded commas/newlines, CRLF/LF, BOM tolerated). ≤1 MB, ≤5,000 data rows.
 Header names are case-insensitive, spaces/hyphens → `_`; duplicate headers are a file error; unknown
 columns are ignored with a warning.
@@ -19,6 +20,7 @@ Importing assigns `dataset_label` (user-provided, required) as `source_ref`, `so
 last_seen, strongest_evidence, missing_information, note, as_of`.
 
 ## Screens (single-page app, tabs; no client router so refresh works under `/recruit-radar/`)
+
 1. **Radar** — table of companies: name, active roles, relevant roles, role mix (work mode),
    locations, sources, last seen, signal age ("last seen N days ago"), **priority score** with coverage,
    shortlist toggle. Sort, filter (text, work mode, source, min score, shortlisted only), saved views
@@ -36,6 +38,7 @@ last_seen, strongest_evidence, missing_information, note, as_of`.
 6. **About** — method, scoring formulas, limitations.
 
 ## Honesty copy (must appear; tests assert key phrases)
+
 - Banner in local-data mode: "Local-data mode: your data stays in this browser. Live ATS refresh needs
   the local backend."
 - Sample data banner when synthetic rows are present: "Synthetic sample data — invented companies, not real hiring data."
@@ -45,6 +48,7 @@ last_seen, strongest_evidence, missing_information, note, as_of`.
 - `urgency` label: "Possible urgency signal (aged postings) — not evidence of hiring difficulty."
 
 ## Journeys (Playwright, production build under `/recruit-radar/`)
+
 1. **Local overlap** (no backend): load two overlapping CSVs (different dataset labels), see duplicates
    collapsed into canonical companies/roles, resolve a merge candidate, open an evidence score
    breakdown, add the company to the shortlist, export shortlist CSV.

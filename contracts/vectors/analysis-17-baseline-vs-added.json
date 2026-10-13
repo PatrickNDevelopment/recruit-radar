@@ -1,0 +1,382 @@
+{
+  "name": "baseline-vs-added",
+  "description": "The first snapshot of EACH source is its baseline: lever's first snapshot (2026-09-20) produces `baseline` events even though greenhouse history already exists, and baselines never count in the change score. Only greenhouse's later 'Data Analyst' is `added`, so change = 600. The lever 'Backend Engineer' corroborates the greenhouse role.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Product Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-15T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Product Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "3",
+            "company_name": "Acme",
+            "title": "Data Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "lever",
+        "source_ref": "acme",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "acme",
+            "source_posting_id": "L1",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "acme",
+            "source_posting_id": "L2",
+            "company_name": "Acme",
+            "title": "Sales Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 746,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 690,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 0,
+              "net": 1,
+              "span_days": 19,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 698,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 23
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_0a1c0addcbb2",
+        "company_id": "c_822b33ad87c1",
+        "title": "Product Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f27b6bca26e9",
+        "company_id": "c_822b33ad87c1",
+        "title": "Backend Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "acme",
+            "source_posting_id": "L1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_2a1f9d37e322",
+        "company_id": "c_822b33ad87c1",
+        "title": "Data Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-15T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 28,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-15T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b9e9c68b2b03",
+        "company_id": "c_822b33ad87c1",
+        "title": "Sales Lead",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "lever",
+            "source_ref": "acme",
+            "source_posting_id": "L2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_f27b6bca26e9",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_0a1c0addcbb2",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Product Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-15T00:00:00Z",
+        "type": "added",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_2a1f9d37e322",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Data Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_f27b6bca26e9",
+        "source_kind": "lever",
+        "source_ref": "acme",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_b9e9c68b2b03",
+        "source_kind": "lever",
+        "source_ref": "acme",
+        "title": "Sales Lead",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 3,
+      "postings_observed": 7,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

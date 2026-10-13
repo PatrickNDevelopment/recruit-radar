@@ -1,0 +1,675 @@
+{
+  "name": "change-title-scope-filter",
+  "description": "With keywords configured only events whose title (AT EVENT TIME) matches an include keyword and no exclude keyword count. 'Backend Engineer' added (+1) and 'Engineer Two' removed (-1) count; 'Marketing Lead' added, 'Engineer Intern' added/removed (exclude wins) and role 1 removed under its NEW title 'Designer' do not. 'Staff Engineer' is added in scope (+1) and renamed afterwards to 'Staff Designer': the event keeps the title it had at event time, so it still counts. Net +1 => 600. Unfiltered it would be added 4 / removed 4.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer"],
+      "exclude_keywords": ["intern"]
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-08-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "3",
+            "company_name": "Acme",
+            "title": "Engineer Intern",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "4",
+            "company_name": "Acme",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "company_name": "Acme",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "company_name": "Acme",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "3",
+            "company_name": "Acme",
+            "title": "Engineer Intern",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "4",
+            "company_name": "Acme",
+            "title": "Engineer Two",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "5",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "6",
+            "company_name": "Acme",
+            "title": "Marketing Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "7",
+            "company_name": "Acme",
+            "title": "Engineer Intern",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "8",
+            "company_name": "Acme",
+            "title": "Staff Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "5",
+            "company_name": "Acme",
+            "title": "Backend Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "6",
+            "company_name": "Acme",
+            "title": "Marketing Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "7",
+            "company_name": "Acme",
+            "title": "Engineer Intern",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "8",
+            "company_name": "Acme",
+            "title": "Staff Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": 1,
+        "removed_roles": 4,
+        "score": 466,
+        "coverage": 100,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 250,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 1,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 2,
+              "removed": 1,
+              "net": 1,
+              "span_days": 61,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "aged": 0,
+              "known": 1,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_3423bbab7b01",
+        "company_id": "c_822b33ad87c1",
+        "title": "Engineer Intern",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "7",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_3ff7a7e4cb51",
+        "company_id": "c_822b33ad87c1",
+        "title": "Staff Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "8",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_afe3baf491aa",
+        "company_id": "c_822b33ad87c1",
+        "title": "Marketing Lead",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "6",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f27b6bca26e9",
+        "company_id": "c_822b33ad87c1",
+        "title": "Backend Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "5",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_34bb973da815",
+        "company_id": "c_822b33ad87c1",
+        "title": "Engineer Intern",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-01T00:00:00Z",
+        "relevant": false,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_562b30b81eec",
+        "company_id": "c_822b33ad87c1",
+        "title": "Engineer Two",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-01T00:00:00Z",
+        "relevant": true,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "4",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6771ab6db525",
+        "company_id": "c_822b33ad87c1",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-01T00:00:00Z",
+        "relevant": false,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6e2f8a95599c",
+        "company_id": "c_822b33ad87c1",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": "2026-10-01T00:00:00Z",
+        "relevant": false,
+        "age_days": 73,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6771ab6db525",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6e2f8a95599c",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_34bb973da815",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer Intern",
+        "fields": null
+      },
+      {
+        "at": "2026-08-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_562b30b81eec",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer Two",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "changed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6771ab6db525",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Designer",
+        "fields": ["title"]
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_f27b6bca26e9",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Backend Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_afe3baf491aa",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Marketing Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_3423bbab7b01",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer Intern",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_3ff7a7e4cb51",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Staff Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "changed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_3ff7a7e4cb51",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Staff Designer",
+        "fields": ["title"]
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6771ab6db525",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6e2f8a95599c",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_34bb973da815",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer Intern",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_562b30b81eec",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer Two",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 3,
+      "postings_observed": 16,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

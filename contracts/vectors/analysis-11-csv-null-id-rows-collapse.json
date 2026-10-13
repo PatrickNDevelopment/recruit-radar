@@ -1,0 +1,352 @@
+{
+  "name": "csv-null-id-rows-collapse",
+  "description": "CSV rows without posting ids are identified by (company_key, title_key, location_key): 'New York, NY' and 'NY - New York' rows are the SAME source role (last row wins). The same rows WITH ids ('A-1','A-2') stay two roles. A later import re-lists the collapsed role with another raw location spelling and a new department, which is a `changed` event for fields ['department','location'] because tracked fields compare raw values.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "i1",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "observed_at": "2026-10-08T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Support Engineer",
+            "location": "New York, NY",
+            "work_mode": "unknown",
+            "department": "Support",
+            "url": "https://jobs.example.test/1",
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Support Engineer",
+            "location": "NY - New York",
+            "work_mode": "unknown",
+            "department": "Customer Success",
+            "url": "https://jobs.example.test/2",
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Support Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": "A-1",
+            "company_name": "Acme",
+            "title": "Account Executive",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": "A-2",
+            "company_name": "Acme",
+            "title": "Account Executive",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "i2",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Support Engineer",
+            "location": "NY, New York",
+            "work_mode": "unknown",
+            "department": "Support Ops",
+            "url": "https://jobs.example.test/2",
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-10-08T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 729,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 690,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_7b2a4671c921",
+        "company_id": "c_822b33ad87c1",
+        "title": "Account Executive",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-08T00:00:00Z",
+        "last_seen": "2026-10-08T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 5,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": "A-1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-08T00:00:00Z",
+            "last_seen": "2026-10-08T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_cba7e0085a08",
+        "company_id": "c_822b33ad87c1",
+        "title": "Account Executive",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-08T00:00:00Z",
+        "last_seen": "2026-10-08T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 5,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": "A-2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-08T00:00:00Z",
+            "last_seen": "2026-10-08T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_ce1c189973f8",
+        "company_id": "c_822b33ad87c1",
+        "title": "Support Engineer",
+        "location": "NY, New York",
+        "work_mode": "unknown",
+        "department": "Support Ops",
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-08T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 5,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "url": "https://jobs.example.test/2",
+            "status": "active",
+            "first_seen": "2026-10-08T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_fbf621f9fbef",
+        "company_id": "c_822b33ad87c1",
+        "title": "Support Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-08T00:00:00Z",
+        "last_seen": "2026-10-08T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 5,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "jobs-export",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-08T00:00:00Z",
+            "last_seen": "2026-10-08T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-08T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_ce1c189973f8",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "title": "Support Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-08T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_fbf621f9fbef",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "title": "Support Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-08T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_7b2a4671c921",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "title": "Account Executive",
+        "fields": null
+      },
+      {
+        "at": "2026-10-08T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_cba7e0085a08",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "title": "Account Executive",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "changed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_ce1c189973f8",
+        "source_kind": "csv",
+        "source_ref": "jobs-export",
+        "title": "Support Engineer",
+        "fields": ["department", "location"]
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 6,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

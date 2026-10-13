@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Evidence-backed hiring-market intelligence: normalized job postings, identity resolution, explainable scoring.",
-  "engines": { "node": ">=20.19.0" },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

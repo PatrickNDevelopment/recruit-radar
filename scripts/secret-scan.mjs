@@ -10,7 +10,12 @@ const SKIP_DIRS = new Set([
   '.git',
   'playwright-report',
   'test-results',
-  'coverage', '.venv', '__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache',
+  'coverage',
+  '.venv',
+  '__pycache__',
+  '.pytest_cache',
+  '.mypy_cache',
+  '.ruff_cache',
 ]);
 const SKIP_EXT = /\.(png|jpg|jpeg|gif|ico|woff2?|lock)$/i;
 const PATTERNS = [

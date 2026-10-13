@@ -5,17 +5,18 @@ unauthenticated, read-only `GET` JSON endpoints. **Application-submission endpoi
 called.** None of the three documents a rate limit or usage terms; the client is therefore
 deliberately conservative.
 
-| Provider | Endpoint (default base URL) | Notes |
-|---|---|---|
-| Greenhouse Job Board API | `GET https://boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true` | doc: https://docs.greenhouse.io/job-board.html |
-| Lever Postings API | `GET https://api.lever.co/v0/postings/{site}?mode=json&skip={n}&limit={m}` (EU: `api.eu.lever.co`) | doc: https://github.com/lever/postings-api ; only `published` postings are public |
-| Ashby Public Job Posting API | `GET https://api.ashbyhq.com/posting-api/job-board/{name}` | doc: https://developers.ashbyhq.com/docs/public-job-posting-api |
+| Provider                     | Endpoint (default base URL)                                                                        | Notes                                                                             |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Greenhouse Job Board API     | `GET https://boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true`                         | doc: https://docs.greenhouse.io/job-board.html                                    |
+| Lever Postings API           | `GET https://api.lever.co/v0/postings/{site}?mode=json&skip={n}&limit={m}` (EU: `api.eu.lever.co`) | doc: https://github.com/lever/postings-api ; only `published` postings are public |
+| Ashby Public Job Posting API | `GET https://api.ashbyhq.com/posting-api/job-board/{name}`                                         | doc: https://developers.ashbyhq.com/docs/public-job-posting-api                   |
 
 Base URLs are configurable (env `RECRUIT_RADAR_GREENHOUSE_BASE_URL`, `…_LEVER_BASE_URL`,
 `…_ASHBY_BASE_URL`) **only so tests can target a local fake server**; defaults are the real hosts.
 The UI shows the active base host for every refresh.
 
 ## Field mapping → RawPosting
+
 **Greenhouse** (`{"jobs":[…],"meta":{"total":n}}`): `source_posting_id = str(job.id)` ·
 `title = job.title` · `location = job.location.name` (may be missing) · `url = job.absolute_url` ·
 `department = job.departments[0].name` if present · `posted_at = date(job.first_published)` if present
@@ -39,9 +40,10 @@ last non-empty path segment of `jobUrl` if it looks like a UUID/slug (`^[A-Za-z0
 `company_name` is always the user-supplied name on the source (provider data is not trusted for it).
 
 ## HTTP client policy (all providers)
+
 - Exactly one request per page; no parallel requests; `User-Agent: RecruitRadar/<version> (+read-only)`.
 - Connect/read timeout 15 s; response size cap 10 MB; item cap 5,000 → `too_large` (run failed, no snapshot).
-- Only `https` to the default hosts (an `http://localhost`/`127.0.0.1` base is allowed *only* when set
+- Only `https` to the default hosts (an `http://localhost`/`127.0.0.1` base is allowed _only_ when set
   via the env override). Tokens are validated against `^[A-Za-z0-9_.-]{1,100}$` and URL-quoted — callers
   can never supply a URL.
 - No redirects to a different host are followed.

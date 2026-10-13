@@ -1,0 +1,376 @@
+{
+  "name": "merge-decision-applies-to-history",
+  "description": "A user merge of 'door dash' and 'doordash' is applied retroactively: events from before the decision carry the merged company id, the canonical key is the smaller key ('door dash'), the display name is still the earliest posting's ('DoorDash'), and 'Courier Operations Lead' from both spellings dedups into one role with two observations. The csv import lists 'Data Scientist' under BOTH spellings: they have different source role keys (company_key is part of a null-id key), so after the merge they are two roles of one source and stay two canonical roles (a merge never collapses a source with itself). No candidate remains.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [
+      {
+        "a_key": "door dash",
+        "b_key": "doordash",
+        "decision": "merge"
+      }
+    ],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "10",
+            "company_name": "DoorDash",
+            "title": "Courier Operations Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "dd-sheet",
+        "observed_at": "2026-09-10T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "company_name": "Door Dash",
+            "title": "Courier Operations Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "company_name": "Door Dash",
+            "title": "Data Scientist",
+            "location": "San Francisco, CA",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "company_name": "DoorDash",
+            "title": "Data Scientist",
+            "location": "San Francisco, CA",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "10",
+            "company_name": "DoorDash",
+            "title": "Courier Operations Lead",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "11",
+            "company_name": "DoorDash",
+            "title": "Merchant Success Manager",
+            "location": "New York, NY",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_007b690611a0",
+        "key": "door dash",
+        "name": "DoorDash",
+        "aliases": ["Door Dash", "DoorDash"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 696,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 690,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 1,
+              "removed": 0,
+              "net": 1,
+              "span_days": 19,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 800,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 4,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 698,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 23
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_5d6af5b00e27",
+        "company_id": "c_007b690611a0",
+        "title": "Courier Operations Lead",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-10T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "10",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_3db98e1a98b0",
+        "company_id": "c_007b690611a0",
+        "title": "Data Scientist",
+        "location": "San Francisco, CA",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-10T00:00:00Z",
+        "last_seen": "2026-09-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 33,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-10T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b3ebf5c2e3af",
+        "company_id": "c_007b690611a0",
+        "title": "Data Scientist",
+        "location": "San Francisco, CA",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-10T00:00:00Z",
+        "last_seen": "2026-09-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 33,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "dd-sheet",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-10T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_0f1cc6bad942",
+        "company_id": "c_007b690611a0",
+        "title": "Merchant Success Manager",
+        "location": "New York, NY",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "doordash",
+            "source_posting_id": "11",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_5d6af5b00e27",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "title": "Courier Operations Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_5d6af5b00e27",
+        "source_kind": "csv",
+        "source_ref": "dd-sheet",
+        "title": "Courier Operations Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_3db98e1a98b0",
+        "source_kind": "csv",
+        "source_ref": "dd-sheet",
+        "title": "Data Scientist",
+        "fields": null
+      },
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_b3ebf5c2e3af",
+        "source_kind": "csv",
+        "source_ref": "dd-sheet",
+        "title": "Data Scientist",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_007b690611a0",
+        "role_id": "r_0f1cc6bad942",
+        "source_kind": "greenhouse",
+        "source_ref": "doordash",
+        "title": "Merchant Success Manager",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 3,
+      "postings_observed": 6,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

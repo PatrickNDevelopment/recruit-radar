@@ -1,0 +1,460 @@
+{
+  "name": "mixed-work-modes-and-role-order",
+  "description": "Work modes remote/hybrid/onsite/unknown are carried through to roles. Roles are ordered active first, then first_seen, then role_id (ties on first_seen are broken by role_id); the removed role comes last.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "1",
+            "company_name": "Mosaic Group",
+            "title": "Remote Engineer",
+            "location": "Remote",
+            "work_mode": "remote",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "2",
+            "company_name": "Mosaic Group",
+            "title": "Hybrid Designer",
+            "location": "Leeds",
+            "work_mode": "hybrid",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "3",
+            "company_name": "Mosaic Group",
+            "title": "Onsite Technician",
+            "location": "Leeds",
+            "work_mode": "onsite",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "4",
+            "company_name": "Mosaic Group",
+            "title": "Unknown Planner",
+            "location": "Leeds",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "observed_at": "2026-09-20T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "1",
+            "company_name": "Mosaic Group",
+            "title": "Remote Engineer",
+            "location": "Remote",
+            "work_mode": "remote",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "2",
+            "company_name": "Mosaic Group",
+            "title": "Hybrid Designer",
+            "location": "Leeds",
+            "work_mode": "hybrid",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "4",
+            "company_name": "Mosaic Group",
+            "title": "Unknown Planner",
+            "location": "Leeds",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "5",
+            "company_name": "Mosaic Group",
+            "title": "Remote Writer",
+            "location": "Remote",
+            "work_mode": "remote",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "6",
+            "company_name": "Mosaic Group",
+            "title": "Hybrid Editor",
+            "location": "Leeds",
+            "work_mode": "hybrid",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_3fbe80872ba8",
+        "key": "mosaic group",
+        "name": "Mosaic Group",
+        "aliases": ["Mosaic Group"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "active_roles": 5,
+        "relevant_roles": null,
+        "removed_roles": 1,
+        "score": 770,
+        "coverage": 60,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 5
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 760,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 5
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "added": 2,
+              "removed": 1,
+              "net": 1,
+              "span_days": 19,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 5,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 698,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 23
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_6940abac6941",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Remote Engineer",
+        "location": "Remote",
+        "work_mode": "remote",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_85f39d09f620",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Hybrid Designer",
+        "location": "Leeds",
+        "work_mode": "hybrid",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b7ed44ccc245",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Unknown Planner",
+        "location": "Leeds",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "4",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6266c85b372f",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Remote Writer",
+        "location": "Remote",
+        "work_mode": "remote",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "5",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_9ed984685497",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Hybrid Editor",
+        "location": "Leeds",
+        "work_mode": "hybrid",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-20T00:00:00Z",
+        "last_seen": "2026-09-20T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 23,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "6",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-20T00:00:00Z",
+            "last_seen": "2026-09-20T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f41ae972c4a1",
+        "company_id": "c_3fbe80872ba8",
+        "title": "Onsite Technician",
+        "location": "Leeds",
+        "work_mode": "onsite",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-01T00:00:00Z",
+        "removed_at": "2026-09-20T00:00:00Z",
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "mosaic",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_6940abac6941",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Remote Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_85f39d09f620",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Hybrid Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_f41ae972c4a1",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Onsite Technician",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_b7ed44ccc245",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Unknown Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_6266c85b372f",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Remote Writer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "added",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_9ed984685497",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Hybrid Editor",
+        "fields": null
+      },
+      {
+        "at": "2026-09-20T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_3fbe80872ba8",
+        "role_id": "r_f41ae972c4a1",
+        "source_kind": "greenhouse",
+        "source_ref": "mosaic",
+        "title": "Onsite Technician",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 9,
+      "companies": 1,
+      "active_roles": 5
+    }
+  }
+}

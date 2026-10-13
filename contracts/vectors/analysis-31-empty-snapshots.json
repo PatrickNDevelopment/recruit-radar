@@ -1,0 +1,26 @@
+{
+  "name": "empty-snapshots",
+  "description": "No snapshots at all: every collection is empty and every stat is 0.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer"],
+      "exclude_keywords": ["intern"]
+    },
+    "decisions": [],
+    "snapshots": []
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [],
+    "roles": [],
+    "events": [],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 0,
+      "postings_observed": 0,
+      "companies": 0,
+      "active_roles": 0
+    }
+  }
+}

@@ -1,0 +1,1218 @@
+{
+  "format_version": 1,
+  "kind": "normalization",
+  "description": "Golden cases for the 01-normalization-and-identity functions. See README.md.",
+  "cases": [
+    {
+      "id": "norm_text-001",
+      "fn": "norm_text",
+      "input": "Hello World",
+      "expected": "hello world",
+      "note": "plain ASCII, lowercase"
+    },
+    {
+      "id": "norm_text-002",
+      "fn": "norm_text",
+      "input": "  Multiple   spaces\t\ttabs\r\nand\nnewlines  ",
+      "expected": "multiple spaces tabs and newlines",
+      "note": "mixed whitespace collapses to single spaces, ends trimmed"
+    },
+    {
+      "id": "norm_text-003",
+      "fn": "norm_text",
+      "input": "a\u00a0b\u2003c\u3000d",
+      "expected": "a b c d",
+      "note": "NBSP, em space, ideographic space are separators"
+    },
+    {
+      "id": "norm_text-004",
+      "fn": "norm_text",
+      "input": "\uff21\uff23\uff2d\uff25\u3000\uff11\uff12\uff13",
+      "expected": "acme 123",
+      "note": "fullwidth Latin, space and digits fold under NFKC"
+    },
+    {
+      "id": "norm_text-005",
+      "fn": "norm_text",
+      "input": "Caf\u00e9",
+      "expected": "caf\u00e9",
+      "note": "precomposed accent preserved (not stripped)"
+    },
+    {
+      "id": "norm_text-006",
+      "fn": "norm_text",
+      "input": "Cafe\u0301",
+      "expected": "caf\u00e9",
+      "note": "decomposed e + U+0301 composes under NFKC"
+    },
+    {
+      "id": "norm_text-007",
+      "fn": "norm_text",
+      "input": "Stra\u00dfe",
+      "expected": "stra\u00dfe",
+      "note": "sharp s is not casefolded to ss"
+    },
+    {
+      "id": "norm_text-008",
+      "fn": "norm_text",
+      "input": "STRASSE",
+      "expected": "strasse",
+      "note": "ASCII SS stays ss, so differs from the sharp-s spelling"
+    },
+    {
+      "id": "norm_text-009",
+      "fn": "norm_text",
+      "input": "STRA\u1e9eE",
+      "expected": "stra\u00dfe",
+      "note": "capital sharp s lowercases to sharp s"
+    },
+    {
+      "id": "norm_text-010",
+      "fn": "norm_text",
+      "input": "\u0130stanbul",
+      "expected": "i\u0307stanbul",
+      "note": "Turkish dotted capital I -> i + U+0307 (kept: category Mn)"
+    },
+    {
+      "id": "norm_text-011",
+      "fn": "norm_text",
+      "input": "ISTANBUL",
+      "expected": "istanbul",
+      "note": "plain I lowercases to i, not dotless i (locale-free)"
+    },
+    {
+      "id": "norm_text-012",
+      "fn": "norm_text",
+      "input": "\u0131stanbul",
+      "expected": "\u0131stanbul",
+      "note": "dotless i is already lowercase and stays"
+    },
+    {
+      "id": "norm_text-013",
+      "fn": "norm_text",
+      "input": "\u041c\u041e\u0421\u041a\u0412\u0410",
+      "expected": "\u043c\u043e\u0441\u043a\u0432\u0430",
+      "note": "Cyrillic lowercases"
+    },
+    {
+      "id": "norm_text-014",
+      "fn": "norm_text",
+      "input": "\u6771\u4eac\u3001\u6e0b\u8c37\u3002",
+      "expected": "\u6771\u4eac \u6e0b\u8c37",
+      "note": "CJK letters kept, ideographic punctuation separates"
+    },
+    {
+      "id": "norm_text-015",
+      "fn": "norm_text",
+      "input": "Rocket \ud83d\ude80 Labs",
+      "expected": "rocket labs",
+      "note": "emoji (So) is a separator"
+    },
+    {
+      "id": "norm_text-016",
+      "fn": "norm_text",
+      "input": "\u2764\ufe0f",
+      "expected": "\ufe0f",
+      "note": "heart + VS16: the heart is a separator but U+FE0F is category Mn and survives"
+    },
+    {
+      "id": "norm_text-017",
+      "fn": "norm_text",
+      "input": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
+      "expected": "",
+      "note": "ZWJ family emoji: all So/Cf -> empty"
+    },
+    {
+      "id": "norm_text-018",
+      "fn": "norm_text",
+      "input": "1\ufe0f\u20e3",
+      "expected": "1\ufe0f\u20e3",
+      "note": "keycap sequence: digit + Mn + Me all survive as one token"
+    },
+    {
+      "id": "norm_text-019",
+      "fn": "norm_text",
+      "input": "\u0301abc",
+      "expected": "\u0301abc",
+      "note": "lone leading combining mark is category M and survives"
+    },
+    {
+      "id": "norm_text-020",
+      "fn": "norm_text",
+      "input": "(Remote) [US]",
+      "expected": "remote us",
+      "note": "brackets are separators in norm_text (only title_key removes them)"
+    },
+    {
+      "id": "norm_text-021",
+      "fn": "norm_text",
+      "input": "AT&T",
+      "expected": "at t",
+      "note": "ampersand splits"
+    },
+    {
+      "id": "norm_text-022",
+      "fn": "norm_text",
+      "input": "O'Brien & Sons, Ltd.",
+      "expected": "o brien sons ltd",
+      "note": "apostrophe, ampersand, comma, period"
+    },
+    {
+      "id": "norm_text-023",
+      "fn": "norm_text",
+      "input": "C++ / C# / .NET",
+      "expected": "c c net",
+      "note": "symbols dropped, single letters kept"
+    },
+    {
+      "id": "norm_text-024",
+      "fn": "norm_text",
+      "input": "",
+      "expected": "",
+      "note": "empty input"
+    },
+    {
+      "id": "norm_text-025",
+      "fn": "norm_text",
+      "input": "!!!---???",
+      "expected": "",
+      "note": "punctuation only -> empty"
+    },
+    {
+      "id": "norm_text-026",
+      "fn": "norm_text",
+      "input": "   \t\n ",
+      "expected": "",
+      "note": "whitespace only -> empty"
+    },
+    {
+      "id": "norm_text-027",
+      "fn": "norm_text",
+      "input": "3M",
+      "expected": "3m",
+      "note": "digits are kept"
+    },
+    {
+      "id": "norm_text-028",
+      "fn": "norm_text",
+      "input": "7-Eleven",
+      "expected": "7 eleven",
+      "note": "hyphen splits"
+    },
+    {
+      "id": "norm_text-029",
+      "fn": "norm_text",
+      "input": "H\u2082O",
+      "expected": "h2o",
+      "note": "subscript two folds to 2 under NFKC"
+    },
+    {
+      "id": "norm_text-030",
+      "fn": "norm_text",
+      "input": "\u2167",
+      "expected": "viii",
+      "note": "roman numeral eight (Nl) NFKC-expands to letters"
+    },
+    {
+      "id": "norm_text-031",
+      "fn": "norm_text",
+      "input": "\u0663\u0664",
+      "expected": "\u0663\u0664",
+      "note": "Arabic-Indic digits are category Nd and survive unchanged"
+    },
+    {
+      "id": "norm_text-032",
+      "fn": "norm_text",
+      "input": "\ufb01nance",
+      "expected": "finance",
+      "note": "fi ligature expands under NFKC"
+    },
+    {
+      "id": "norm_text-033",
+      "fn": "norm_text",
+      "input": "Acme\u2122",
+      "expected": "acmetm",
+      "note": "trade mark sign NFKC-expands to the letters TM"
+    },
+    {
+      "id": "norm_text-034",
+      "fn": "norm_text",
+      "input": "\u039f\u0394\u03a5\u03a3\u03a3\u0395\u03a5\u03a3",
+      "expected": "\u03bf\u03b4\u03c5\u03c3\u03c3\u03b5\u03c5\u03c2",
+      "note": "final sigma: only the last capital sigma lowercases to U+03C2 (default, non-locale lowercasing)"
+    },
+    {
+      "id": "norm_text-035",
+      "fn": "norm_text",
+      "input": "\u03a3",
+      "expected": "\u03c3",
+      "note": "lone capital sigma lowercases to medial sigma"
+    },
+    {
+      "id": "norm_text-036",
+      "fn": "norm_text",
+      "input": "O\u02bcBrien",
+      "expected": "o\u02bcbrien",
+      "note": "U+02BC modifier letter apostrophe is category Lm: a LETTER, not a separator"
+    },
+    {
+      "id": "norm_text-037",
+      "fn": "norm_text",
+      "input": "co\u00adoperate",
+      "expected": "co operate",
+      "note": "soft hyphen (Cf) is a separator"
+    },
+    {
+      "id": "norm_text-038",
+      "fn": "norm_text",
+      "input": "a\u200bb\u200cc\u200dd\ufeffe",
+      "expected": "a b c d e",
+      "note": "ZWSP, ZWNJ, ZWJ, BOM are all separators"
+    },
+    {
+      "id": "norm_text-039",
+      "fn": "norm_text",
+      "input": "\u212a",
+      "expected": "k",
+      "note": "Kelvin sign NFKC-folds to K"
+    },
+    {
+      "id": "norm_text-040",
+      "fn": "norm_text",
+      "input": "\u212b",
+      "expected": "\u00e5",
+      "note": "Angstrom sign NFKC-folds to A-ring, lowercased"
+    },
+    {
+      "id": "norm_text-041",
+      "fn": "norm_text",
+      "input": "\u00bd time",
+      "expected": "1 2 time",
+      "note": "vulgar half expands to 1, fraction slash (Sm), 2"
+    },
+    {
+      "id": "norm_text-042",
+      "fn": "norm_text",
+      "input": "\u24b6cme",
+      "expected": "acme",
+      "note": "circled A folds to A"
+    },
+    {
+      "id": "norm_text-043",
+      "fn": "norm_text",
+      "input": "\u3231\u30a2\u30af\u30e1",
+      "expected": "\u682a \u30a2\u30af\u30e1",
+      "note": "parenthesized ideograph stock expands to (kabu): parens separate"
+    },
+    {
+      "id": "norm_text-044",
+      "fn": "norm_text",
+      "input": "\uff08Remote\uff09",
+      "expected": "remote",
+      "note": "fullwidth parentheses become ASCII parentheses then separators"
+    },
+    {
+      "id": "norm_text-045",
+      "fn": "norm_text",
+      "input": "\uff71\uff78\uff92",
+      "expected": "\u30a2\u30af\u30e1",
+      "note": "halfwidth katakana widen under NFKC"
+    },
+    {
+      "id": "norm_text-046",
+      "fn": "norm_text",
+      "input": "\u01c5",
+      "expected": "d\u017e",
+      "note": "titlecase DZ-caron digraph expands to d + z-caron"
+    },
+    {
+      "id": "norm_text-047",
+      "fn": "norm_text",
+      "input": "\ud835\udc00\ud835\udc1c\ud835\udc26\ud835\udc1e",
+      "expected": "acme",
+      "note": "mathematical bold letters (astral) fold to ASCII"
+    },
+    {
+      "id": "norm_text-048",
+      "fn": "norm_text",
+      "input": "\u0e2a\u0e27\u0e31\u0e2a\u0e14\u0e35",
+      "expected": "\u0e2a\u0e27\u0e31\u0e2a\u0e14\u0e35",
+      "note": "Thai letters + vowel marks (Mn) all kept"
+    },
+    {
+      "id": "norm_text-049",
+      "fn": "norm_text",
+      "input": "\u05e9\u05c1\u05dc\u05d5\u05b9\u05dd",
+      "expected": "\u05e9\u05c1\u05dc\u05d5\u05b9\u05dd",
+      "note": "Hebrew with points: Mn marks kept"
+    },
+    {
+      "id": "norm_text-050",
+      "fn": "norm_text",
+      "input": "\u00c5ngstr\u00f6m",
+      "expected": "\u00e5ngstr\u00f6m",
+      "note": "Latin-1 uppercase accents lowercase"
+    },
+    {
+      "id": "norm_text-051",
+      "fn": "norm_text",
+      "input": "\u0e3f100",
+      "expected": "100",
+      "note": "currency symbol (Sc) is a separator, digits stay"
+    },
+    {
+      "id": "norm_text-052",
+      "fn": "norm_text",
+      "input": "a_b-c.d/e\\f",
+      "expected": "a b c d e f",
+      "note": "underscore (Pc), hyphen (Pd), period, slashes all separate"
+    },
+    {
+      "id": "norm_text-053",
+      "fn": "norm_text",
+      "input": "Tab\tseparated\u000bvertical\fform",
+      "expected": "tab separated vertical form",
+      "note": "VT and FF are whitespace"
+    },
+    {
+      "id": "norm_text-054",
+      "fn": "norm_text",
+      "input": "\u00aa",
+      "expected": "a",
+      "note": "feminine ordinal indicator NFKC-folds to a"
+    },
+    {
+      "id": "norm_text-055",
+      "fn": "norm_text",
+      "input": "x\u0338y",
+      "expected": "x\u0338y",
+      "note": "combining long solidus overlay (Mn) stays inside the token"
+    },
+    {
+      "id": "norm_text-056",
+      "fn": "norm_text",
+      "input": "\u1100\u1161",
+      "expected": "\uac00",
+      "note": "Hangul jamo pair composes to a syllable under NFKC"
+    },
+    {
+      "id": "norm_text-057",
+      "fn": "norm_text",
+      "input": "\u00df",
+      "expected": "\u00df",
+      "note": "lone sharp s"
+    },
+    {
+      "id": "norm_text-058",
+      "fn": "norm_text",
+      "input": "\u00a9 2026",
+      "expected": "2026",
+      "note": "copyright sign (So) separates, digits stay"
+    },
+    {
+      "id": "company_key-001",
+      "fn": "company_key",
+      "input": "Acme, Inc.",
+      "expected": "acme",
+      "note": "spec example"
+    },
+    {
+      "id": "company_key-002",
+      "fn": "company_key",
+      "input": "The Acme Corporation",
+      "expected": "acme",
+      "note": "spec example: leading 'the' and trailing suffix"
+    },
+    {
+      "id": "company_key-003",
+      "fn": "company_key",
+      "input": "Inc",
+      "expected": "inc",
+      "note": "spec example: suffix-only name keeps its tokens"
+    },
+    {
+      "id": "company_key-004",
+      "fn": "company_key",
+      "input": "AT&T",
+      "expected": "at t",
+      "note": "spec example"
+    },
+    {
+      "id": "company_key-005",
+      "fn": "company_key",
+      "input": "Acme Co Ltd",
+      "expected": "acme",
+      "note": "two stacked suffixes"
+    },
+    {
+      "id": "company_key-006",
+      "fn": "company_key",
+      "input": "ACME INC. LLC",
+      "expected": "acme",
+      "note": "uppercase, punctuation, stacked suffixes"
+    },
+    {
+      "id": "company_key-007",
+      "fn": "company_key",
+      "input": "The Inc",
+      "expected": "the inc",
+      "note": "dropping suffix then 'the' would leave nothing -> original tokens"
+    },
+    {
+      "id": "company_key-008",
+      "fn": "company_key",
+      "input": "The",
+      "expected": "the",
+      "note": "'the' alone is kept"
+    },
+    {
+      "id": "company_key-009",
+      "fn": "company_key",
+      "input": "The The",
+      "expected": "the",
+      "note": "only a single leading 'the' is dropped"
+    },
+    {
+      "id": "company_key-010",
+      "fn": "company_key",
+      "input": "The Company",
+      "expected": "the company",
+      "note": "suffix + 'the' would empty the key -> original tokens"
+    },
+    {
+      "id": "company_key-011",
+      "fn": "company_key",
+      "input": "Co Inc",
+      "expected": "co inc",
+      "note": "all tokens are suffixes -> original tokens"
+    },
+    {
+      "id": "company_key-012",
+      "fn": "company_key",
+      "input": "Inc Inc",
+      "expected": "inc inc",
+      "note": "all tokens are suffixes -> original tokens"
+    },
+    {
+      "id": "company_key-013",
+      "fn": "company_key",
+      "input": "Pte Ltd",
+      "expected": "pte ltd",
+      "note": "all suffixes -> original tokens"
+    },
+    {
+      "id": "company_key-014",
+      "fn": "company_key",
+      "input": "The Co Ltd",
+      "expected": "the co ltd",
+      "note": "drop ltd, co, the would empty -> original tokens"
+    },
+    {
+      "id": "company_key-015",
+      "fn": "company_key",
+      "input": "Inc. Acme",
+      "expected": "inc acme",
+      "note": "a leading suffix word is not dropped"
+    },
+    {
+      "id": "company_key-016",
+      "fn": "company_key",
+      "input": "Acme Inc Holdings",
+      "expected": "acme inc holdings",
+      "note": "a mid-name suffix word is not dropped"
+    },
+    {
+      "id": "company_key-017",
+      "fn": "company_key",
+      "input": "Acme Holding AG",
+      "expected": "acme holding",
+      "note": "AG is a suffix, 'holding' is not"
+    },
+    {
+      "id": "company_key-018",
+      "fn": "company_key",
+      "input": "Acme S.A.",
+      "expected": "acme s a",
+      "note": "S.A. normalizes to tokens 's','a' - not the suffix 'sa'"
+    },
+    {
+      "id": "company_key-019",
+      "fn": "company_key",
+      "input": "Acme SA",
+      "expected": "acme",
+      "note": "SA without dots is the suffix"
+    },
+    {
+      "id": "company_key-020",
+      "fn": "company_key",
+      "input": "Acme GmbH & Co. KG",
+      "expected": "acme gmbh co kg",
+      "note": "trailing 'kg' is not a suffix, so nothing is dropped"
+    },
+    {
+      "id": "company_key-021",
+      "fn": "company_key",
+      "input": "Acme L.L.C.",
+      "expected": "acme l l c",
+      "note": "dotted LLC is three tokens, not the suffix"
+    },
+    {
+      "id": "company_key-022",
+      "fn": "company_key",
+      "input": "Acme Pty. Ltd.",
+      "expected": "acme",
+      "note": "Pty + Ltd"
+    },
+    {
+      "id": "company_key-023",
+      "fn": "company_key",
+      "input": "Acme Limited Liability Company",
+      "expected": "acme limited liability",
+      "note": "only the trailing 'company' goes; 'limited' is no longer trailing"
+    },
+    {
+      "id": "company_key-024",
+      "fn": "company_key",
+      "input": "Acme Incorporated",
+      "expected": "acme",
+      "note": "'incorporated' is a suffix"
+    },
+    {
+      "id": "company_key-025",
+      "fn": "company_key",
+      "input": "\uff21\uff43\uff4d\uff45\u3000\uff29\uff4e\uff43\uff0e",
+      "expected": "acme",
+      "note": "fullwidth 'Acme Inc.' normalizes first"
+    },
+    {
+      "id": "company_key-026",
+      "fn": "company_key",
+      "input": "!!!",
+      "expected": "",
+      "note": "no tokens at all -> empty key"
+    },
+    {
+      "id": "company_key-027",
+      "fn": "company_key",
+      "input": "",
+      "expected": "",
+      "note": "empty name"
+    },
+    {
+      "id": "company_key-028",
+      "fn": "company_key",
+      "input": "The Acme The",
+      "expected": "acme the",
+      "note": "trailing 'the' is not a suffix; only the leading 'the' goes"
+    },
+    {
+      "id": "company_key-029",
+      "fn": "company_key",
+      "input": "Acme The",
+      "expected": "acme the",
+      "note": "'the' is only dropped when leading"
+    },
+    {
+      "id": "company_key-030",
+      "fn": "company_key",
+      "input": "the the inc",
+      "expected": "the",
+      "note": "inc dropped, then one leading 'the'"
+    },
+    {
+      "id": "company_key-031",
+      "fn": "company_key",
+      "input": "Acme Corp Inc Co",
+      "expected": "acme",
+      "note": "four suffix words, longest chain"
+    },
+    {
+      "id": "company_key-032",
+      "fn": "company_key",
+      "input": "Stra\u00dfe GmbH",
+      "expected": "stra\u00dfe",
+      "note": "sharp s kept, GmbH dropped"
+    },
+    {
+      "id": "company_key-033",
+      "fn": "company_key",
+      "input": "\u682a\u5f0f\u4f1a\u793e\u30a2\u30af\u30e1",
+      "expected": "\u682a\u5f0f\u4f1a\u793e\u30a2\u30af\u30e1",
+      "note": "CJK corporate prefix is not in the Latin suffix set"
+    },
+    {
+      "id": "company_key-034",
+      "fn": "company_key",
+      "input": "Acme Co.",
+      "expected": "acme",
+      "note": "period after suffix"
+    },
+    {
+      "id": "company_key-035",
+      "fn": "company_key",
+      "input": "Co",
+      "expected": "co",
+      "note": "single suffix token kept"
+    },
+    {
+      "id": "company_key-036",
+      "fn": "company_key",
+      "input": "The O'Brien Company",
+      "expected": "o brien",
+      "note": "'company' dropped, 'the' dropped, apostrophe split"
+    },
+    {
+      "id": "title_key-001",
+      "fn": "title_key",
+      "input": "Senior Engineer (Remote) [US]",
+      "expected": "senior engineer",
+      "note": "spec example"
+    },
+    {
+      "id": "title_key-002",
+      "fn": "title_key",
+      "input": "Engineer (Remote (US))",
+      "expected": "engineer",
+      "note": "nested parentheses removed innermost first, repeatedly"
+    },
+    {
+      "id": "title_key-003",
+      "fn": "title_key",
+      "input": "Engineer (Remote",
+      "expected": "engineer remote",
+      "note": "unbalanced open parenthesis: nothing removed, punctuation separates"
+    },
+    {
+      "id": "title_key-004",
+      "fn": "title_key",
+      "input": "Engineer Remote)",
+      "expected": "engineer remote",
+      "note": "unbalanced close parenthesis"
+    },
+    {
+      "id": "title_key-005",
+      "fn": "title_key",
+      "input": "Engineer ((Remote)",
+      "expected": "engineer",
+      "note": "inner pair removed, stray '(' becomes a separator"
+    },
+    {
+      "id": "title_key-006",
+      "fn": "title_key",
+      "input": "Engineer [Remote (US)]",
+      "expected": "engineer",
+      "note": "parentheses inside brackets"
+    },
+    {
+      "id": "title_key-007",
+      "fn": "title_key",
+      "input": "Engineer [Remote (US]",
+      "expected": "engineer",
+      "note": "bracket pair containing a stray '(' is still removed"
+    },
+    {
+      "id": "title_key-008",
+      "fn": "title_key",
+      "input": "Engineer [[Remote]]",
+      "expected": "engineer",
+      "note": "nested brackets"
+    },
+    {
+      "id": "title_key-009",
+      "fn": "title_key",
+      "input": "Data(Science)Engineer",
+      "expected": "dataengineer",
+      "note": "removal deletes the segment (no space inserted): neighbours fuse"
+    },
+    {
+      "id": "title_key-010",
+      "fn": "title_key",
+      "input": "Lead [Platform] (Core) Engineer",
+      "expected": "lead engineer",
+      "note": "several segments, mixed kinds"
+    },
+    {
+      "id": "title_key-011",
+      "fn": "title_key",
+      "input": "()",
+      "expected": "",
+      "note": "empty parentheses"
+    },
+    {
+      "id": "title_key-012",
+      "fn": "title_key",
+      "input": "[ ]",
+      "expected": "",
+      "note": "blank brackets"
+    },
+    {
+      "id": "title_key-013",
+      "fn": "title_key",
+      "input": "((()))",
+      "expected": "",
+      "note": "deeply nested empty parentheses"
+    },
+    {
+      "id": "title_key-014",
+      "fn": "title_key",
+      "input": "Manager (Engineer track)",
+      "expected": "manager",
+      "note": "keyword inside brackets is invisible to matching"
+    },
+    {
+      "id": "title_key-015",
+      "fn": "title_key",
+      "input": "Engineer\uff08Remote\uff09",
+      "expected": "engineer remote",
+      "note": "fullwidth brackets are NOT removed (removal precedes NFKC); NFKC then separates"
+    },
+    {
+      "id": "title_key-016",
+      "fn": "title_key",
+      "input": "Engineer (Remote\nUS) II",
+      "expected": "engineer ii",
+      "note": "a bracketed segment may span a newline"
+    },
+    {
+      "id": "title_key-017",
+      "fn": "title_key",
+      "input": "Engineer (A) (B) [C] [D]",
+      "expected": "engineer",
+      "note": "multiple adjacent segments"
+    },
+    {
+      "id": "title_key-018",
+      "fn": "title_key",
+      "input": "Staff Engineer - (Platform)",
+      "expected": "staff engineer",
+      "note": "trailing parenthetical after a dash"
+    },
+    {
+      "id": "title_key-019",
+      "fn": "title_key",
+      "input": "(Remote) Engineer",
+      "expected": "engineer",
+      "note": "leading parenthetical"
+    },
+    {
+      "id": "title_key-020",
+      "fn": "title_key",
+      "input": "Sr. Software Engineer, Backend (Remote, US)",
+      "expected": "sr software engineer backend",
+      "note": "commas and periods"
+    },
+    {
+      "id": "title_key-021",
+      "fn": "title_key",
+      "input": "C++ Developer (Games)",
+      "expected": "c developer",
+      "note": "symbols plus bracket removal"
+    },
+    {
+      "id": "title_key-022",
+      "fn": "title_key",
+      "input": "\u30a8\u30f3\u30b8\u30cb\u30a2\uff08\u30ea\u30e2\u30fc\u30c8\uff09",
+      "expected": "\u30a8\u30f3\u30b8\u30cb\u30a2 \u30ea\u30e2\u30fc\u30c8",
+      "note": "CJK title with fullwidth parentheses survives"
+    },
+    {
+      "id": "title_key-023",
+      "fn": "title_key",
+      "input": "Engineer )(",
+      "expected": "engineer",
+      "note": "reversed parentheses are not a segment"
+    },
+    {
+      "id": "title_key-024",
+      "fn": "title_key",
+      "input": "",
+      "expected": "",
+      "note": "empty title"
+    },
+    {
+      "id": "location_key-001",
+      "fn": "location_key",
+      "input": "New York, NY",
+      "expected": "new ny york",
+      "note": "spec example"
+    },
+    {
+      "id": "location_key-002",
+      "fn": "location_key",
+      "input": "NY - New York",
+      "expected": "new ny york",
+      "note": "spec example: token order does not matter"
+    },
+    {
+      "id": "location_key-003",
+      "fn": "location_key",
+      "input": null,
+      "expected": "",
+      "note": "null location is treated as empty"
+    },
+    {
+      "id": "location_key-004",
+      "fn": "location_key",
+      "input": "",
+      "expected": "",
+      "note": "empty location"
+    },
+    {
+      "id": "location_key-005",
+      "fn": "location_key",
+      "input": "Remote",
+      "expected": "remote",
+      "note": "single token"
+    },
+    {
+      "id": "location_key-006",
+      "fn": "location_key",
+      "input": "NY NY New York",
+      "expected": "new ny york",
+      "note": "duplicate tokens collapse"
+    },
+    {
+      "id": "location_key-007",
+      "fn": "location_key",
+      "input": "Z\u00fcrich, Switzerland",
+      "expected": "switzerland z\u00fcrich",
+      "note": "'s' sorts before 'z-umlaut' by code point"
+    },
+    {
+      "id": "location_key-008",
+      "fn": "location_key",
+      "input": "\u00e9cole zebra",
+      "expected": "zebra \u00e9cole",
+      "note": "code point order puts e-acute (U+E9) AFTER z; locale collation would not"
+    },
+    {
+      "id": "location_key-009",
+      "fn": "location_key",
+      "input": "10 Downing St",
+      "expected": "10 downing st",
+      "note": "digits sort before letters"
+    },
+    {
+      "id": "location_key-010",
+      "fn": "location_key",
+      "input": "\ud840\udc00 \u2764\ufe0f",
+      "expected": "\ufe0f \ud840\udc00",
+      "note": "U+FE0F (BMP) sorts BEFORE U+20000 (astral) by code point; UTF-16 unit order says the opposite"
+    },
+    {
+      "id": "location_key-011",
+      "fn": "location_key",
+      "input": "Berlin, Germany; Munich, Germany",
+      "expected": "berlin germany munich",
+      "note": "semicolon separates, duplicates collapse"
+    },
+    {
+      "id": "location_key-012",
+      "fn": "location_key",
+      "input": "San Francisco Bay Area (Hybrid)",
+      "expected": "area bay francisco hybrid san",
+      "note": "brackets are NOT removed in location_key"
+    },
+    {
+      "id": "location_key-013",
+      "fn": "location_key",
+      "input": "\uff2e\uff39",
+      "expected": "ny",
+      "note": "fullwidth letters fold"
+    },
+    {
+      "id": "location_key-014",
+      "fn": "location_key",
+      "input": "Remote - US / Canada",
+      "expected": "canada remote us",
+      "note": "slash and dash separate"
+    },
+    {
+      "id": "location_key-015",
+      "fn": "location_key",
+      "input": "\u6771\u4eac \u65e5\u672c",
+      "expected": "\u65e5\u672c \u6771\u4eac",
+      "note": "CJK tokens sort by code point (U+65E5 < U+6771)"
+    },
+    {
+      "id": "location_key-016",
+      "fn": "location_key",
+      "input": "a b A B",
+      "expected": "a b",
+      "note": "case-folded duplicates collapse"
+    },
+    {
+      "id": "location_key-017",
+      "fn": "location_key",
+      "input": "\u00c5rhus, \u00d8stergade",
+      "expected": "\u00e5rhus \u00f8stergade",
+      "note": "a-ring (U+E5) before o-slash (U+F8)"
+    },
+    {
+      "id": "location_key-018",
+      "fn": "location_key",
+      "input": "Remote (US)",
+      "expected": "remote us",
+      "note": "parenthetical stays as tokens"
+    },
+    {
+      "id": "token_sequence_match-001",
+      "fn": "token_sequence_match",
+      "input": { "title": "senior data engineer", "phrase": "data engineer" },
+      "expected": true,
+      "note": "contiguous multi-token phrase"
+    },
+    {
+      "id": "token_sequence_match-002",
+      "fn": "token_sequence_match",
+      "input": { "title": "data software engineer", "phrase": "data engineer" },
+      "expected": false,
+      "note": "same tokens, not contiguous"
+    },
+    {
+      "id": "token_sequence_match-003",
+      "fn": "token_sequence_match",
+      "input": { "title": "engineering manager", "phrase": "engineer" },
+      "expected": false,
+      "note": "token must match whole token, not a prefix"
+    },
+    {
+      "id": "token_sequence_match-004",
+      "fn": "token_sequence_match",
+      "input": { "title": "engineer", "phrase": "engineer" },
+      "expected": true,
+      "note": "exact"
+    },
+    {
+      "id": "token_sequence_match-005",
+      "fn": "token_sequence_match",
+      "input": { "title": "senior engineer", "phrase": "Engineer" },
+      "expected": true,
+      "note": "phrase is normalized (case)"
+    },
+    {
+      "id": "token_sequence_match-006",
+      "fn": "token_sequence_match",
+      "input": { "title": "senior engineer", "phrase": "" },
+      "expected": false,
+      "note": "empty phrase never matches"
+    },
+    {
+      "id": "token_sequence_match-007",
+      "fn": "token_sequence_match",
+      "input": { "title": "senior engineer", "phrase": "!!!" },
+      "expected": false,
+      "note": "phrase that normalizes to empty never matches"
+    },
+    {
+      "id": "token_sequence_match-008",
+      "fn": "token_sequence_match",
+      "input": { "title": "engineer", "phrase": "senior engineer" },
+      "expected": false,
+      "note": "phrase longer than title"
+    },
+    {
+      "id": "token_sequence_match-009",
+      "fn": "token_sequence_match",
+      "input": { "title": "c developer", "phrase": "C++" },
+      "expected": true,
+      "note": "'C++' normalizes to token 'c'"
+    },
+    {
+      "id": "token_sequence_match-010",
+      "fn": "token_sequence_match",
+      "input": { "title": "objective c developer", "phrase": "C#" },
+      "expected": true,
+      "note": "'c' matches inside an unrelated title"
+    },
+    {
+      "id": "token_sequence_match-011",
+      "fn": "token_sequence_match",
+      "input": { "title": "a b a b", "phrase": "b a" },
+      "expected": true,
+      "note": "match found at an inner offset"
+    },
+    {
+      "id": "token_sequence_match-012",
+      "fn": "token_sequence_match",
+      "input": { "title": "a b a b", "phrase": "a a" },
+      "expected": false,
+      "note": "tokens exist but are not adjacent"
+    },
+    {
+      "id": "token_sequence_match-013",
+      "fn": "token_sequence_match",
+      "input": { "title": "machine learning researcher", "phrase": "machine learning" },
+      "expected": true,
+      "note": "two-token phrase"
+    },
+    {
+      "id": "token_sequence_match-014",
+      "fn": "token_sequence_match",
+      "input": { "title": "learning machine operator", "phrase": "machine learning" },
+      "expected": false,
+      "note": "order matters"
+    },
+    {
+      "id": "token_sequence_match-015",
+      "fn": "token_sequence_match",
+      "input": { "title": "internal tools engineer", "phrase": "intern" },
+      "expected": false,
+      "note": "'intern' must not match 'internal'"
+    },
+    {
+      "id": "token_sequence_match-016",
+      "fn": "token_sequence_match",
+      "input": { "title": "engineer intern", "phrase": "intern" },
+      "expected": true,
+      "note": "'intern' matches as a whole token"
+    },
+    {
+      "id": "token_sequence_match-017",
+      "fn": "token_sequence_match",
+      "input": { "title": "caf\u00e9 manager", "phrase": "CAFE\u0301" },
+      "expected": true,
+      "note": "phrase NFKC-composes before comparison"
+    },
+    {
+      "id": "token_sequence_match-018",
+      "fn": "token_sequence_match",
+      "input": { "title": "stra\u00dfe lead", "phrase": "STRASSE" },
+      "expected": false,
+      "note": "sharp s is not ss"
+    },
+    {
+      "id": "token_sequence_match-019",
+      "fn": "token_sequence_match",
+      "input": { "title": "", "phrase": "engineer" },
+      "expected": false,
+      "note": "empty title key"
+    },
+    {
+      "id": "token_sequence_match-020",
+      "fn": "token_sequence_match",
+      "input": { "title": "", "phrase": "" },
+      "expected": false,
+      "note": "both empty"
+    },
+    {
+      "id": "token_sequence_match-021",
+      "fn": "token_sequence_match",
+      "input": { "title": "lead engineer ii", "phrase": "lead  ENGINEER" },
+      "expected": true,
+      "note": "internal whitespace and case in the phrase"
+    },
+    {
+      "id": "token_sequence_match-022",
+      "fn": "token_sequence_match",
+      "input": { "title": "front end engineer", "phrase": "front-end" },
+      "expected": true,
+      "note": "hyphenated phrase becomes two tokens"
+    },
+    {
+      "id": "token_sequence_match-023",
+      "fn": "token_sequence_match",
+      "input": { "title": "frontend engineer", "phrase": "front-end" },
+      "expected": false,
+      "note": "fused word does not match split phrase"
+    },
+    {
+      "id": "token_sequence_match-024",
+      "fn": "token_sequence_match",
+      "input": { "title": "sr software engineer", "phrase": "Sr. Software" },
+      "expected": true,
+      "note": "punctuation in phrase"
+    },
+    {
+      "id": "token_sequence_match-025",
+      "fn": "token_sequence_match",
+      "input": { "title": "\u682a\u5f0f\u4f1a\u793e", "phrase": "\u682a\u5f0f" },
+      "expected": false,
+      "note": "CJK token is whole-token matched"
+    },
+    {
+      "id": "token_sequence_match-026",
+      "fn": "token_sequence_match",
+      "input": { "title": "engineer", "phrase": "engineer engineer" },
+      "expected": false,
+      "note": "repeated phrase tokens need repeated title tokens"
+    },
+    {
+      "id": "sha12-001",
+      "fn": "sha12",
+      "input": "",
+      "expected": "e3b0c44298fc",
+      "note": "SHA-256 of the empty string starts e3b0c44298fc"
+    },
+    {
+      "id": "sha12-002",
+      "fn": "sha12",
+      "input": "abc",
+      "expected": "ba7816bf8f01",
+      "note": "SHA-256 of 'abc' starts ba7816bf8f01"
+    },
+    {
+      "id": "sha12-003",
+      "fn": "sha12",
+      "input": "acme",
+      "expected": "822b33ad87c1",
+      "note": "company key as hashed for company_id"
+    },
+    {
+      "id": "sha12-004",
+      "fn": "sha12",
+      "input": "Acme",
+      "expected": "37036cd8f974",
+      "note": "case-sensitive: differs from 'acme'"
+    },
+    {
+      "id": "sha12-005",
+      "fn": "sha12",
+      "input": "acme|acme robotics",
+      "expected": "222aa4deb8b9",
+      "note": "candidate_id preimage uses '|'"
+    },
+    {
+      "id": "sha12-006",
+      "fn": "sha12",
+      "input": "\u00e9",
+      "expected": "4a99557e4033",
+      "note": "precomposed e-acute: UTF-8 bytes C3 A9, no normalization"
+    },
+    {
+      "id": "sha12-007",
+      "fn": "sha12",
+      "input": "e\u0301",
+      "expected": "bf12767b0f2a",
+      "note": "decomposed e-acute differs from the precomposed hash (sha12 does NOT normalize)"
+    },
+    {
+      "id": "sha12-008",
+      "fn": "sha12",
+      "input": "\ud83d\ude80",
+      "expected": "ebbc0b2870eb",
+      "note": "astral code point hashes its 4 UTF-8 bytes"
+    },
+    {
+      "id": "sha12-009",
+      "fn": "sha12",
+      "input": "c_acme",
+      "expected": "da516c92e366",
+      "note": "prefix is not part of the digest"
+    },
+    {
+      "id": "sha12-010",
+      "fn": "sha12",
+      "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected": "41edece42d63",
+      "note": "long input"
+    },
+    {
+      "id": "sha12-011",
+      "fn": "sha12",
+      "input": "\u682a\u5f0f\u4f1a\u793e",
+      "expected": "e6843c6eb529",
+      "note": "CJK, 12 UTF-8 bytes"
+    }
+  ]
+}

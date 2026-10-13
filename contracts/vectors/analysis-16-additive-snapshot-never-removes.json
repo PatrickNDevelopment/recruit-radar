@@ -1,0 +1,367 @@
+{
+  "name": "additive-snapshot-never-removes",
+  "description": "An additive (import) snapshot that omits roles removes nothing: B and C stay active with their old last_seen while A is refreshed (raw location/url changed => `changed` ['location','url']). In the same company a FULL greenhouse snapshot that omits its role does remove it.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s0",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-08-15T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "D1",
+            "company_name": "Acme",
+            "title": "Warehouse Lead",
+            "location": "Boston",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s1",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Forklift Operator",
+            "location": "Boston, MA",
+            "work_mode": "unknown",
+            "department": "Warehouse",
+            "url": "https://sheet.example.test/a",
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Packer",
+            "location": "Boston, MA",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Shift Supervisor",
+            "location": "Cambridge, MA",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "observed_at": "2026-09-15T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "company_name": "Acme",
+            "title": "Forklift Operator",
+            "location": "MA - Boston",
+            "work_mode": "unknown",
+            "department": "Warehouse",
+            "url": "https://sheet.example.test/a2",
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-09-30T00:00:00Z",
+        "mode": "full",
+        "postings": []
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-08-15T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "active_roles": 3,
+        "relevant_roles": null,
+        "removed_roles": 1,
+        "score": 472,
+        "coverage": 70,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 3
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 400,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 1,
+              "net": -1,
+              "span_days": 46,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "aged": 0,
+              "known": 3,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 604,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 28
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_5365170323d2",
+        "company_id": "c_822b33ad87c1",
+        "title": "Shift Supervisor",
+        "location": "Cambridge, MA",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_ac09018a9838",
+        "company_id": "c_822b33ad87c1",
+        "title": "Forklift Operator",
+        "location": "MA - Boston",
+        "work_mode": "unknown",
+        "department": "Warehouse",
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-15T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "url": "https://sheet.example.test/a2",
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-15T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_b87761d6b13a",
+        "company_id": "c_822b33ad87c1",
+        "title": "Packer",
+        "location": "Boston, MA",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-09-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_cd7fecd72a0d",
+        "company_id": "c_822b33ad87c1",
+        "title": "Warehouse Lead",
+        "location": "Boston",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "removed",
+        "first_seen": "2026-08-15T00:00:00Z",
+        "last_seen": "2026-08-15T00:00:00Z",
+        "removed_at": "2026-09-30T00:00:00Z",
+        "relevant": null,
+        "age_days": 59,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "D1",
+            "url": null,
+            "status": "removed",
+            "first_seen": "2026-08-15T00:00:00Z",
+            "last_seen": "2026-08-15T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-08-15T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_cd7fecd72a0d",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Warehouse Lead",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_ac09018a9838",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Forklift Operator",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_b87761d6b13a",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Packer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_5365170323d2",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Shift Supervisor",
+        "fields": null
+      },
+      {
+        "at": "2026-09-15T00:00:00Z",
+        "type": "changed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_ac09018a9838",
+        "source_kind": "csv",
+        "source_ref": "list",
+        "title": "Forklift Operator",
+        "fields": ["location", "url"]
+      },
+      {
+        "at": "2026-09-30T00:00:00Z",
+        "type": "removed",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_cd7fecd72a0d",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Warehouse Lead",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 5,
+      "companies": 1,
+      "active_roles": 3
+    }
+  }
+}

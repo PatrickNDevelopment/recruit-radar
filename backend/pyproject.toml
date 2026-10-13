@@ -1,4 +1,4 @@
-﻿[project]
+[project]
 name = "recruit-radar-backend"
 version = "0.1.0"
 description = "RecruitRadar backend: normalized job-posting snapshots, identity resolution, refresh history"

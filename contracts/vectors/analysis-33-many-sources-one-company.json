@@ -1,0 +1,500 @@
+{
+  "name": "many-sources-one-company",
+  "description": "All five source kinds feed one company. 'Systems Engineer' has 5 observations (still one role, corroborated, 1000); 'Account Executive' joins lever + csv despite 'Chicago, IL' / 'IL - Chicago'; 'Site Reliability Engineer' is ashby-only; 'Office Manager' manual-only. History spans three full snapshots (20 days).",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer", "executive"],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "orbit",
+        "observed_at": "2026-09-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "orbit",
+            "source_posting_id": "g1",
+            "company_name": "Orbit Systems",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "lever",
+        "source_ref": "orbit",
+        "observed_at": "2026-09-12T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "orbit",
+            "source_posting_id": "l1",
+            "company_name": "Orbit Systems",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "orbit",
+            "source_posting_id": "l2",
+            "company_name": "Orbit Systems",
+            "title": "Account Executive",
+            "location": "Chicago, IL",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s3",
+        "source_kind": "ashby",
+        "source_ref": "orbit",
+        "observed_at": "2026-09-30T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "orbit",
+            "source_posting_id": "a1",
+            "company_name": "Orbit Systems",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "ashby",
+            "source_ref": "orbit",
+            "source_posting_id": "a2",
+            "company_name": "Orbit Systems",
+            "title": "Site Reliability Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s4",
+        "source_kind": "csv",
+        "source_ref": "orbit-leads",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "orbit-leads",
+            "source_posting_id": null,
+            "company_name": "Orbit Systems",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "orbit-leads",
+            "source_posting_id": null,
+            "company_name": "Orbit Systems",
+            "title": "Account Executive",
+            "location": "IL - Chicago",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s5",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "observed_at": "2026-10-02T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Orbit Systems",
+            "title": "Systems Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "company_name": "Orbit Systems",
+            "title": "Office Manager",
+            "location": "Chicago IL",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_2575a7e735ef",
+        "key": "orbit systems",
+        "name": "Orbit Systems",
+        "aliases": ["Orbit Systems"],
+        "first_seen": "2026-09-10T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "active_roles": 4,
+        "relevant_roles": 3,
+        "removed_roles": 0,
+        "score": 736,
+        "coverage": 90,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 750,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 3,
+              "active": 4
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 0,
+              "net": 0,
+              "span_days": 20,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 2
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 925,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 11
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_13f930a4535c",
+        "company_id": "c_2575a7e735ef",
+        "title": "Systems Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-10T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 33,
+        "observations": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "orbit",
+            "source_posting_id": "a1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-30T00:00:00Z",
+            "last_seen": "2026-09-30T00:00:00Z"
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "orbit-leads",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "orbit",
+            "source_posting_id": "g1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-10T00:00:00Z",
+            "last_seen": "2026-09-10T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "orbit",
+            "source_posting_id": "l1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-12T00:00:00Z",
+            "last_seen": "2026-09-12T00:00:00Z"
+          },
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6929df620189",
+        "company_id": "c_2575a7e735ef",
+        "title": "Account Executive",
+        "location": "IL - Chicago",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-12T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 31,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "orbit-leads",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "orbit",
+            "source_posting_id": "l2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-12T00:00:00Z",
+            "last_seen": "2026-09-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_59b9c10e3f84",
+        "company_id": "c_2575a7e735ef",
+        "title": "Site Reliability Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-30T00:00:00Z",
+        "last_seen": "2026-09-30T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 13,
+        "observations": [
+          {
+            "source_kind": "ashby",
+            "source_ref": "orbit",
+            "source_posting_id": "a2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-30T00:00:00Z",
+            "last_seen": "2026-09-30T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_27e751cd9b7f",
+        "company_id": "c_2575a7e735ef",
+        "title": "Office Manager",
+        "location": "Chicago IL",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-02T00:00:00Z",
+        "last_seen": "2026-10-02T00:00:00Z",
+        "removed_at": null,
+        "relevant": false,
+        "age_days": 11,
+        "observations": [
+          {
+            "source_kind": "manual",
+            "source_ref": "manual",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-02T00:00:00Z",
+            "last_seen": "2026-10-02T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_13f930a4535c",
+        "source_kind": "greenhouse",
+        "source_ref": "orbit",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_13f930a4535c",
+        "source_kind": "lever",
+        "source_ref": "orbit",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_6929df620189",
+        "source_kind": "lever",
+        "source_ref": "orbit",
+        "title": "Account Executive",
+        "fields": null
+      },
+      {
+        "at": "2026-09-30T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_13f930a4535c",
+        "source_kind": "ashby",
+        "source_ref": "orbit",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-09-30T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_59b9c10e3f84",
+        "source_kind": "ashby",
+        "source_ref": "orbit",
+        "title": "Site Reliability Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_13f930a4535c",
+        "source_kind": "csv",
+        "source_ref": "orbit-leads",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_6929df620189",
+        "source_kind": "csv",
+        "source_ref": "orbit-leads",
+        "title": "Account Executive",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_13f930a4535c",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Systems Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_2575a7e735ef",
+        "role_id": "r_27e751cd9b7f",
+        "source_kind": "manual",
+        "source_ref": "manual",
+        "title": "Office Manager",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 5,
+      "postings_observed": 9,
+      "companies": 1,
+      "active_roles": 4
+    }
+  }
+}

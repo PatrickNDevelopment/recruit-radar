@@ -4,14 +4,16 @@
 explainable view of which companies show hiring activity in the roles you care about.
 
 ## What it is NOT (hard rules — tests enforce several)
+
 - Not a candidate tool: no candidate records, no candidate scoring, no outreach, no emails (guessed or real).
-- Never states or implies that a company *needs*, *is struggling*, or *will pay* an outside recruiter.
+- Never states or implies that a company _needs_, _is struggling_, or _will pay_ an outside recruiter.
   A posting is a posting. Scores say "observed hiring activity", never "hiring pain".
 - No LinkedIn or other logged-in scraping; no CAPTCHA evasion; no HTML scraping at all. Only the three
   documented public JSON APIs (Greenhouse, Lever, Ashby) and user-provided CSV / manual entry.
 - No secrets, no accounts, no paid services. The three ATS GET endpoints need no key.
 
 ## Two runtime modes sharing one contract
+
 1. **Local-data mode (static GitHub Pages demo, works offline):** browser-only TypeScript engine +
    `localStorage`. Features: manual entry, CSV import/export, dedup, identity resolution, scoring,
    company detail, saved views, qualification notes, shortlist export. No ATS refresh (CORS/policy);
@@ -24,6 +26,7 @@ independent implementations of the same pure function `analyze(...)` defined in 
 produce identical results on every vector in `contracts/vectors/*.json`.
 
 ## Repository layout
+
 ```
 docs/spec/                 these documents (the contract)
 contracts/vectors/*.json   golden analysis vectors (hand-derived, implementation-independent)
@@ -39,6 +42,7 @@ e2e/                       Playwright
 ```
 
 ## Ownership boundaries (avoid edit conflicts)
+
 - `backend/**` — backend agents only. `src/engine/**`, `tests/**` — TS engine agent only.
   `src/data/**`, `src/ui/**`, `src/*.tsx`, `src/*.css`, `e2e/**` — UI agent only.
 - `docs/spec/**` and `contracts/vectors/**` are read-only for implementers. If the spec is ambiguous
@@ -46,6 +50,7 @@ e2e/                       Playwright
   chosen reading and why, and implement that reading.
 
 ## Determinism
+
 `analyze` never reads the clock, randomness, locale, or environment. `as_of` is an explicit input.
 All money-free arithmetic is integer arithmetic; "round half up" for non-negative integers is
 `floor((2*num + den) / (2*den))`. No floating point anywhere in scoring.

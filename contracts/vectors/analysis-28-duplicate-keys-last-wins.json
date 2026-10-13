@@ -1,0 +1,285 @@
+{
+  "name": "duplicate-keys-last-wins",
+  "description": "Inside one snapshot a repeated source role key is replaced by its LAST occurrence and produces no event of its own (role 'a' ends with title 'Engineer v2', department 'New'); events are emitted in order of each key's last occurrence (b, a, n1). postings_observed still counts all 5 listed postings.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "observed_at": "2026-10-10T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "a",
+            "company_name": "Acme",
+            "title": "Engineer v1",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": "Old",
+            "url": "https://boards.example.test/a1",
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "b",
+            "company_name": "Acme",
+            "title": "Designer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "a",
+            "company_name": "Acme",
+            "title": "Engineer v2",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": "New",
+            "url": "https://boards.example.test/a2",
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "n1",
+            "company_name": "Acme",
+            "title": "Office Manager",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "n1",
+            "company_name": "Acme",
+            "title": "Office Manager",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": "Facilities",
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_822b33ad87c1",
+        "key": "acme",
+        "name": "Acme",
+        "aliases": ["Acme"],
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "active_roles": 3,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 822,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 3
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 3
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_2f949b40e372",
+        "company_id": "c_822b33ad87c1",
+        "title": "Engineer v2",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": "New",
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "a",
+            "url": "https://boards.example.test/a2",
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_331bce2c2a4e",
+        "company_id": "c_822b33ad87c1",
+        "title": "Office Manager",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": "Facilities",
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "n1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_6771ab6db525",
+        "company_id": "c_822b33ad87c1",
+        "title": "Designer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-10T00:00:00Z",
+        "last_seen": "2026-10-10T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 3,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "acme",
+            "source_posting_id": "b",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-10T00:00:00Z",
+            "last_seen": "2026-10-10T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_6771ab6db525",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Designer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_2f949b40e372",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Engineer v2",
+        "fields": null
+      },
+      {
+        "at": "2026-10-10T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_822b33ad87c1",
+        "role_id": "r_331bce2c2a4e",
+        "source_kind": "greenhouse",
+        "source_ref": "acme",
+        "title": "Office Manager",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 1,
+      "postings_observed": 5,
+      "companies": 1,
+      "active_roles": 3
+    }
+  }
+}

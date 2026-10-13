@@ -1,0 +1,301 @@
+{
+  "name": "future-posted-at-age-clamp",
+  "description": "posted_at later than as_of gives a negative raw age that clamps to 0 (age_days 0, known, not aged); posted_at on the as_of day is also 0. When two sources disagree, the canonical posted_at is the earliest non-null ('2026-10-01' beats the future '2026-11-01') => age 12.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": ["engineer", "analyst"],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "s1",
+        "source_kind": "greenhouse",
+        "source_ref": "future",
+        "observed_at": "2026-10-12T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "1",
+            "company_name": "Future Foods",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-11-01"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "2",
+            "company_name": "Future Foods",
+            "title": "Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-10-13"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "3",
+            "company_name": "Future Foods",
+            "title": "Engineer II",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-11-01"
+          }
+        ]
+      },
+      {
+        "snapshot_id": "s2",
+        "source_kind": "csv",
+        "source_ref": "future-list",
+        "observed_at": "2026-10-12T06:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "future-list",
+            "source_posting_id": null,
+            "company_name": "Future Foods",
+            "title": "Engineer",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": "2026-10-01"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_11da1dcfb49b",
+        "key": "future foods",
+        "name": "Future Foods",
+        "aliases": ["Future Foods"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T06:00:00Z",
+        "active_roles": 3,
+        "relevant_roles": 3,
+        "removed_roles": 0,
+        "score": 788,
+        "coverage": 85,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "relevant": 3,
+              "active": 3
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "aged": 0,
+              "known": 3,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 3,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_2466719bca82",
+        "company_id": "c_11da1dcfb49b",
+        "title": "Engineer II",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-11-01",
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 0,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "3",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_30312e39a7cb",
+        "company_id": "c_11da1dcfb49b",
+        "title": "Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-10-13",
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 0,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "2",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_c08b30c8832f",
+        "company_id": "c_11da1dcfb49b",
+        "title": "Engineer",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": "2026-10-01",
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T06:00:00Z",
+        "removed_at": null,
+        "relevant": true,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "future-list",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T06:00:00Z",
+            "last_seen": "2026-10-12T06:00:00Z"
+          },
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "future",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_11da1dcfb49b",
+        "role_id": "r_c08b30c8832f",
+        "source_kind": "greenhouse",
+        "source_ref": "future",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_11da1dcfb49b",
+        "role_id": "r_30312e39a7cb",
+        "source_kind": "greenhouse",
+        "source_ref": "future",
+        "title": "Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_11da1dcfb49b",
+        "role_id": "r_2466719bca82",
+        "source_kind": "greenhouse",
+        "source_ref": "future",
+        "title": "Engineer II",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T06:00:00Z",
+        "type": "baseline",
+        "company_id": "c_11da1dcfb49b",
+        "role_id": "r_c08b30c8832f",
+        "source_kind": "csv",
+        "source_ref": "future-list",
+        "title": "Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 4,
+      "companies": 1,
+      "active_roles": 3
+    }
+  }
+}

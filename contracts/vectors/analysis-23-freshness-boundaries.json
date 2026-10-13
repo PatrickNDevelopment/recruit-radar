@@ -1,0 +1,1245 @@
+{
+  "name": "freshness-boundaries",
+  "description": "Nine single-role companies whose only snapshot is 0, 7, 7d23:59:59, 8, 59, 59d23:59:59, 60, 61 and 400 days before as_of. Freshness is 1000 for d<=7 (7d23:59:59 floors to 7), rhu(1000*(60-d),53) in between (d=8 -> 981, d=59 -> 19) and 0 at d>=60: the formula itself is continuous at 7 and 60, so d=61 and d=400 are there to catch an implementation that applies it (negative!) or forgets the clamp. The first three tie on score, as do the last three; ties are ordered by key.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "f-fresh-amberly",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-amberly",
+        "observed_at": "2026-10-13T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-amberly",
+            "source_posting_id": "1",
+            "company_name": "Amberly",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-birchwood",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-birchwood",
+        "observed_at": "2026-10-06T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-birchwood",
+            "source_posting_id": "1",
+            "company_name": "Birchwood",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-cedarville",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-cedarville",
+        "observed_at": "2026-10-05T12:00:01Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-cedarville",
+            "source_posting_id": "1",
+            "company_name": "Cedarville",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-dahlia",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-dahlia",
+        "observed_at": "2026-10-05T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-dahlia",
+            "source_posting_id": "1",
+            "company_name": "Dahlia Works",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-elmstead",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-elmstead",
+        "observed_at": "2026-08-15T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-elmstead",
+            "source_posting_id": "1",
+            "company_name": "Elmstead",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-fjordhaven",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-fjordhaven",
+        "observed_at": "2026-08-14T12:00:01Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-fjordhaven",
+            "source_posting_id": "1",
+            "company_name": "Fjordhaven",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-granite",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-granite",
+        "observed_at": "2026-08-14T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-granite",
+            "source_posting_id": "1",
+            "company_name": "Granite Quay",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-hollowell",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-hollowell",
+        "observed_at": "2026-08-13T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-hollowell",
+            "source_posting_id": "1",
+            "company_name": "Hollowell",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "f-fresh-ivywood",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-ivywood",
+        "observed_at": "2025-09-08T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-ivywood",
+            "source_posting_id": "1",
+            "company_name": "Ivywood",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_65030317e848",
+        "key": "amberly",
+        "name": "Amberly",
+        "aliases": ["Amberly"],
+        "first_seen": "2026-10-13T12:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 0
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_5f521a7c7166",
+        "key": "birchwood",
+        "name": "Birchwood",
+        "aliases": ["Birchwood"],
+        "first_seen": "2026-10-06T12:00:00Z",
+        "last_seen": "2026-10-06T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 7
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_07fcbc9a9e37",
+        "key": "cedarville",
+        "name": "Cedarville",
+        "aliases": ["Cedarville"],
+        "first_seen": "2026-10-05T12:00:01Z",
+        "last_seen": "2026-10-05T12:00:01Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 7
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_1bb097859757",
+        "key": "dahlia works",
+        "name": "Dahlia Works",
+        "aliases": ["Dahlia Works"],
+        "first_seen": "2026-10-05T12:00:00Z",
+        "last_seen": "2026-10-05T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 685,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 981,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 8
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_3c822326004a",
+        "key": "elmstead",
+        "name": "Elmstead",
+        "aliases": ["Elmstead"],
+        "first_seen": "2026-08-15T12:00:00Z",
+        "last_seen": "2026-08-15T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 471,
+        "coverage": 45,
+        "rank": 5,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 19,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 59
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_65162d7db4a7",
+        "key": "fjordhaven",
+        "name": "Fjordhaven",
+        "aliases": ["Fjordhaven"],
+        "first_seen": "2026-08-14T12:00:01Z",
+        "last_seen": "2026-08-14T12:00:01Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 471,
+        "coverage": 45,
+        "rank": 6,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 19,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 59
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_9eaf6b820d5e",
+        "key": "granite quay",
+        "name": "Granite Quay",
+        "aliases": ["Granite Quay"],
+        "first_seen": "2026-08-14T12:00:00Z",
+        "last_seen": "2026-08-14T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 467,
+        "coverage": 45,
+        "rank": 7,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 60
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_d8e8ecbaa9e7",
+        "key": "hollowell",
+        "name": "Hollowell",
+        "aliases": ["Hollowell"],
+        "first_seen": "2026-08-13T12:00:00Z",
+        "last_seen": "2026-08-13T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 467,
+        "coverage": 45,
+        "rank": 8,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 61
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_76f2fc6f8cba",
+        "key": "ivywood",
+        "name": "Ivywood",
+        "aliases": ["Ivywood"],
+        "first_seen": "2025-09-08T12:00:00Z",
+        "last_seen": "2025-09-08T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 467,
+        "coverage": 45,
+        "rank": 9,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 0,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 400
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_44dbc9347140",
+        "company_id": "c_65030317e848",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-13T12:00:00Z",
+        "last_seen": "2026-10-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 0,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-amberly",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-13T12:00:00Z",
+            "last_seen": "2026-10-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_c0f7928bebca",
+        "company_id": "c_5f521a7c7166",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-06T12:00:00Z",
+        "last_seen": "2026-10-06T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 7,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-birchwood",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-06T12:00:00Z",
+            "last_seen": "2026-10-06T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_7c66cb1e236e",
+        "company_id": "c_07fcbc9a9e37",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T12:00:01Z",
+        "last_seen": "2026-10-05T12:00:01Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 7,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-cedarville",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T12:00:01Z",
+            "last_seen": "2026-10-05T12:00:01Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_3ec06e5edf77",
+        "company_id": "c_1bb097859757",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T12:00:00Z",
+        "last_seen": "2026-10-05T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 8,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-dahlia",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T12:00:00Z",
+            "last_seen": "2026-10-05T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_9cf2fd37c704",
+        "company_id": "c_3c822326004a",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-15T12:00:00Z",
+        "last_seen": "2026-08-15T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 59,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-elmstead",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-15T12:00:00Z",
+            "last_seen": "2026-08-15T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_0318bb553680",
+        "company_id": "c_65162d7db4a7",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-14T12:00:01Z",
+        "last_seen": "2026-08-14T12:00:01Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 59,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-fjordhaven",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-14T12:00:01Z",
+            "last_seen": "2026-08-14T12:00:01Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_2467d67631d9",
+        "company_id": "c_9eaf6b820d5e",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-14T12:00:00Z",
+        "last_seen": "2026-08-14T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 60,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-granite",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-14T12:00:00Z",
+            "last_seen": "2026-08-14T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_9f6c888cc006",
+        "company_id": "c_d8e8ecbaa9e7",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-08-13T12:00:00Z",
+        "last_seen": "2026-08-13T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 61,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-hollowell",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-08-13T12:00:00Z",
+            "last_seen": "2026-08-13T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_204bd1027769",
+        "company_id": "c_76f2fc6f8cba",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2025-09-08T12:00:00Z",
+        "last_seen": "2025-09-08T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 400,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "fresh-ivywood",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2025-09-08T12:00:00Z",
+            "last_seen": "2025-09-08T12:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2025-09-08T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_76f2fc6f8cba",
+        "role_id": "r_204bd1027769",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-ivywood",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-08-13T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_d8e8ecbaa9e7",
+        "role_id": "r_9f6c888cc006",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-hollowell",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-08-14T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_9eaf6b820d5e",
+        "role_id": "r_2467d67631d9",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-granite",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-08-14T12:00:01Z",
+        "type": "baseline",
+        "company_id": "c_65162d7db4a7",
+        "role_id": "r_0318bb553680",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-fjordhaven",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-08-15T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3c822326004a",
+        "role_id": "r_9cf2fd37c704",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-elmstead",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1bb097859757",
+        "role_id": "r_3ec06e5edf77",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-dahlia",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T12:00:01Z",
+        "type": "baseline",
+        "company_id": "c_07fcbc9a9e37",
+        "role_id": "r_7c66cb1e236e",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-cedarville",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-06T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_5f521a7c7166",
+        "role_id": "r_c0f7928bebca",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-birchwood",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-13T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_65030317e848",
+        "role_id": "r_44dbc9347140",
+        "source_kind": "greenhouse",
+        "source_ref": "fresh-amberly",
+        "title": "Operations Analyst",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 9,
+      "postings_observed": 9,
+      "companies": 9,
+      "active_roles": 9
+    }
+  }
+}

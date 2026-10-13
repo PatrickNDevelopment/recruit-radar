@@ -1,0 +1,705 @@
+{
+  "name": "score-ties-order-by-key",
+  "description": "Five identical companies score 689 each; rank is decided by KEY ascending BY CODE POINT (not by display name: 'Zebra Works' sorts before 'alpha works' as a name but not as a key): '7 seas' < 'alpha works' < 'zebra works' < '<e-acute>mile works' (U+E9) < '<omega>mega works' (U+3C9). A locale-aware or case-insensitive sort would put the accented name between alpha and zebra.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "t-tie-0",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-0",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-0",
+            "source_posting_id": "1",
+            "company_name": "Zebra Works",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "t-tie-1",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-1",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-1",
+            "source_posting_id": "1",
+            "company_name": "alpha works",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "t-tie-2",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-2",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-2",
+            "source_posting_id": "1",
+            "company_name": "\u00c9mile Works",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "t-tie-3",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-3",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-3",
+            "source_posting_id": "1",
+            "company_name": "\u03a9mega Works",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "t-tie-4",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-4",
+        "observed_at": "2026-10-12T12:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-4",
+            "source_posting_id": "1",
+            "company_name": "7 Seas",
+            "title": "Operations Analyst",
+            "location": "Remote",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_7127f8836e3c",
+        "key": "7 seas",
+        "name": "7 Seas",
+        "aliases": ["7 Seas"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_feb622fdd413",
+        "key": "alpha works",
+        "name": "alpha works",
+        "aliases": ["alpha works"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_d77349eda7b1",
+        "key": "zebra works",
+        "name": "Zebra Works",
+        "aliases": ["Zebra Works"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_455d0f78fd19",
+        "key": "\u00e9mile works",
+        "name": "\u00c9mile Works",
+        "aliases": ["\u00c9mile Works"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_bd3240d42af8",
+        "key": "\u03c9mega works",
+        "name": "\u03a9mega Works",
+        "aliases": ["\u03a9mega Works"],
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 689,
+        "coverage": 45,
+        "rank": 5,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_6b30b094354d",
+        "company_id": "c_7127f8836e3c",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-4",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f3e0f883294b",
+        "company_id": "c_feb622fdd413",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-1",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_bce6a70f87e0",
+        "company_id": "c_d77349eda7b1",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-0",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_69b53bea3143",
+        "company_id": "c_455d0f78fd19",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-2",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_8a8da9e87764",
+        "company_id": "c_bd3240d42af8",
+        "title": "Operations Analyst",
+        "location": "Remote",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T12:00:00Z",
+        "last_seen": "2026-10-12T12:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tie-3",
+            "source_posting_id": "1",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T12:00:00Z",
+            "last_seen": "2026-10-12T12:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_d77349eda7b1",
+        "role_id": "r_bce6a70f87e0",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-0",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_feb622fdd413",
+        "role_id": "r_f3e0f883294b",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-1",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_455d0f78fd19",
+        "role_id": "r_69b53bea3143",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-2",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_bd3240d42af8",
+        "role_id": "r_8a8da9e87764",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-3",
+        "title": "Operations Analyst",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T12:00:00Z",
+        "type": "baseline",
+        "company_id": "c_7127f8836e3c",
+        "role_id": "r_6b30b094354d",
+        "source_kind": "greenhouse",
+        "source_ref": "tie-4",
+        "title": "Operations Analyst",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 5,
+      "postings_observed": 5,
+      "companies": 5,
+      "active_roles": 5
+    }
+  }
+}
