@@ -88,7 +88,10 @@ def test_header_normalization(raw: str, expected: str) -> None:
 def test_headers_are_case_insensitive_and_unknown_columns_warn() -> None:
     result = parse("Company Name,TITLE,Salary,Posted-At\nAcme,Engineer,100k,2026-10-01\n")
     assert result.rows[0].posting.posted_at == "2026-10-01"
-    assert [(w.line, "Salary" in w.message) for w in result.warnings] == [(1, True)]
+    # the warning names the column as normalized, the same way the TypeScript importer does
+    assert [(w.line, w.message) for w in result.warnings] == [
+        (1, 'Unknown column "salary" is ignored')
+    ]
 
 
 def test_duplicate_headers_are_a_file_error() -> None:
@@ -229,13 +232,63 @@ def test_guard_leaves_ordinary_text_alone() -> None:
     assert unguard_cell("'") == "'"
 
 
-def test_only_an_apostrophe_directly_before_a_trigger_is_removed_on_import() -> None:
-    # Literal spec 05 reading: the *leading* apostrophe must be followed by a trigger character.
-    assert unguard_cell("''=1+1") == "''=1+1"
+def test_guard_is_a_bijection_even_for_apostrophes_in_front_of_a_trigger() -> None:
+    # Spec 05 "CSV details": a cell matching ^'*[=+\-@\t\r] gains one apostrophe on export and a
+    # cell matching ^'+[=+\-@\t\r] loses exactly one on import (same rule as the TypeScript side).
+    assert guard_cell("'=x") == "''=x"
+    assert guard_cell("''=x") == "'''=x"
+    assert unguard_cell("''=1+1") == "'=1+1"
     assert unguard_cell("'=1+1") == "=1+1"
+    assert unguard_cell("'''+x") == "''+x"
+    for sample in [
+        "",
+        "'",
+        "''",
+        "'=x",
+        "''=x",
+        "'@a",
+        "'\tx",
+        "'abc",
+        "O'Brien",
+        "=SUM(A1)",
+        "-1",
+    ]:
+        assert unguard_cell(guard_cell(sample)) == sample, sample
     result = parse("company_name,title\n'=Evil Corp,'-Lead\n")
     posting = result.rows[0].posting
     assert (posting.company_name, posting.title) == ("=Evil Corp", "-Lead")
+
+
+def test_import_trims_a_cell_before_removing_its_guard_apostrophe() -> None:
+    result = parse("company_name,title\n  '=x  ,\t'-y\n")
+    posting = result.rows[0].posting
+    assert (posting.company_name, posting.title) == ("=x", "-y")
+
+
+def test_extra_empty_cells_are_tolerated_but_extra_values_are_not() -> None:
+    result = parse('company_name,title\nA,B,,\nC,D, ,""\nE,F,oops\n')
+    assert [r.posting.company_name for r in result.rows] == ["A", "C"]
+    assert [(e.line, e.field) for e in result.errors] == [(4, None)]
+
+
+def test_spaces_and_tabs_around_a_quoted_field_are_ignored() -> None:
+    result = parse('company_name,title\nAcme, "Senior, Engineer" \n  "Beta"\t,\t"D"\n')
+    assert [(r.posting.company_name, r.posting.title) for r in result.rows] == [
+        ("Acme", "Senior, Engineer"),
+        ("Beta", "D"),
+    ]
+
+
+def test_whitespace_only_and_quoted_empty_lines_are_blank_lines() -> None:
+    result = parse('company_name,title\n   \n\t\n""\nAcme,Engineer\n  ""  \n,Broken\n')
+    assert [r.line for r in result.rows] == [5]
+    assert [e.line for e in result.errors] == [7]
+
+
+def test_header_names_treat_tabs_and_no_break_spaces_like_spaces() -> None:
+    result = parse("Company\tName,TITLE,Posted At\nAcme,Engineer,2026-09-01\n")
+    posting = result.rows[0].posting
+    assert (posting.company_name, posting.posted_at) == ("Acme", "2026-09-01")
 
 
 def test_export_import_round_trip_preserves_formula_looking_text() -> None:

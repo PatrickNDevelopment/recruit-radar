@@ -6,7 +6,7 @@
  */
 import { COMPONENT_NAMES, describeComponent, formatScore, REASON_TEXT } from './explain';
 import { EngineInputError } from './errors';
-import { trimText } from './normalize';
+import { companyKey, isSpecWhitespace, locationKey, titleKey, trimText } from './normalize';
 import { sha12 } from './sha256';
 import {
   checkDate,
@@ -74,8 +74,10 @@ const REQUIRED_COLUMNS: readonly PostingColumn[] = ['company_name', 'title'];
 export type CsvFileErrorCode =
   | 'too_large'
   | 'too_many_rows'
+  | 'contains_nul'
   | 'unterminated_quote'
   | 'empty_file'
+  | 'malformed_header'
   | 'duplicate_header'
   | 'missing_required_column'
   | 'invalid_dataset_label';
@@ -151,7 +153,13 @@ export type CsvParseResult =
 
 /**
  * Parse CSV text. Handles quoted fields, doubled quotes, embedded commas and newlines, CRLF / LF
- * (a lone CR also ends a record), and a leading UTF-8 BOM. Blank lines are skipped.
+ * (a lone CR also ends a record), and a leading UTF-8 BOM.
+ *
+ * Binding details (spec 05, "CSV details"; pinned by `contracts/vectors/csv-import.json`):
+ * spaces and tabs between a delimiter and an opening quote, and between a closing quote and the
+ * next delimiter or line end, are ignored; any other text after a closing quote malforms the
+ * record; a quote inside an unquoted field is literal. A record whose only cell is empty or
+ * whitespace-only (quoted or not) is a blank line: it is skipped but still counts as a line.
  */
 export function parseCsv(text: string): CsvParseResult {
   const source = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
@@ -160,6 +168,10 @@ export function parseCsv(text: string): CsvParseResult {
   let field = '';
   let inQuotes = false;
   let fieldWasQuoted = false;
+  /** A closing quote was just read in the current field: only spaces and tabs may follow. */
+  let afterQuote = false;
+  /** Everything read so far in the current unquoted field is a space or a tab. */
+  let fieldBlank = true;
   let recordMalformed: string | undefined;
   let line = 1;
   let recordLine = 1;
@@ -169,18 +181,19 @@ export function parseCsv(text: string): CsvParseResult {
     cells.push(field);
     field = '';
     fieldWasQuoted = false;
+    afterQuote = false;
+    fieldBlank = true;
   };
   const endRecord = (): void => {
-    const blank = cells.length === 0 && field === '' && !fieldWasQuoted;
+    endField();
+    const blank =
+      cells.length === 1 && trimText(cells[0] ?? '') === '' && recordMalformed === undefined;
     if (!blank) {
-      endField();
       const record: CsvRecord = { line: recordLine, cells };
       if (recordMalformed !== undefined) record.malformed = recordMalformed;
       records.push(record);
     }
     cells = [];
-    field = '';
-    fieldWasQuoted = false;
     recordMalformed = undefined;
     recordLine = line;
   };
@@ -196,6 +209,7 @@ export function parseCsv(text: string): CsvParseResult {
           i += 2;
         } else {
           inQuotes = false;
+          afterQuote = true;
           i += 1;
         }
       } else if (ch === '\r') {
@@ -222,14 +236,26 @@ export function parseCsv(text: string): CsvParseResult {
       i += ch === '\r' && source.charAt(i + 1) === '\n' ? 2 : 1;
       line += 1;
       endRecord();
-    } else if (ch === '"' && field === '' && !fieldWasQuoted) {
-      inQuotes = true;
-      fieldWasQuoted = true;
-      quoteOpenedAt = line;
+    } else if (ch === '"') {
+      if (afterQuote) {
+        recordMalformed ??= 'a quote follows a closing quote';
+      } else if (fieldBlank) {
+        // Spaces and tabs before an opening quote are dropped, not kept in the field.
+        inQuotes = true;
+        fieldWasQuoted = true;
+        field = '';
+        fieldBlank = false;
+        quoteOpenedAt = line;
+      } else {
+        field += '"';
+      }
+      i += 1;
+    } else if (afterQuote) {
+      if (ch !== ' ' && ch !== '\t') recordMalformed ??= 'text follows a closing quote';
       i += 1;
     } else {
-      if (fieldWasQuoted) recordMalformed ??= 'unexpected text after a closing quote';
       field += ch;
+      if (ch !== ' ' && ch !== '\t') fieldBlank = false;
       i += 1;
     }
   }
@@ -293,9 +319,18 @@ export function utf8ByteLength(text: string): number {
   return bytes;
 }
 
-/** `Company Name` / `company-name` -> `company_name`. */
+/**
+ * `Company Name` / `company-name` -> `company_name`: trim, lower-case, then every whitespace
+ * character (the spec trim set, so a tab or a no-break space counts) and every hyphen becomes `_`.
+ */
 export function normalizeHeader(header: string): string {
-  return trimText(header).toLowerCase().replace(/[\s-]/gu, '_');
+  const lowered = trimText(header).toLowerCase();
+  let result = '';
+  for (let index = 0; index < lowered.length; index += 1) {
+    const unit = lowered.charCodeAt(index);
+    result += unit === 0x2d || isSpecWhitespace(unit) ? '_' : lowered.charAt(index);
+  }
+  return result;
 }
 
 export type ValidatedRow =
@@ -409,6 +444,13 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
     });
   }
 
+  if (text.includes('\u0000')) {
+    return emptyResult(datasetLabel, {
+      code: 'contains_nul',
+      message: 'The file contains a NUL character (U+0000), which is not valid text',
+    });
+  }
+
   const parsed = parseCsv(text);
   if (!parsed.ok) return emptyResult(datasetLabel, parsed.error);
   const [header, ...rows] = parsed.records;
@@ -419,17 +461,17 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
       line: 1,
     });
   }
-  if (rows.length > CSV_MAX_ROWS) {
+  if (header.malformed !== undefined) {
     return emptyResult(datasetLabel, {
-      code: 'too_many_rows',
-      message: `The file has ${rows.length} data rows; the limit is ${CSV_MAX_ROWS}`,
+      code: 'malformed_header',
+      message: `The header row is malformed: ${header.malformed}`,
+      line: header.line,
     });
   }
 
   // Header: normalize names, reject duplicates, ignore (and warn about) unknown columns.
   const warnings: CsvWarning[] = [];
   const columnIndex = new Map<PostingColumn, number>();
-  const unknownColumns = new Set<number>();
   const seen = new Map<string, number>();
   const known = new Set<string>(POSTING_COLUMNS);
   for (let index = 0; index < header.cells.length; index += 1) {
@@ -439,7 +481,6 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
         line: header.line,
         message: `Column ${index + 1} has no header name and is ignored`,
       });
-      unknownColumns.add(index);
       continue;
     }
     const earlier = seen.get(name);
@@ -454,7 +495,6 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
     if (known.has(name)) {
       columnIndex.set(name as PostingColumn, index);
     } else {
-      unknownColumns.add(index);
       warnings.push({ line: header.line, message: `Unknown column "${name}" is ignored` });
     }
   }
@@ -467,10 +507,18 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
       });
     }
   }
+  if (rows.length > CSV_MAX_ROWS) {
+    return emptyResult(datasetLabel, {
+      code: 'too_many_rows',
+      message: `The file has ${rows.length} data rows; the limit is ${CSV_MAX_ROWS}`,
+    });
+  }
 
   const errors: CsvRowError[] = [];
   const rejectedRows: CsvRejectedRow[] = [];
   const byObservedAt = new Map<string, RawPosting[]>();
+  /** First line of each role at one instant, to say when a later row replaces an earlier one. */
+  const firstLineOfRole = new Map<string, number>();
   let accepted = 0;
 
   for (const row of rows) {
@@ -481,26 +529,26 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
     const rowErrors: CsvRowError[] = [];
     if (row.malformed !== undefined) {
       rowErrors.push({ line: row.line, message: `Malformed row: ${row.malformed}` });
-    }
-    if (row.cells.length > header.cells.length) {
+    } else if (row.cells.length > header.cells.length) {
       const extra = row.cells.slice(header.cells.length);
       if (extra.some((cell) => trimText(cell) !== '')) {
         rowErrors.push({
           line: row.line,
           message:
-            `Row has ${row.cells.length} fields but the header has ${header.cells.length}; ` +
-            'quote any field that contains a comma',
+            `Row has ${row.cells.length} values but the header defines ${header.cells.length} ` +
+            'columns; quote any field that contains a comma',
         });
       }
     }
-    const validated = validateImportRow(values, importedAt.value);
-    if (!validated.ok) {
+    // A structurally broken row has no trustworthy columns, so its fields are not validated.
+    const validated = rowErrors.length > 0 ? null : validateImportRow(values, importedAt.value);
+    if (validated !== null && !validated.ok) {
       for (const error of validated.errors) {
         rowErrors.push({ line: row.line, field: error.field, message: error.message });
       }
     }
 
-    if (rowErrors.length > 0 || !validated.ok) {
+    if (validated === null || !validated.ok) {
       errors.push(...rowErrors);
       rejectedRows.push({ line: row.line, values, errors: rowErrors });
       continue;
@@ -511,10 +559,37 @@ export function importCsv(text: string, options: CsvImportOptions): CsvImportRes
       source_ref: datasetLabel,
       ...validated.posting,
     };
+
+    // Same role at the same stated instant (a row without observed_at shares the import time).
+    const roleKey =
+      posting.source_posting_id !== null
+        ? `id\u0000${posting.source_posting_id}`
+        : `k\u0000${companyKey(posting.company_name)}\u0000${titleKey(posting.title)}\u0000` +
+          locationKey(posting.location);
+    const roleAtInstant = `${values['observed_at'] ?? ''}\u0000${roleKey}`;
+    const earlier = firstLineOfRole.get(roleAtInstant);
+    if (earlier === undefined) {
+      firstLineOfRole.set(roleAtInstant, row.line);
+    } else {
+      warnings.push({
+        line: row.line,
+        message: `Same posting as line ${earlier}; the later row replaces the earlier one`,
+      });
+    }
+    if (validated.observed_at > importedAt.value) {
+      warnings.push({
+        line: row.line,
+        message:
+          `observed_at ${validated.observed_at} is after the import time ${importedAt.value}; ` +
+          'the analysis ignores this row until then',
+      });
+    }
+
     const group = byObservedAt.get(validated.observed_at);
     if (group === undefined) byObservedAt.set(validated.observed_at, [posting]);
     else group.push(posting);
   }
+  warnings.sort((a, b) => a.line - b.line);
 
   const prefix =
     options.snapshot_id_prefix ?? `csv_${sha12(`${datasetLabel}\n${importedAt.value}\n${text}`)}`;
@@ -557,7 +632,10 @@ type Cell = string | number | null;
 const UTF8_BOM = String.fromCharCode(0xfeff);
 
 function quoteCell(cell: string): string {
-  return /[",\r\n]/u.test(cell) ? `"${cell.replace(/"/gu, '""')}"` : cell;
+  // Cells with edge whitespace are quoted too, so the padding is visible in the file.
+  return /[",\r\n]/u.test(cell) || cell !== trimText(cell)
+    ? `"${cell.replace(/"/gu, '""')}"`
+    : cell;
 }
 
 /** Serialize rows as RFC 4180 CSV (CRLF line endings, trailing CRLF). */

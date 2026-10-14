@@ -81,25 +81,17 @@ def import_csv(
     label = _label(dataset_label, code="invalid_csv")
     default_observed = _instant(observed_at, code="invalid_csv", field="observed_at") or now
     try:
-        parsed = parse_postings(csv_text)
+        parsed = parse_postings(csv_text, default_observed=default_observed, now=now)
     except CsvFileError as exc:
-        details = {"line": exc.line} if exc.line is not None else None
+        details: dict[str, object] = {"reason": exc.code}
+        if exc.line is not None:
+            details["line"] = exc.line
         raise AppError(422, "invalid_csv", exc.message, details=details) from exc
 
     groups: dict[str, list[ParsedRow]] = defaultdict(list)
-    warnings = list(parsed.warnings)
     for row in parsed.rows:
-        effective = row.observed_at or default_observed
-        groups[effective].append(row)
-        if effective > now:
-            warnings.append(
-                RowWarning(
-                    row.line,
-                    f"observed_at {effective} is after the import time {now}; the analysis "
-                    "ignores this row until then",
-                )
-            )
-    warnings.sort(key=lambda w: w.line)
+        groups[row.observed_at or default_observed].append(row)
+    warnings = parsed.warnings
 
     snapshot_id: str | None = None
     for effective in sorted(groups):

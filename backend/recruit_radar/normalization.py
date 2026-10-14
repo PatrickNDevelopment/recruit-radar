@@ -65,6 +65,9 @@ _TRIM_CHARS: Final = "".join(
     )
 )
 
+#: The characters ``trim`` strips (public: the CSV header normalizer maps them to ``_``).
+WHITESPACE_CHARS: Final = _TRIM_CHARS
+
 _PAREN_SEGMENT: Final = re.compile(r"\([^()]*\)")
 _BRACKET_SEGMENT: Final = re.compile(r"\[[^\[\]]*\]")
 _HTTP_SCHEME: Final = re.compile(r"https?:", re.IGNORECASE | re.ASCII)

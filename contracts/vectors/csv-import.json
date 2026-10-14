@@ -1,0 +1,884 @@
+{
+  "format_version": 1,
+  "kind": "csv-import",
+  "description": "Hand-derived vectors for CSV import (docs/spec/05, section 'CSV details'). The Python importer (backend/recruit_radar/services/csv_io.py) and the TypeScript importer (src/engine/csv.ts) must both reproduce every case. Row cells are [explicit observed_at or null, company_name, title, location, work_mode, department, url, posted_at, source_posting_id]; rows are listed by effective observed_at ascending (a blank observed_at counts as the import time), then file order. errors are unique [line, field-or-null] pairs sorted by line then field; warnings are [line, kind] pairs. A text given as an object is expanded by the harness: {repeat:{head,row,count}} = head + row.replace('{i}', i) for i in 0..count-1; {pad:{head,fill,total_bytes,bom}} = optional BOM + head + fill repeated (then 'x' to reach the byte length exactly); {parts:[...]} = the concatenation of literal strings and {fill,count} runs. expected.rows null means the rows are not compared. Python and the TypeScript importer take the same imported_at.",
+  "imported_at": "2026-10-13T12:00:00Z",
+  "cases": [
+    {
+      "id": "csv-01-plain",
+      "description": "Two required columns, one row. Optional fields are null, work_mode defaults to unknown.",
+      "text": "company_name,title\nAcme,Engineer\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-02-all-columns",
+      "description": "Every documented column, a quoted comma, an explicit observed_at.",
+      "text": "company_name,title,location,work_mode,department,url,posted_at,source_posting_id,observed_at\r\nAcme Inc.,Engineer,\"New York, NY\",remote,Platform,https://acme.example/jobs/1,2026-09-01,42,2026-10-01T09:00:00Z\r\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [
+          [
+            "2026-10-01T09:00:00Z",
+            "Acme Inc.",
+            "Engineer",
+            "New York, NY",
+            "remote",
+            "Platform",
+            "https://acme.example/jobs/1",
+            "2026-09-01",
+            "42"
+          ]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-03-header-case-hyphen-space",
+      "description": "Header names are case-insensitive; hyphens and spaces become underscores.",
+      "text": "Company Name,TITLE,Posted-At,Source Posting ID\nAcme,Engineer,2026-09-01,7\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, "2026-09-01", "7"]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-04-header-tab-and-nbsp",
+      "description": "Any whitespace character in the trim set (a tab, a no-break space) counts as a space in a header name.",
+      "text": "Company\tName,TITLE,Posted At\nAcme,Engineer,2026-09-01\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, "2026-09-01", null]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-05-header-unknown-and-blank-columns",
+      "description": "Unknown and unnamed columns are ignored with one warning each (on the header line).",
+      "text": "company_name,title,salary,,notes\nA,B,1,2,3\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "A", "B", null, "unknown", null, null, null, null]],
+        "errors": [],
+        "warnings": [
+          [1, "blank_header"],
+          [1, "unknown_column"],
+          [1, "unknown_column"]
+        ]
+      }
+    },
+    {
+      "id": "csv-06-header-duplicate-after-normalization",
+      "description": "'company_name' and 'Company Name' are the same column: the file is refused.",
+      "text": "company_name,Company Name,title\nA,B,C\n",
+      "expected": {
+        "file_error": "duplicate_header",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-07-header-missing-required",
+      "description": "title is required.",
+      "text": "company_name,location\nA,B\n",
+      "expected": {
+        "file_error": "missing_required_column",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-08-header-malformed-quote",
+      "description": "Text after a closing quote in the header row refuses the whole file.",
+      "text": "\"company_name\"x,title\nA,B\n",
+      "expected": {
+        "file_error": "malformed_header",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-09-empty-text",
+      "description": "No header at all.",
+      "text": "",
+      "expected": {
+        "file_error": "empty_file",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-10-only-blank-lines",
+      "description": "Blank, whitespace-only and tab-only lines are not records.",
+      "text": "\n  \n\t\n",
+      "expected": {
+        "file_error": "empty_file",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-11-header-only",
+      "description": "A valid header with no data rows is a valid, empty import.",
+      "text": "company_name,title\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-12-bom",
+      "description": "A leading UTF-8 BOM is ignored.",
+      "text": "﻿company_name,title\nAcme,Engineer\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-13-line-terminators",
+      "description": "CRLF, LF and a lone CR all end a record.",
+      "text": "company_name,title\r\nA,B\nC,D\rE,F\r\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 3,
+        "rejected": 0,
+        "rows": [
+          [null, "A", "B", null, "unknown", null, null, null, null],
+          [null, "C", "D", null, "unknown", null, null, null, null],
+          [null, "E", "F", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-14-quoted-newline-and-quotes",
+      "description": "A quoted field may hold a line break and doubled quotes; the next record's line number counts the embedded break.",
+      "text": "company_name,title\n\"Ac\nme\",\"He said \"\"hi\"\"\"\n,Broken\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "Ac\nme", "He said \"hi\"", null, "unknown", null, null, null, null]],
+        "errors": [[4, "company_name"]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-15-space-around-quoted-field",
+      "description": "Spaces and tabs between a delimiter and an opening quote, and between a closing quote and the next delimiter or line end, are ignored.",
+      "text": "company_name,title\nAcme, \"Senior, Engineer\" \n  \"Beta\"\t,\t\"D\"\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 0,
+        "rows": [
+          [null, "Acme", "Senior, Engineer", null, "unknown", null, null, null, null],
+          [null, "Beta", "D", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-16-text-after-closing-quote",
+      "description": "Other text after a closing quote rejects that row only, with one row-level error.",
+      "text": "company_name,title\n\"Acme\"x,Engineer\nBeta,Analyst\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "Beta", "Analyst", null, "unknown", null, null, null, null]],
+        "errors": [[2, null]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-17-quote-after-closing-quote",
+      "description": "A second quoted part after a closing quote is malformed too.",
+      "text": "company_name,title\n\"Acme\"\"x\" \"y\",Engineer\nBeta,Analyst\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "Beta", "Analyst", null, "unknown", null, null, null, null]],
+        "errors": [[2, null]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-18-quote-inside-unquoted-field",
+      "description": "A quote in the middle of an unquoted field is literal.",
+      "text": "company_name,title\nAc\"me,Engineer\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Ac\"me", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-19-whitespace-only-lines",
+      "description": "Whitespace-only and tab-only lines are blank lines: skipped without an error.",
+      "text": "company_name,title\nAcme,Engineer\n   \n\t\nBeta,Analyst\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 0,
+        "rows": [
+          [null, "Acme", "Engineer", null, "unknown", null, null, null, null],
+          [null, "Beta", "Analyst", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-20-quoted-empty-lines",
+      "description": "A line holding only a quoted empty field is a blank line too.",
+      "text": "company_name,title\n\"\"\n  \"\"  \nAcme,Engineer\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-21-blank-lines-keep-line-numbers",
+      "description": "Skipped blank lines still advance the line counter used in error reports.",
+      "text": "company_name,title\n\n   \nAcme,Engineer\n,Broken\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [[5, "company_name"]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-22-trailing-empty-cells",
+      "description": "Extra cells are tolerated when they are all empty (a trailing comma, a blank, a quoted empty).",
+      "text": "company_name,title\nA,B,,\nC,D, ,\"\"\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 0,
+        "rows": [
+          [null, "A", "B", null, "unknown", null, null, null, null],
+          [null, "C", "D", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-23-extra-values",
+      "description": "An extra non-empty cell would shift columns: the row is refused, with a row-level error.",
+      "text": "company_name,title\nA,B,,\nC,D,oops\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "A", "B", null, "unknown", null, null, null, null]],
+        "errors": [[3, null]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-24-short-rows",
+      "description": "A short row leaves the missing cells blank; a missing required cell is a field error.",
+      "text": "company_name,title,location\nAcme,Engineer\nOnlyCompany\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": [[null, "Acme", "Engineer", null, "unknown", null, null, null, null]],
+        "errors": [[3, "title"]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-25-structural-errors-suppress-field-errors",
+      "description": "The columns of a malformed or shifted row cannot be trusted, so only one row-level error is reported for it.",
+      "text": "company_name,title,url\n\"A\"x,B,ftp://nope\n,B,C,D\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 0,
+        "rejected": 2,
+        "rows": [],
+        "errors": [
+          [2, null],
+          [3, null]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-26-every-field-error-is-reported",
+      "description": "A structurally sound row with several invalid fields reports each field.",
+      "text": "company_name,title,url,work_mode,posted_at,observed_at\n,,ftp://x,Remote,2026-02-30,2026-10-01 09:00:00\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 0,
+        "rejected": 1,
+        "rows": [],
+        "errors": [
+          [2, "company_name"],
+          [2, "observed_at"],
+          [2, "posted_at"],
+          [2, "title"],
+          [2, "url"],
+          [2, "work_mode"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-27-url-schemes",
+      "description": "Only http: and https: (any case) are accepted; the rest of the string is not judged.",
+      "text": "company_name,title,url\nA,B,HTTP://X.TEST/a\nA,C,HtTpS://y.test\nA,D,ftp://x.test\nA,E,javascript:alert(1)\nA,F,//x.test\nA,G,x.test\nA,H,https:\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 3,
+        "rejected": 4,
+        "rows": [
+          [null, "A", "B", null, "unknown", null, "HTTP://X.TEST/a", null, null],
+          [null, "A", "C", null, "unknown", null, "HtTpS://y.test", null, null],
+          [null, "A", "H", null, "unknown", null, "https:", null, null]
+        ],
+        "errors": [
+          [4, "url"],
+          [5, "url"],
+          [6, "url"],
+          [7, "url"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-28-work-mode",
+      "description": "work_mode is one of remote, hybrid, onsite, unknown in lower case; blank means unknown; padding is trimmed.",
+      "text": "company_name,title,work_mode\nA,B1,remote\nA,B2,Remote\nA,B3, hybrid \nA,B4,on-site\nA,B5,\nA,B6,onsite\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 4,
+        "rejected": 2,
+        "rows": [
+          [null, "A", "B1", null, "remote", null, null, null, null],
+          [null, "A", "B3", null, "hybrid", null, null, null, null],
+          [null, "A", "B5", null, "unknown", null, null, null, null],
+          [null, "A", "B6", null, "onsite", null, null, null, null]
+        ],
+        "errors": [
+          [3, "work_mode"],
+          [5, "work_mode"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-29-posted-at",
+      "description": "posted_at must be a real YYYY-MM-DD date (a leap day is real, 30 February is not, no padding forgiveness).",
+      "text": "company_name,title,posted_at\nA,B1,2024-02-29\nA,B2,2026-02-30\nA,B3,2026-9-1\nA,B4,2026-13-01\nA,B5,20260901\nA,B6, 2026-09-01 \n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 4,
+        "rows": [
+          [null, "A", "B1", null, "unknown", null, null, "2024-02-29", null],
+          [null, "A", "B6", null, "unknown", null, null, "2026-09-01", null]
+        ],
+        "errors": [
+          [3, "posted_at"],
+          [4, "posted_at"],
+          [5, "posted_at"],
+          [6, "posted_at"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-30-observed-at",
+      "description": "observed_at must match YYYY-MM-DDTHH:MM:SSZ exactly (upper-case Z, 'T', real date and time).",
+      "text": "company_name,title,observed_at\nA,B1,2026-09-01T10:00:00Z\nA,B2,2026-09-01 10:00:00\nA,B3,2026-09-01T10:00:00z\nA,B4,2026-09-01T24:00:00Z\nA,B5,2026-02-29T00:00:00Z\nA,B6, 2026-09-01T11:00:00Z \nA,B7,2026-09-01T10:00:00+00:00\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 5,
+        "rows": [
+          ["2026-09-01T10:00:00Z", "A", "B1", null, "unknown", null, null, null, null],
+          ["2026-09-01T11:00:00Z", "A", "B6", null, "unknown", null, null, null, null]
+        ],
+        "errors": [
+          [3, "observed_at"],
+          [4, "observed_at"],
+          [5, "observed_at"],
+          [6, "observed_at"],
+          [8, "observed_at"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-31a-company-length",
+      "description": "company_name allows 200 characters; 201 is a field error on that row only.",
+      "text": {
+        "parts": [
+          "company_name,title\n",
+          { "fill": "x", "count": 200 },
+          ",T\n",
+          { "fill": "x", "count": 201 },
+          ",T\n"
+        ]
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": null,
+        "errors": [[3, "company_name"]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-31b-title-length",
+      "description": "title allows 300 characters; 301 is a field error.",
+      "text": {
+        "parts": [
+          "company_name,title\nA,",
+          { "fill": "t", "count": 300 },
+          "\nA,",
+          { "fill": "t", "count": 301 },
+          "\n"
+        ]
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": null,
+        "errors": [[3, "title"]],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-31c-location-and-department-length",
+      "description": "location allows 300 characters and department 200; one more of each is a field error.",
+      "text": {
+        "parts": [
+          "company_name,title,location,department\nA,B,",
+          { "fill": "l", "count": 300 },
+          ",",
+          { "fill": "d", "count": 200 },
+          "\nA,B,",
+          { "fill": "l", "count": 301 },
+          ",",
+          { "fill": "d", "count": 201 },
+          "\n"
+        ]
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 1,
+        "rows": null,
+        "errors": [
+          [3, "department"],
+          [3, "location"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-31d-length-counts-code-points",
+      "description": "Limits count Unicode code points, not UTF-16 units or bytes: 200 and 300 rocket emoji fit, 201 and 301 do not.",
+      "text": {
+        "parts": [
+          "company_name,title\n",
+          { "fill": "🚀", "count": 200 },
+          ",B\n",
+          { "fill": "🚀", "count": 201 },
+          ",B\nA,",
+          { "fill": "🚀", "count": 300 },
+          "\nA,",
+          { "fill": "🚀", "count": 301 },
+          "\n"
+        ]
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 2,
+        "rows": null,
+        "errors": [
+          [3, "company_name"],
+          [5, "title"]
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-32-formula-guard-on-import",
+      "description": "After trimming, exactly one apostrophe is removed from a cell that is apostrophes followed by = + - @ tab or CR; any other apostrophe stays.",
+      "text": "company_name,title\n'=SUM(A1),'-Lead\n''=twice,'abc\n  '@home  ,'\n'''+x,O'Brien\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 4,
+        "rejected": 0,
+        "rows": [
+          [null, "=SUM(A1)", "-Lead", null, "unknown", null, null, null, null],
+          [null, "'=twice", "'abc", null, "unknown", null, null, null, null],
+          [null, "@home", "'", null, "unknown", null, null, null, null],
+          [null, "''+x", "O'Brien", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-33-nul-character",
+      "description": "U+0000 anywhere in the text refuses the file.",
+      "text": "company_name,title\nAc\u0000me,B\n",
+      "expected": {
+        "file_error": "contains_nul",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-34-unterminated-quote",
+      "description": "An unterminated quoted field refuses the file (no partial import).",
+      "text": "company_name,title\nA,\"B\nC,D\n",
+      "expected": {
+        "file_error": "unterminated_quote",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-35-trim-set",
+      "description": "Cells are trimmed with the ECMAScript whitespace set: a no-break space and a BOM are trimmed, NEL (U+0085) and U+001F are not.",
+      "text": "company_name,title\n Acme ,﻿Engineer﻿\n\u0085Beta,Analyst\u001f\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 2,
+        "rejected": 0,
+        "rows": [
+          [null, "Acme", "Engineer", null, "unknown", null, null, null, null],
+          [null, "\u0085Beta", "Analyst\u001f", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-36-unicode-is-kept",
+      "description": "Accents and CJK are stored as given (no normalization at import).",
+      "text": "company_name,title,location\nCafé Réunion,データ エンジニア,東京\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": [
+          [null, "Café Réunion", "データ エンジニア", "東京", "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-37-duplicate-rows-warn",
+      "description": "A later row for the same role at the same instant replaces the earlier one in the analysis; the import says so. Different posting ids, or different stated instants, are different roles.",
+      "text": "company_name,title,location,source_posting_id,observed_at\nAcme,Engineer,Berlin,,\nACME Inc.,Engineer (Remote),berlin,,\nAcme,Designer,,1,\nAcme,Designer,,2,\nAcme,Analyst,,,2026-10-01T00:00:00Z\nAcme,Analyst,,,2026-10-02T00:00:00Z\nAcme,Writer,,,2026-10-01T00:00:00Z\nAcme,Writer,,,2026-10-01T00:00:00Z\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 8,
+        "rejected": 0,
+        "rows": [
+          ["2026-10-01T00:00:00Z", "Acme", "Analyst", null, "unknown", null, null, null, null],
+          ["2026-10-01T00:00:00Z", "Acme", "Writer", null, "unknown", null, null, null, null],
+          ["2026-10-01T00:00:00Z", "Acme", "Writer", null, "unknown", null, null, null, null],
+          ["2026-10-02T00:00:00Z", "Acme", "Analyst", null, "unknown", null, null, null, null],
+          [null, "Acme", "Engineer", "Berlin", "unknown", null, null, null, null],
+          [null, "ACME Inc.", "Engineer (Remote)", "berlin", "unknown", null, null, null, null],
+          [null, "Acme", "Designer", null, "unknown", null, null, null, "1"],
+          [null, "Acme", "Designer", null, "unknown", null, null, null, "2"]
+        ],
+        "errors": [],
+        "warnings": [
+          [3, "duplicate_row"],
+          [9, "duplicate_row"]
+        ]
+      }
+    },
+    {
+      "id": "csv-38-future-observed-at",
+      "description": "A row stamped after the import time is accepted but flagged: the analysis ignores it until then.",
+      "text": "company_name,title,observed_at\nA,B,2030-01-01T00:00:00Z\nC,D,2026-10-13T11:59:59Z\nE,F,\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 3,
+        "rejected": 0,
+        "rows": [
+          ["2026-10-13T11:59:59Z", "C", "D", null, "unknown", null, null, null, null],
+          [null, "E", "F", null, "unknown", null, null, null, null],
+          ["2030-01-01T00:00:00Z", "A", "B", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": [[2, "future_observed"]]
+      }
+    },
+    {
+      "id": "csv-39-rows-sorted-by-instant",
+      "description": "Rows are grouped into one snapshot per effective observed_at (ascending); a blank observed_at is the import time.",
+      "text": "company_name,title,observed_at\nA,One,2026-10-02T00:00:00Z\nB,Two,2026-10-01T00:00:00Z\nC,Three,2026-10-02T00:00:00Z\nD,Four,\n",
+      "expected": {
+        "file_error": null,
+        "accepted": 4,
+        "rejected": 0,
+        "rows": [
+          ["2026-10-01T00:00:00Z", "B", "Two", null, "unknown", null, null, null, null],
+          ["2026-10-02T00:00:00Z", "A", "One", null, "unknown", null, null, null, null],
+          ["2026-10-02T00:00:00Z", "C", "Three", null, "unknown", null, null, null, null],
+          [null, "D", "Four", null, "unknown", null, null, null, null]
+        ],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-40-5000-rows-accepted",
+      "description": "Exactly 5,000 data rows are accepted.",
+      "text": {
+        "repeat": { "head": "company_name,title\n", "row": "Co {i},Role\n", "count": 5000 }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 5000,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-41-5001-rows-refused",
+      "description": "5,001 data rows refuse the whole file.",
+      "text": {
+        "repeat": { "head": "company_name,title\n", "row": "Co {i},Role\n", "count": 5001 }
+      },
+      "expected": {
+        "file_error": "too_many_rows",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-42-blank-lines-do-not-count-against-the-cap",
+      "description": "5,000 rows, each followed by a blank line, are 5,000 rows.",
+      "text": {
+        "repeat": { "head": "company_name,title\n", "row": "Co {i},Role\n\n", "count": 5000 }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 5000,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-43-whitespace-lines-do-not-count-against-the-cap",
+      "description": "5,000 rows, each followed by a whitespace-only line, are 5,000 rows.",
+      "text": {
+        "repeat": { "head": "company_name,title\n", "row": "Co {i},Role\n   \n", "count": 5000 }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 5000,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-44-size-cap-exact",
+      "description": "1,048,576 UTF-8 bytes are accepted.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "x",
+          "total_bytes": 1048576,
+          "bom": false
+        }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": [[1, "unknown_column"]]
+      }
+    },
+    {
+      "id": "csv-45-size-cap-plus-one",
+      "description": "One byte more refuses the file.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "x",
+          "total_bytes": 1048577,
+          "bom": false
+        }
+      },
+      "expected": {
+        "file_error": "too_large",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-46-size-cap-counts-the-bom",
+      "description": "The three bytes of a BOM count: 1,048,576 with the BOM is accepted, one more is refused.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "x",
+          "total_bytes": 1048576,
+          "bom": true
+        }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": [[1, "unknown_column"]]
+      }
+    },
+    {
+      "id": "csv-47-size-cap-bom-plus-one",
+      "description": "BOM plus one byte over the cap is refused.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "x",
+          "total_bytes": 1048577,
+          "bom": true
+        }
+      },
+      "expected": {
+        "file_error": "too_large",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-48-size-cap-counts-bytes-not-characters",
+      "description": "Two-byte characters: under the cap in characters, over it in bytes.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "é",
+          "total_bytes": 1048577,
+          "bom": false
+        }
+      },
+      "expected": {
+        "file_error": "too_large",
+        "accepted": 0,
+        "rejected": 0,
+        "rows": [],
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "id": "csv-49-two-byte-fill-at-the-cap",
+      "description": "Two-byte characters filling exactly 1,048,576 bytes are accepted.",
+      "text": {
+        "pad": {
+          "head": "company_name,title,notes\nA,B,",
+          "fill": "é",
+          "total_bytes": 1048576,
+          "bom": false
+        }
+      },
+      "expected": {
+        "file_error": null,
+        "accepted": 1,
+        "rejected": 0,
+        "rows": null,
+        "errors": [],
+        "warnings": [[1, "unknown_column"]]
+      }
+    }
+  ]
+}

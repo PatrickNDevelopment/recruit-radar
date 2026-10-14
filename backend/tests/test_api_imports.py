@@ -64,30 +64,41 @@ def test_header_only_file_is_accepted_and_empty(client: TestClient) -> None:
 
 
 @pytest.mark.parametrize(
-    ("text", "needle"),
+    ("text", "needle", "reason"),
     [
-        pytest.param("", "empty", id="empty"),
-        pytest.param("title\nEngineer\n", "company_name", id="missing-column"),
-        pytest.param("company_name,title,Title\nA,B,C\n", "Duplicate column", id="duplicate"),
-        pytest.param('company_name,title\nAcme,"Eng\nineer\n', "Unterminated", id="unterminated"),
-        pytest.param("company_name,title\r\n" + "A,B\r\n" * 5001, "5000", id="too-many-rows"),
-        pytest.param("company_name,title\nA,B\x00\n", "NUL", id="nul"),
+        pytest.param("", "empty", "empty_file", id="empty"),
+        pytest.param("title\nEngineer\n", "company_name", "missing_required_column", id="missing"),
+        pytest.param(
+            "company_name,title,Title\nA,B,C\n", "Duplicate column", "duplicate_header", id="dup"
+        ),
+        pytest.param(
+            'company_name,title\nAcme,"Eng\nineer\n',
+            "Unterminated",
+            "unterminated_quote",
+            id="quote",
+        ),
+        pytest.param(
+            "company_name,title\r\n" + "A,B\r\n" * 5001, "5000", "too_many_rows", id="too-many-rows"
+        ),
+        pytest.param("company_name,title\nA,B\x00\n", "NUL", "contains_nul", id="nul"),
+        pytest.param('"company_name"x,title\nA,B\n', "malformed", "malformed_header", id="header"),
     ],
 )
 def test_file_level_problems_are_422_invalid_csv(
-    client: TestClient, text: str, needle: str
+    client: TestClient, text: str, needle: str, reason: str
 ) -> None:
     response = import_csv(client, text)
     assert response.status_code == 422
     error = error_of(response)
     assert error["code"] == "invalid_csv"
     assert needle in error["message"]
+    assert error["details"]["reason"] == reason  # the same vocabulary the TypeScript importer uses
     assert analysis(client)["stats"]["snapshots"] == 0
 
 
 def test_unterminated_quote_reports_the_line_it_started_on(client: TestClient) -> None:
     response = import_csv(client, 'company_name,title\nAcme,Engineer\n"oops,row\n')
-    assert error_of(response)["details"] == {"line": 3}
+    assert error_of(response)["details"] == {"line": 3, "reason": "unterminated_quote"}
 
 
 def test_oversized_csv_is_invalid_csv(client: TestClient) -> None:

@@ -12,6 +12,7 @@ contracts/vectors/
   HAND_CHECKS.md                     step-by-step hand derivations and whether the oracle agreed
   normalization.json                 173 cases for six functions
   analysis-NN-<name>.json            47 vectors, ONE vector per file
+  csv-import.json                    52 CSV import cases (both CSV importers, see below)
 contracts/tools/
   oracle.py                          reference implementation + `--self-check`
   generate_vectors.py                the only writer of the files above
@@ -190,3 +191,12 @@ readings were then decided from the spec text (`docs/spec/ambiguities/differenti
 and are pinned by vectors 45-47. For these, `--self-check` asserts the opposite of insensitivity: the
 alternative reading (`T=multiset`, `dangling=present_canonical|ignore`, `not_same=mapped`) must change
 _exactly_ the pinning vector and no other. The remaining ambiguous readings stay insensitive.
+
+## `csv-import.json`
+
+Hand-derived expectations for CSV import (spec 05 "CSV details"). Unlike the analysis vectors it is
+**not** produced by the oracle (CSV parsing is not part of `analyze()`); the expected values were
+written from the spec rules and are asserted by both importers: `backend/tests/test_csv_vectors.py`
+(Python) and `tests/csv-vectors.test.ts` (TypeScript). `contracts/tools/fuzz_csv.py` extends the same
+comparison to generated files. Texts too large to write out are described as `{repeat}`, `{pad}` or
+`{parts}` objects (see the file's `description`).

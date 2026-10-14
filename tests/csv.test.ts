@@ -46,7 +46,8 @@ describe('parseCsv (RFC 4180)', () => {
     expect(cells('a,"b,c","line1\nline2"\n')).toEqual([['a', 'b,c', 'line1\nline2']]);
     expect(cells('"say ""hi"""')).toEqual([['say "hi"']]);
     expect(cells('"x\r\ny",z')).toEqual([['x\r\ny', 'z']]);
-    expect(cells('""')).toEqual([['']]);
+    expect(cells('""')).toEqual([]); // a line holding only a quoted empty field is a blank line
+    expect(cells('"",x')).toEqual([['', 'x']]);
     expect(cells('"""",x')).toEqual([['"', 'x']]);
   });
 
@@ -84,9 +85,30 @@ describe('parseCsv (RFC 4180)', () => {
   it('flags text after a closing quote as a malformed record', () => {
     const parsed = parseCsv('"a"b,c');
     expect(parsed.ok && parsed.records[0]).toMatchObject({
-      cells: ['ab', 'c'],
-      malformed: 'unexpected text after a closing quote',
+      cells: ['a', 'c'],
+      malformed: 'text follows a closing quote',
     });
+    const second = parseCsv('"a""b" "c",d');
+    expect(second.ok && second.records[0]?.malformed).toBe('a quote follows a closing quote');
+  });
+
+  it('ignores spaces and tabs around a quoted field (spec 05, CSV details)', () => {
+    expect(cells('a, "b, c" ,d')).toEqual([['a', 'b, c', 'd']]);
+    expect(cells('  "x"\t,"y"  \n')).toEqual([['x', 'y']]);
+    // ...but not other characters, and not inside a field that already has text.
+    expect(cells('a, "b"')).toEqual([['a', ' "b"']]);
+    expect(cells('a, x"y",z')).toEqual([['a', ' x"y"', 'z']]);
+  });
+
+  it('skips records whose only cell is blank, quoted or not, and still counts their lines', () => {
+    expect(cells('a\n   \n\t\nb\n""\n  ""  \nc')).toEqual([['a'], ['b'], ['c']]);
+    const parsed = parseCsv('h\n \n"  "\nx\n');
+    expect(parsed.ok && parsed.records.map((r) => [r.line, r.cells[0]])).toEqual([
+      [1, 'h'],
+      [4, 'x'],
+    ]);
+    // A record with two empty cells is a row, not a blank line.
+    expect(cells(' ,')).toEqual([[' ', '']]);
   });
 
   it('reports an unterminated quote as a file-level error with its line', () => {
@@ -393,7 +415,52 @@ describe('importCsv — row validation', () => {
       [3, undefined],
       [4, 'title'],
     ]);
-    expect(r2.errors[0]?.message).toContain('3 fields but the header has 2');
+    expect(r2.errors[0]?.message).toContain('3 values but the header defines 2 columns');
+  });
+
+  it('does not validate the fields of a structurally broken row', () => {
+    // The columns of a shifted or badly quoted row cannot be trusted: one row-level error only.
+    const r2 = importCsv('company_name,title,url\n"A"x,B,ftp://nope\n,B,C,D\n', OPTIONS);
+    expect(r2.rejected).toBe(2);
+    expect(r2.errors.map((e) => [e.line, e.field])).toEqual([
+      [2, undefined],
+      [3, undefined],
+    ]);
+  });
+
+  it('refuses a file whose header row is malformed, or that contains a NUL', () => {
+    const header = importCsv('"company_name"x,title\nA,B\n', OPTIONS);
+    expect(header.file_error).toMatchObject({ code: 'malformed_header', line: 1 });
+    const nul = importCsv('company_name,title\nA\u0000B,C\n', OPTIONS);
+    expect(nul.ok).toBe(false);
+    expect(nul.file_error?.code).toBe('contains_nul');
+    expect(nul.snapshots).toEqual([]);
+  });
+
+  it('maps tabs and no-break spaces in header names like spaces', () => {
+    const ok = importCsv('Company\tName,TITLE,Posted At\nA,B,2026-09-01\n', OPTIONS);
+    expect(ok.accepted).toBe(1);
+    expect(ok.snapshots[0]?.postings[0]).toMatchObject({
+      company_name: 'A',
+      posted_at: '2026-09-01',
+    });
+  });
+
+  it('warns about a row that replaces an earlier one and about a future observed_at', () => {
+    const r2 = importCsv(
+      [
+        'company_name,title,location,observed_at',
+        'Acme,Engineer,Berlin,',
+        'ACME Inc.,Engineer (Remote),berlin,',
+        'Acme,Engineer,Berlin,2030-01-01T00:00:00Z',
+      ].join('\n'),
+      OPTIONS,
+    );
+    expect(r2.accepted).toBe(3);
+    expect(r2.warnings.map((w) => [w.line, w.message.slice(0, 22)])).toEqual([
+      [3, 'Same posting as line 2'],
+      [4, 'observed_at 2030-01-01'],
+    ]);
   });
 
   it('reports a malformed quote as a row error', () => {

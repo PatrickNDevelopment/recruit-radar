@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from typing import Final
 
 from ..clock import is_valid_ts
-from ..normalization import CleanPosting, FieldProblem, clean_posting, trim
+from ..normalization import WHITESPACE_CHARS, CleanPosting, FieldProblem, clean_posting, trim
 
 _BOM: Final = chr(0xFEFF)
 MAX_CSV_BYTES: Final = 1024 * 1024
@@ -35,12 +35,19 @@ FORMULA_TRIGGERS: Final = ("=", "+", "-", "@", "\t", "\r")
 
 
 class CsvFileError(Exception):
-    """The file as a whole is unusable (spec 03: 422 ``invalid_csv``)."""
+    """The file as a whole is unusable (spec 03: 422 ``invalid_csv``).
 
-    def __init__(self, message: str, line: int | None = None) -> None:
+    ``code`` is the same vocabulary the TypeScript importer uses (``too_large``,
+    ``too_many_rows``, ``contains_nul``, ``unterminated_quote``, ``empty_file``,
+    ``malformed_header``, ``duplicate_header``, ``missing_required_column``), pinned by
+    ``contracts/vectors/csv-import.json``.
+    """
+
+    def __init__(self, message: str, line: int | None = None, *, code: str = "invalid_csv") -> None:
         super().__init__(message)
         self.message = message
         self.line = line
+        self.code = code
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,14 +88,24 @@ class ParsedCsv:
 # ---------------------------------------------------------------------------------------------
 # Formula guard
 # ---------------------------------------------------------------------------------------------
+def _leading_apostrophes(value: str) -> int:
+    count = 0
+    while count < len(value) and value[count] == "'":
+        count += 1
+    return count
+
+
 def guard_cell(value: str) -> str:
-    """Export: one leading apostrophe on a cell that starts with a formula trigger."""
-    return "'" + value if value[:1] in FORMULA_TRIGGERS else value
+    """Export: one more leading apostrophe on a cell that is a formula trigger, optionally
+    already behind apostrophes (``'=x`` becomes ``''=x``), so the transform is a bijection."""
+    lead = _leading_apostrophes(value)
+    return "'" + value if value[lead : lead + 1] in FORMULA_TRIGGERS else value
 
 
 def unguard_cell(value: str) -> str:
-    """Import: remove exactly one leading apostrophe that precedes a formula trigger."""
-    if len(value) >= 2 and value[0] == "'" and value[1] in FORMULA_TRIGGERS:
+    """Import: remove exactly one leading apostrophe when apostrophes precede a trigger."""
+    lead = _leading_apostrophes(value)
+    if lead >= 1 and value[lead : lead + 1] in FORMULA_TRIGGERS:
         return value[1:]
     return value
 
@@ -106,7 +123,9 @@ def parse_records(text: str) -> list[CsvRecord]:
     if text.startswith(_BOM):
         text = text[1:]
     if "\x00" in text:
-        raise CsvFileError("CSV contains a NUL character, which is not valid text")
+        raise CsvFileError(
+            "CSV contains a NUL character, which is not valid text", code="contains_nul"
+        )
 
     records: list[CsvRecord] = []
     cells: list[str] = []
@@ -188,7 +207,11 @@ def parse_records(text: str) -> list[CsvRecord]:
             i += 1
 
     if in_quotes:
-        raise CsvFileError(f"Unterminated quoted field starting on line {quote_line}", quote_line)
+        raise CsvFileError(
+            f"Unterminated quoted field starting on line {quote_line}",
+            quote_line,
+            code="unterminated_quote",
+        )
     if cells or buf or record_quoted:
         cells.append("".join(buf))
         records.append(CsvRecord(record_line, tuple(cells), malformed))
@@ -199,51 +222,78 @@ def _is_blank(record: CsvRecord) -> bool:
     return len(record.cells) == 1 and trim(record.cells[0]) == "" and record.malformed is None
 
 
+_HEADER_SEPARATORS: Final = str.maketrans({ch: "_" for ch in WHITESPACE_CHARS + "-"})
+
+
 def normalize_header(name: str) -> str:
-    """Case-insensitive; spaces and hyphens become underscores (spec 05)."""
-    return trim(name).lower().replace(" ", "_").replace("-", "_")
+    """Case-insensitive; every whitespace character (the spec trim set: a tab and a no-break
+    space count) and every hyphen becomes an underscore (spec 05 "CSV details")."""
+    return trim(name).lower().translate(_HEADER_SEPARATORS)
 
 
 # ---------------------------------------------------------------------------------------------
 # Postings
 # ---------------------------------------------------------------------------------------------
-def parse_postings(text: str) -> ParsedCsv:
-    """Parse and validate an import file; valid rows are kept, invalid rows are reported."""
+def parse_postings(
+    text: str, *, default_observed: str | None = None, now: str | None = None
+) -> ParsedCsv:
+    """Parse and validate an import file; valid rows are kept, invalid rows are reported.
+
+    ``now`` is the import time and ``default_observed`` the instant of rows that leave
+    ``observed_at`` blank (``now`` when omitted). With ``now`` given, a row whose instant is
+    later than ``now`` gets a warning: the analysis ignores it until then.
+    """
     try:
         size = len(text.encode("utf-8"))
     except UnicodeEncodeError as exc:
-        raise CsvFileError("CSV text is not valid UTF-8") from exc
+        raise CsvFileError("CSV text is not valid UTF-8", code="invalid_text") from exc
     if size > MAX_CSV_BYTES:
-        raise CsvFileError(f"CSV is larger than 1 MB ({size} bytes)")
+        raise CsvFileError(f"CSV is larger than 1 MB ({size} bytes)", code="too_large")
 
     records = [record for record in parse_records(text) if not _is_blank(record)]
     if not records:
-        raise CsvFileError("CSV is empty: a header row with company_name and title is required")
+        raise CsvFileError(
+            "CSV is empty: a header row with company_name and title is required",
+            code="empty_file",
+        )
 
     header = records[0]
     if header.malformed is not None:
-        raise CsvFileError(f"Header row is malformed: {header.malformed}", header.line)
+        raise CsvFileError(
+            f"Header row is malformed: {header.malformed}", header.line, code="malformed_header"
+        )
     names = [normalize_header(cell) for cell in header.cells]
     seen: dict[str, str] = {}
     for original, name in zip(header.cells, names, strict=True):
         if name and name in seen:
             raise CsvFileError(
-                f"Duplicate column {name!r} (headers {seen[name]!r} and {original!r})", header.line
+                f"Duplicate column {name!r} (headers {seen[name]!r} and {original!r})",
+                header.line,
+                code="duplicate_header",
             )
         seen[name] = original
     missing = [column for column in REQUIRED_COLUMNS if column not in names]
     if missing:
-        raise CsvFileError(f"Missing required column(s): {', '.join(missing)}", header.line)
+        raise CsvFileError(
+            f"Missing required column(s): {', '.join(missing)}",
+            header.line,
+            code="missing_required_column",
+        )
 
     data = records[1:]
     if len(data) > MAX_CSV_ROWS:
-        raise CsvFileError(f"CSV has {len(data)} data rows; the limit is {MAX_CSV_ROWS}")
+        raise CsvFileError(
+            f"CSV has {len(data)} data rows; the limit is {MAX_CSV_ROWS}", code="too_many_rows"
+        )
 
     result = ParsedCsv()
-    for original, name in zip(header.cells, names, strict=True):
-        if name not in KNOWN_COLUMNS:
-            label = repr(trim(original)) if trim(original) else "(unnamed)"
-            result.warnings.append(RowWarning(header.line, f"Unknown column {label} ignored"))
+    for index, name in enumerate(names):
+        if not name:
+            result.warnings.append(
+                RowWarning(header.line, f"Column {index + 1} has no header name and is ignored")
+            )
+        elif name not in KNOWN_COLUMNS:
+            result.warnings.append(RowWarning(header.line, f'Unknown column "{name}" is ignored'))
 
     # A repeated role only replaces the earlier one inside one snapshot, i.e. at one instant.
     first_line_of_role: dict[tuple[str, ...], int] = {}
@@ -252,12 +302,17 @@ def parse_postings(text: str) -> ParsedCsv:
             result.errors.append(RowError(record.line, None, f"Malformed row: {record.malformed}"))
             result.rejected += 1
             continue
-        if len(record.cells) > len(names):
+        if len(record.cells) > len(names) and any(
+            trim(cell) for cell in record.cells[len(names) :]
+        ):
+            # Extra *empty* cells (a trailing comma) are tolerated; extra values would shift
+            # columns and corrupt data, so that row is refused (spec 05 "CSV details").
             result.errors.append(
                 RowError(
                     record.line,
                     None,
-                    f"Row has {len(record.cells)} values but the header defines {len(names)} columns",
+                    f"Row has {len(record.cells)} values but the header defines {len(names)} "
+                    "columns; quote any field that contains a comma",
                 )
             )
             result.rejected += 1
@@ -266,7 +321,7 @@ def parse_postings(text: str) -> ParsedCsv:
         raw: dict[str, object] = {}
         for name, cell in zip(names, record.cells, strict=False):
             if name in KNOWN_COLUMNS:
-                raw[name] = unguard_cell(cell)
+                raw[name] = unguard_cell(trim(cell))
         observed_text = raw.pop("observed_at", None)
         observed_at = trim(observed_text) if isinstance(observed_text, str) else ""
 
@@ -294,7 +349,18 @@ def parse_postings(text: str) -> ParsedCsv:
                     f"Same posting as line {earlier}; the later row replaces the earlier one",
                 )
             )
+        if now is not None:
+            effective = observed_at or default_observed or now
+            if effective > now:
+                result.warnings.append(
+                    RowWarning(
+                        record.line,
+                        f"observed_at {effective} is after the import time {now}; "
+                        "the analysis ignores this row until then",
+                    )
+                )
         result.rows.append(ParsedRow(record.line, posting, observed_at or None))
+    result.warnings.sort(key=lambda warning: warning.line)
     return result
 
 

@@ -1,4 +1,4 @@
-# Differential review: decisions D-1 .. D-10
+# Differential review: decisions D-1 .. D-11
 
 Three artifacts were written independently from `docs/spec/`: the Python engine, the TypeScript
 engine, and the oracle with its golden vectors. All 44 original vectors passed in both engines, yet a
@@ -22,6 +22,34 @@ sweep over all 1,152,198 Unicode code points (see D-0).
 | D-8  | `url` validity                                       | the scheme is the only constraint (`http:` / `https:`, case-insensitive); the rest of the string is stored as given                                                          | 01 s1                                        | TypeScript                                                                                         |
 | D-9  | keyword limits                                       | enforced at the engine boundary (<= 50 per list, <= 60 code points after trimming; blank keywords allowed and never match)                                                   | 03 `PUT /api/profile` limits                 | Python                                                                                             |
 | D-10 | posting-level `source_ref` present but empty         | invalid; `null`/absent inherit the snapshot's `source_ref`; a padded copy of the snapshot's ref agrees                                                                       | 01 s1 `source_ref` 1..200                    | Python                                                                                             |
+
+## D-11: the CSV importers (found by the 02B acceptance review)
+
+The differential review above covered `analyze()` only. The product has a second pair of
+independent implementations nobody had compared: the CSV importers (Python `csv_io.py` for the
+backend, TypeScript `csv.ts` for local-data mode), written separately from spec 05 and each tested
+only against its own author's reading. The same file therefore gave different results depending on
+the mode. A seeded differential fuzz of the two found **426 of 1,210 generated files** disagreeing
+(70 signatures). After reducing them to single-feature probes the real differences were:
+
+| input                                                     | Python (before)         | TypeScript (before)      | decided (spec 05 "CSV details") |
+| --------------------------------------------------------- | ----------------------- | ------------------------ | ------------------------------- |
+| whitespace-only or tab-only line                          | skipped                 | row rejected, 2 errors   | skipped (blank line)            |
+| line holding only `""`                                    | skipped                 | row rejected             | skipped                         |
+| trailing empty cells (`A,B,,`)                            | row rejected            | accepted                 | accepted                        |
+| `Acme, "Senior, Engineer"` (space before quote)           | quoted field            | literal; row shifted     | quoted field                    |
+| `"Acme" ,Engineer` (space after closing quote)            | accepted                | row rejected             | accepted                        |
+| header `Company<TAB>Name` or with a no-break space        | file refused            | mapped to `company_name` | mapped to `_`                   |
+| NUL inside a cell                                         | file refused            | stored in the name       | file refused                    |
+| `''=x` / `  '=x` (apostrophes in front of a formula char) | one apostrophe lost     | exact round trip         | exact round trip (bijection)    |
+| malformed header row                                      | file refused            | accepted silently        | file refused                    |
+| malformed or shifted row                                  | 1 error, fields skipped | 1 error + every field    | 1 error, fields skipped         |
+
+Both importers now implement the decided column; 52 hand-derived vectors in
+`contracts/vectors/csv-import.json` pin it in both test suites, and
+`contracts/tools/fuzz_csv.py` (part of `npm run fuzz`) re-runs the comparison: 0 mismatches over
+seeds 1, 2, 3 (1,510 files each) after the fix. The spec 05 text was extended instead of picking
+silently, as the ownership rules in spec 00 require.
 
 ## Evidence and regression coverage
 

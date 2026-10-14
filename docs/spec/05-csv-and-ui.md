@@ -19,6 +19,42 @@ Importing assigns `dataset_label` (user-provided, required) as `source_ref`, `so
 **Shortlist export CSV**: `rank, company, score, coverage_percent, active_roles, relevant_roles,
 last_seen, strongest_evidence, missing_information, note, as_of`.
 
+### CSV details (binding; pinned by `contracts/vectors/csv-import.json`)
+
+Both importers (Python `csv_io.py`, TypeScript `csv.ts`) implement exactly this, and
+`contracts/tools/fuzz_csv.py` compares them on generated files. Before this section existed they
+disagreed on eight input classes (docs/spec/ambiguities/differential.md D-11).
+
+1. **Text.** U+0000 anywhere refuses the file (`contains_nul`). A leading BOM is ignored. Records end
+   at CRLF, LF or a lone CR; a quoted field may contain delimiters, `""` and line breaks.
+2. **Quotes.** Spaces and tabs between a delimiter (or the line start) and an opening quote, and
+   between a closing quote and the next delimiter or line end, are ignored. Any other text after a
+   closing quote makes that row malformed. A quote inside an unquoted field is literal. An
+   unterminated quoted field refuses the file (`unterminated_quote`, with the line it opened on).
+3. **Blank lines.** A record whose only cell is empty or whitespace-only, quoted or not (`""`), is
+   skipped. It still advances the line counter, and does not count against the 5,000-row cap.
+4. **Header.** The first non-blank record. Each name is trimmed (spec 01 trim set), lower-cased, and
+   every whitespace character (a tab and a no-break space count) or hyphen becomes `_`. Duplicates
+   after normalization refuse the file (`duplicate_header`); a blank name is ignored with a warning,
+   as is an unknown name; `company_name` and `title` are required (`missing_required_column`); a
+   malformed header row refuses the file (`malformed_header`).
+5. **Rows.** Fewer cells than the header leave the rest blank. More cells are tolerated only when
+   every extra cell is blank (a trailing comma); an extra non-blank cell would shift columns, so the
+   row is refused. Malformed quoting and shifted columns each give **one** row-level error (no
+   field); the fields of such a row are not validated. Otherwise every invalid field is reported
+   with its name. Valid rows are kept.
+6. **Cells.** Trimmed with the spec 01 trim set, then, when the result is apostrophes followed by
+   `=`, `+`, `-`, `@`, tab or CR (`^'+[=+\-@\t\r]`), exactly one apostrophe is removed. Export adds
+   one apostrophe to a cell that matches `^'*[=+\-@\t\r]`, so `'=x` leaves as `''=x` and returns as
+   `'=x` (the transform is a bijection).
+7. **Limits.** 1,048,576 UTF-8 bytes (a BOM counts) and 5,000 non-blank data records
+   (`too_large`, `too_many_rows`). Field limits count Unicode code points.
+8. **Warnings.** One per unknown or blank header name; one for a row that replaces an earlier row
+   for the same role at the same stated instant ("Same posting as line N ..."); one for a row whose
+   `observed_at` is later than the import time (the analysis ignores it until then).
+9. **Order of file-level checks:** size, NUL, unterminated quote, empty file, malformed header,
+   duplicate header, missing required column, row cap.
+
 ## Screens (single-page app, tabs; no client router so refresh works under `/recruit-radar/`)
 
 1. **Radar** — table of companies: name, active roles, relevant roles, role mix (work mode),
