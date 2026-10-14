@@ -1,7 +1,8 @@
 # Handoff
 
-**State:** v0.1 built locally on branch `phase/02a-build`. Independent acceptance (Prompt 02B) has
-**not** been run. Not pushed, not deployed.
+**State:** v0.1 built locally on branch `phase/02a-build`, then independently reviewed and corrected
+in Prompt 02B (2026-10-14, see `docs/test-report.md`). Gate G2 is met: status
+`ready_for_publication_review`. Not pushed, not deployed, no remote exists.
 
 ## Run
 
@@ -10,42 +11,55 @@ npm ci
 python -m venv .venv ; .\.venv\Scripts\python -m pip install -r backend\requirements.lock.txt
 npm run dev                                  # local-data mode: http://localhost:5173/recruit-radar/
 cd backend ; ..\.venv\Scripts\python -m recruit_radar   # backend: http://127.0.0.1:8787
-npm run verify                               # full gate (or scripts/verify.ps1)
+npm run verify                               # full gate (or scripts/verify.ps1 / verify.sh)
 ```
 
 ## What really works
 
 - Radar, company detail with score breakdown and missing information, role history events.
-- Manual entry, CSV import with line-level errors and in-place correction, datasets, merge review,
-  shortlist with notes, shortlist and postings CSV export, saved views, role keywords.
-- Local-data mode (localStorage, corruption recovery, newer-schema protection, cross-tab notice).
-- Connected mode: SQLite + Alembic, Greenhouse / Lever / Ashby read-only adapters, refresh history,
-  error taxonomy, failed runs keep data, OpenAPI contract with drift test.
-- Two independent engines + oracle, 47 golden analysis vectors, 173 normalization cases, three-way
-  differential fuzz (see `docs/spec/ambiguities/differential.md`).
+- Manual entry, CSV import with line-level errors and in-place correction, datasets, merge review
+  (paged, 25 at a time), shortlist with notes, shortlist and postings CSV export, saved views, role
+  keywords.
+- Local-data mode (localStorage, corruption recovery, newer-schema protection, cross-tab notice,
+  quota failure is reported and nothing half-saved).
+- Connected mode: SQLite + Alembic, Greenhouse / Lever / Ashby read-only adapters (also checked once
+  against the three providers' live sample boards), refresh history, error taxonomy, failed runs
+  keep data, OpenAPI contract with drift test, Host/Origin guards, busy-database 503.
+- Two independent `analyze()` engines + oracle (47 golden vectors, 173 normalization cases,
+  three-way differential fuzz) **and** two independent CSV importers held to 52 shared vectors and
+  their own differential fuzz (`contracts/tools/fuzz_csv.py`).
 
 ## What is absent
 
-- No hosted demo; the Pages workflow has never run (no remote).
+- No hosted demo; the Pages and CI workflows have never run (no remote).
 - No scheduled refresh, no auth (loopback only), no HTML scraping, no candidate data (by design).
-- Provider payload shapes come from documentation, not from recordings of live traffic.
+- Connected mode cannot remove a single dataset or export raw postings (no backend endpoint).
+- No automated provider-traffic test (the 02B live check was a one-off, recorded in the report).
 
 ## Release blockers before publication
 
-1. Run Prompt 02B (independent adversarial acceptance) in a fresh session.
+1. Owner review of README, screenshots, limitations, license and secrets scan (gate G3).
 2. Owner approval to create the public repo, push, and enable Pages (MIT and the
    `PatrickNDevelopment` account are already confirmed, decision D-005).
-3. Verify the CI workflows on a real remote (never executed locally).
-4. Decide whether to rewrite the git author e-mail in history before publishing.
+3. Run the CI and Pages workflows on a real remote (never executed locally; Python 3.11/3.12 and
+   Linux were not available to the reviewers).
+4. Decide whether to rewrite the git author e-mail in history before publishing (the commits carry
+   the local author e-mail address).
 
 ## Next exact step
 
-Open a **new** Claude Code session at `C:\Users\patno\Desktop\Github` and paste **Prompt 02B** from
-`Claude_GitHub_Portfolio_Build_Chain.md`.
+Owner review (G3). If approved, the next prompt in the chain is **03A (SourceTrace)**; publishing
+this repository is a separate, explicitly approved action.
 
 ## Gotchas
 
 - `vite.config.ts` sets `base: '/recruit-radar/'`; e2e tests use that prefix on port 4174.
 - Ports: backend 8787, fake ATS 8788, preview 4174, dev 5173.
 - If you change scoring, identity or normalization: spec, both engines and the oracle together,
-  then `npm run fuzz` must report 0 mismatches.
+  then `npm run fuzz` must report 0 mismatches. If you change CSV parsing or validation: spec 05
+  "CSV details", both importers (`src/engine/csv.ts`, `backend/recruit_radar/services/csv_io.py`)
+  and `contracts/vectors/csv-import.json` together.
+- `npm run e2e` rewrites `docs/screenshots/*.png` (they carry a timestamp); commit them only when
+  the UI changed.
+- The backend refuses requests whose `Host` is not loopback / its bind address /
+  `RECRUIT_RADAR_ALLOWED_HOSTS` (DNS-rebinding guard).
