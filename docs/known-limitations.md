@@ -9,6 +9,9 @@
   60 s minimum interval, caps). Check a provider's current terms before using a real board.
 - **Ashby has no documented job id.** The id is derived from the job URL, so a changed URL looks
   like a removal plus an addition.
+- **Greenhouse `first_published` is only documented on the single-job endpoint.** The list
+  endpoint is what the adapter reads; when a board omits the field the role has no posting date
+  (age is then estimated only from history of 45 days or more).
 - **Lever `createdAt` is undocumented.** When present it is used as the posting date; when absent
   the role has no posting date.
 - **Scores are heuristics.** Weights and thresholds are fixed by the spec, not learned. There is no
@@ -23,7 +26,18 @@
 - **Local storage limits.** Local-data mode is per-browser and subject to the browser's quota
   (workspace capped at 5,000 postings); there is no sync. Another tab's changes are detected and
   flagged, not merged.
-- **Single user, no auth.** The backend is meant for `127.0.0.1` only.
+- **Single user, no auth.** The backend is meant for `127.0.0.1` only. It refuses requests whose
+  `Host` header is not loopback, its bind address or `RECRUIT_RADAR_ALLOWED_HOSTS` (DNS-rebinding
+  guard), so browsing to it by another name needs that variable.
+- **A public page reaching a local backend is up to the browser.** "Use the backend" from a
+  published page sends requests to `127.0.0.1`; whether the browser allows a public page to do that
+  (local-network access prompts or blocks) was not tested because nothing is published. The app
+  explains the CORS and offline cases it can observe.
+- **Connected mode cannot remove a single dataset or export raw postings** (the backend has no
+  endpoint for either); "Erase all data" wipes the database. Local-data mode has both.
+- **Large inputs.** A 5,000-row import takes about a second; the radar renders every company
+  (1,000 companies stay responsive, there is no virtualization), and merge candidates are shown 25
+  at a time.
 - **Accessibility** is covered by automated checks (names, keyboard focus visibility, overflow at
   320/375 px, WCAG AA text contrast in light and dark) and screenshot review; there has been no
   screen-reader session or 200% zoom audit.

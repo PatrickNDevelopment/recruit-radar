@@ -1301,7 +1301,19 @@ dialog::backdrop {
 
 /* ------------------------------------------------------------------ responsive */
 
+/* The radar's score column is far to the right of a scrolling table: on phones the score is
+   repeated under the company name (aria-hidden: the column still carries it for screen readers). */
+.row-score {
+  display: none;
+}
+
 @media (max-width: 40rem) {
+  .row-score {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
   h1 {
     font-size: 1.35rem;
   }

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { MergeCandidate } from '../engine';
 import { findCompanyByKey } from '../data/derive';
 import { useApp, useWorkspace } from './AppContext';
@@ -62,11 +63,20 @@ function Candidate({ candidate }: { candidate: MergeCandidate }) {
   );
 }
 
+/**
+ * Candidates are shown a page at a time. A list of look-alike names ("Store 001" ... "Store 999")
+ * can produce thousands of pairs; rendering all of them froze the page for many seconds.
+ */
+export const CANDIDATES_PER_PAGE = 25;
+
 export function MergeReview() {
   const { state, store } = useApp();
   const workspace = useWorkspace();
   const candidates = workspace.analysis.merge_candidates;
   const decisions = decisionRows(workspace);
+  const [shown, setShown] = useState(CANDIDATES_PER_PAGE);
+  const visible = candidates.slice(0, shown);
+  const hidden = candidates.length - visible.length;
 
   return (
     <div className="stack">
@@ -80,11 +90,27 @@ export function MergeReview() {
       {candidates.length === 0 ? (
         <p data-testid="no-candidates">No similar company names need a decision.</p>
       ) : (
-        <ul className="plain-list stack">
-          {candidates.map((candidate) => (
-            <Candidate key={candidate.candidate_id} candidate={candidate} />
-          ))}
-        </ul>
+        <>
+          <ul className="plain-list stack">
+            {visible.map((candidate) => (
+              <Candidate key={candidate.candidate_id} candidate={candidate} />
+            ))}
+          </ul>
+          {hidden > 0 ? (
+            <div className="row" data-testid="candidates-more">
+              <p className="muted" role="status">
+                Showing {visible.length} of {candidates.length} candidates.
+              </p>
+              <button
+                type="button"
+                className="btn btn--small"
+                onClick={() => setShown((count) => count + CANDIDATES_PER_PAGE)}
+              >
+                Show {Math.min(CANDIDATES_PER_PAGE, hidden)} more
+              </button>
+            </div>
+          ) : null}
+        </>
       )}
 
       <h3>Your decisions ({decisions.length})</h3>

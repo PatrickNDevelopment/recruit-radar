@@ -12,7 +12,7 @@ import {
   TextField,
 } from './components';
 import { COPY } from './copy';
-import { dateOf, EM_DASH, plural } from './format';
+import { dateOf, EM_DASH, plural, scoreText as formatScore } from './format';
 import {
   ariaSortFor,
   datasetTitle,
@@ -400,6 +400,12 @@ function RadarTable({ rows }: { rows: RadarRow[] }) {
                       {plural(row.removedRoles, 'role')} no longer listed
                     </div>
                   ) : null}
+                  {/* Phones show a table that scrolls sideways, and the score column is far to
+                      the right: repeat the score under the name there. Hidden from assistive
+                      technology (the score column has it) and from wide screens (CSS). */}
+                  <div className="row-score small" aria-hidden="true">
+                    {row.score === null ? 'Not scored' : `Score ${formatScore(row.score)}`}
+                  </div>
                 </th>
                 <td className="num">{row.rank ?? EM_DASH}</td>
                 <td className="num">{row.activeRoles}</td>

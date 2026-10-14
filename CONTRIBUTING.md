@@ -4,7 +4,10 @@
 2. `npm ci`, then `python -m venv .venv` and `pip install -r backend/requirements.lock.txt` inside it.
 3. `npm run dev` for the front end; `cd backend && python -m recruit_radar` for the backend.
 4. Before opening a pull request run `npm run verify` (format, lint, types, unit tests, backend
-   checks, vectors, build, secret scan, Playwright). All steps must pass.
+   checks, vectors, differential fuzz, build, secret scan, Playwright). All steps must pass.
+   The Playwright run regenerates `docs/screenshots/*.png` from the real app (they carry a
+   timestamp, so the files always differ): commit them when the UI changed, otherwise
+   `git checkout docs/screenshots`.
 
 ## Rules for changes
 

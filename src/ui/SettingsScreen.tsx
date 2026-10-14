@@ -105,7 +105,7 @@ const MODE_OPTIONS: ReadonlyArray<{ value: ModePreference; label: string; help: 
   {
     value: 'connected',
     label: 'Use the backend',
-    help: 'Contact the backend at the address above (also from a public page). Falls back to local-data mode, with a visible warning, if it is not reachable.',
+    help: 'Contact the backend at the address above, also from a public page (your browser decides whether a public page may reach a local address). Falls back to local-data mode, with a visible warning, if it is not reachable.',
   },
 ];
 

@@ -35,6 +35,9 @@ produce identical output on 47 analysis vectors and 173 normalization cases, and
 cross-implementation fuzzer compares all three on ~950 generated inputs. The first fuzz run found
 212 mismatches the hand-written vectors had missed; they were resolved from the spec text and are
 recorded in [`docs/spec/ambiguities/differential.md`](docs/spec/ambiguities/differential.md).
+The two CSV importers (Python for the backend, TypeScript for local-data mode) are held to 52
+shared vectors and a second differential fuzz; an independent review found they had disagreed on
+eight input classes (decision D-11 in the same file).
 
 ## Quick start
 
@@ -64,7 +67,7 @@ backend**.
 | `npm test`                                                      | Vitest: engine, CSV, data layer, view model, vectors                   |
 | `npm run backend:test`                                          | pytest: engine, adapters, API, migrations, persistence, OpenAPI drift  |
 | `npm run vectors:check`                                         | oracle self-check (vectors re-derived and hand-check values asserted)  |
-| `npm run fuzz`                                                  | three-way cross-implementation fuzz (oracle / Python / TypeScript)     |
+| `npm run fuzz`                                                  | cross-implementation fuzz: analyze (oracle / Python / TS) and CSV      |
 | `npm run e2e`                                                   | Playwright against the production build, a real backend and a fake ATS |
 | `npm run lint` / `typecheck` / `backend:lint` / `backend:types` | ESLint, `tsc --noEmit`, ruff, mypy --strict                            |
 | `npm run verify`                                                | everything above in order (also `scripts/verify.ps1` / `verify.sh`)    |
