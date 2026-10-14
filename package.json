@@ -18,7 +18,13 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "secrets": "node scripts/secret-scan.mjs",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run secrets && npm run e2e"
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run backend:lint && npm run backend:format && npm run backend:types && npm run backend:test && npm run vectors:check && npm run build && npm run secrets && npm run e2e",
+    "backend:lint": "node scripts/py.mjs -m ruff check backend contracts/tools",
+    "backend:format": "node scripts/py.mjs -m ruff format --check backend contracts/tools",
+    "backend:types": "node scripts/py.mjs -m mypy --strict backend/recruit_radar",
+    "backend:test": "node scripts/py.mjs -m pytest backend -q",
+    "vectors:check": "node scripts/py.mjs contracts/tools/oracle.py --self-check",
+    "fuzz": "node scripts/py.mjs contracts/tools/fuzz_diff.py all --seed 1 --count 800"
   },
   "dependencies": {
     "react": "19.3.0",

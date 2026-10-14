@@ -207,3 +207,11 @@ the other computable inputs stay filled (e.g. urgency `no_dated_roles` ⇒ `{age
 - `companies` order: ranked companies (rank asc), then unscored by `(key, company_id)`.
 - `roles` order: by company order, then `status` (active first), then `first_seen`, then `role_id`.
 - `stats.postings_observed` = total postings across processed snapshots (after the as_of filter).
+
+## 6. Clarifications from the differential review (binding)
+
+- `T` is the **set** of distinct `observed_at` instants of full snapshots; `|T|` counts instants, not
+  snapshots (two sources observed at the same instant give `|T| = 1`).
+- `as_of` and each `observed_at` must match `YYYY-MM-DDTHH:MM:SSZ` exactly (no padding, no trimming).
+- Unknown input keys are ignored. An omitted `snapshots` or `postings` is empty; `null` is invalid.
+- Keywords: at most 50 per list, each at most 60 code points after trimming; blank keywords never match.

@@ -743,6 +743,9 @@ legend {
 /* ------------------------------------------------------------------ tables */
 
 .table-scroll {
+  /* A positioned ancestor keeps .sr-only (absolute) text inside the scroll region instead of
+     widening the page. */
+  position: relative;
   overflow-x: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);

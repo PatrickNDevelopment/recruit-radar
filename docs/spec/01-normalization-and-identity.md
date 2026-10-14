@@ -87,3 +87,16 @@ true iff `phrase_key` non-empty and its tokens appear as a contiguous sub-sequen
 - `Acme Robotics` / `Acme Robotic` ⇒ `near_typo` candidate.
 - Identical title+location in the same source with different posting ids ⇒ 2 roles, 2 headcount.
 - Same title+location in a greenhouse board and a csv dataset ⇒ 1 canonical role, 2 observations.
+
+## 6. Clarifications from the differential review (binding)
+
+Decided in `docs/spec/ambiguities/differential.md` and pinned by golden vectors 45-47:
+
+- **Trim** removes exactly ECMAScript WhiteSpace + LineTerminator (U+0009-000D, U+0020, U+00A0, U+1680,
+  U+2000-200A, U+2028, U+2029, U+202F, U+205F, U+3000, U+FEFF). It does not remove U+0085 or U+001C-001F.
+- A merge decision's keys are members of the merged group even when no posting currently has that key;
+  the group's canonical key is its smallest member key.
+- A `not_same` decision suppresses exactly the candidate whose `(a_key, b_key)` equals the decision's pair.
+- A posting-level `source_ref` that is present must be 1..200 characters after trimming; `null` or absent
+  inherits the snapshot's `source_ref`.
+- `url` is constrained by scheme only (`http:`/`https:`, case-insensitive).

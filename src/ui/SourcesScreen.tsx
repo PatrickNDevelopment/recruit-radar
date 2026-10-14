@@ -177,15 +177,20 @@ function ConnectedSources() {
   const runs = current?.runs ?? null;
   const runsError = current?.error ?? null;
   const lastOk = runs?.find((run) => run.status === 'ok') ?? null;
+  // Baseline events can only belong to a source's FIRST successful run. Matching events to a run
+  // by timestamp alone would otherwise attribute them to a later run that finished in the same
+  // second (possible when the refresh interval is configured to 0).
+  const onlyOneOkRun = runs !== null && runs.filter((run) => run.status === 'ok').length === 1;
   const runEvents = useMemo(() => {
     if (selected === null || lastOk === null) return [];
     return workspace.analysis.events.filter(
       (event) =>
         event.source_kind === selected.provider &&
         event.source_ref === selected.token &&
-        event.at === lastOk.finished_at,
+        event.at === lastOk.finished_at &&
+        (event.type !== 'baseline' || onlyOneOkRun),
     );
-  }, [workspace.analysis.events, selected, lastOk]);
+  }, [workspace.analysis.events, selected, lastOk, onlyOneOkRun]);
 
   const add = async () => {
     let valid = true;
