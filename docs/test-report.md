@@ -23,6 +23,13 @@ Overall exit code: **0**.
 | 13  | `npm run secrets`                     | exit 0, no findings                                                                         |
 | 14  | `npm run e2e` (Playwright)            | exit 0, **18 passed** against the production build under `/recruit-radar/`                  |
 
+## Clean-clone check
+
+The committed branch `phase/02a-build` was cloned into a fresh directory, a new virtualenv was
+created with `pip install -r backend/requirements.lock.txt`, and `scripts/verify.ps1` was run there:
+exit 0 with the same counts (646 Vitest, 1,496 pytest, 948 fuzz cases / 0 mismatches, 18
+Playwright). The commit therefore contains everything the gate needs.
+
 ## Browser tests (against a real backend and a local fake ATS)
 
 - **Journey 1** (local-data mode): two overlapping CSVs; 6 companies before decisions; spacing-variant
