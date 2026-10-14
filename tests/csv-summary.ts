@@ -30,7 +30,7 @@ export function expand(spec: TextSpec): string {
   }
   if ('pad' in spec) {
     const { head, fill, total_bytes, bom } = spec.pad;
-    const prefix = `${bom ? '﻿' : ''}${head}`;
+    const prefix = `${bom ? '\ufeff' : ''}${head}`;
     const encoder = new TextEncoder();
     const remaining = total_bytes - encoder.encode(prefix).length;
     const unit = encoder.encode(fill).length;

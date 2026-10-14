@@ -58,7 +58,7 @@
     {
       "id": "csv-04-header-tab-and-nbsp",
       "description": "Any whitespace character in the trim set (a tab, a no-break space) counts as a space in a header name.",
-      "text": "Company\tName,TITLE,Posted At\nAcme,Engineer,2026-09-01\n",
+      "text": "Company\tName,TITLE,Posted\u00a0At\nAcme,Engineer,2026-09-01\n",
       "expected": {
         "file_error": null,
         "accepted": 1,
@@ -166,7 +166,7 @@
     {
       "id": "csv-12-bom",
       "description": "A leading UTF-8 BOM is ignored.",
-      "text": "﻿company_name,title\nAcme,Engineer\n",
+      "text": "\ufeffcompany_name,title\nAcme,Engineer\n",
       "expected": {
         "file_error": null,
         "accepted": 1,
@@ -612,7 +612,7 @@
     {
       "id": "csv-35-trim-set",
       "description": "Cells are trimmed with the ECMAScript whitespace set: a no-break space and a BOM are trimmed, NEL (U+0085) and U+001F are not.",
-      "text": "company_name,title\n Acme ,﻿Engineer﻿\n\u0085Beta,Analyst\u001f\n",
+      "text": "company_name,title\n\u00a0Acme\u00a0,\ufeffEngineer\ufeff\n\u0085Beta,Analyst\u001f\n",
       "expected": {
         "file_error": null,
         "accepted": 2,

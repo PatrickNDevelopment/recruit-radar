@@ -3,15 +3,23 @@
 - **No hosted demo.** The Pages workflow exists but has never run (no remote).
 - **The static demo cannot refresh from ATS APIs.** Browsers would hit CORS/policy limits and it
   would put third-party calls in a public page. Live refresh needs the local backend.
-- **Provider facts come from documentation, not traffic.** Payload shapes were taken from each
-  provider's public docs (2026-10-13); the tests use synthetic payloads in those shapes. None of the
+- **Provider facts come from documentation, not recorded traffic.** Payload shapes were taken from
+  each provider's public docs (2026-10-13) and the automated tests use synthetic payloads in those
+  shapes. The independent acceptance review (2026-10-14) additionally made one real read-only
+  refresh per provider through the product (Greenhouse's own board, Lever's documented `leverdemo`
+  site, Ashby's own board): all three answered in the documented shapes, with dates, URLs,
+  departments and locations mapped. That was a one-off check, not a test in the suite. None of the
   three documents a rate limit or terms, so the client is deliberately conservative (sequential,
   60 s minimum interval, caps). Check a provider's current terms before using a real board.
 - **Ashby has no documented job id.** The id is derived from the job URL, so a changed URL looks
   like a removal plus an addition.
-- **Greenhouse `first_published` is only documented on the single-job endpoint.** The list
-  endpoint is what the adapter reads; when a board omits the field the role has no posting date
-  (age is then estimated only from history of 45 days or more).
+- **Greenhouse `first_published` is only documented on the single-job endpoint, and Lever's
+  `createdAt` is not documented at all.** Live boards returned both in the list responses; when a
+  board omits one the role has no posting date (its age is then estimated only from a history of
+  45 days or more).
+- **The two shortlist exporters word the evidence column differently.** The columns, order and
+  numbers are identical in local-data and connected mode (and both write a UTF-8 BOM); only the
+  sentences in `strongest_evidence` / `missing_information` differ slightly.
 - **Lever `createdAt` is undocumented.** When present it is used as the posting date; when absent
   the role has no posting date.
 - **Scores are heuristics.** Weights and thresholds are fixed by the spec, not learned. There is no

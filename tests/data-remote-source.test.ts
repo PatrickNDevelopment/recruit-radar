@@ -5,6 +5,8 @@ import { RemoteSource } from '../src/data/remoteSource';
 import { csv, FORM_DEFAULTS, makeClock, NOW } from './data-helpers';
 
 const BASE = 'http://127.0.0.1:8787';
+/** U+FEFF by code point, so this file holds no invisible character. */
+const BOM = String.fromCharCode(0xfeff);
 
 interface Call {
   method: string;
@@ -349,11 +351,21 @@ describe('RemoteSource writes', () => {
     expect(calls[0]?.url.searchParams.get('confirm')).toBe('erase-all');
   });
 
-  it('downloads the shortlist CSV as text', async () => {
+  it('downloads the shortlist CSV as text, with the BOM local-data mode also writes', async () => {
     const { remote } = source(
       () => new Response('rank,company\r\n1,Acme\r\n', { headers: { 'Content-Type': 'text/csv' } }),
     );
-    expect(await remote.exportShortlistCsv()).toBe('rank,company\r\n1,Acme\r\n');
+    // Without a BOM Excel decodes the UTF-8 file as ANSI and accented names turn into mojibake.
+    expect(await remote.exportShortlistCsv()).toBe(`${BOM}rank,company\r\n1,Acme\r\n`);
+  });
+
+  it('does not add a second BOM when the backend already wrote one', async () => {
+    const { remote } = source(
+      () => new Response(`${BOM}rank,company\r\n`, { headers: { 'Content-Type': 'text/csv' } }),
+    );
+    const text = await remote.exportShortlistCsv();
+    expect(text.startsWith(BOM + BOM)).toBe(false);
+    expect(text.startsWith(BOM)).toBe(true);
   });
 
   it('refuses local-only operations without making a request', async () => {

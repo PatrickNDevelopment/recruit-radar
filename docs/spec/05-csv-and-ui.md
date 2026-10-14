@@ -12,7 +12,8 @@ Columns: `company_name`* · `title`* · `location` · `work_mode` (`remote|hybri
 Row validation errors (row rejected, others kept) carry the 1-based CSV line number, field, message:
 missing required; over-length; bad `work_mode`; non-http(s) url; impossible date; unterminated quote
 (file-level error). Export formula guard: any text cell starting with `= + - @ tab CR` gets one leading
-apostrophe on export and exactly one leading apostrophe followed by such a character is removed on import.
+apostrophe on export and exactly one leading apostrophe followed by such a character is removed on import
+(made exact for cells that already start with apostrophes in "CSV details", item 6).
 Importing assigns `dataset_label` (user-provided, required) as `source_ref`, `source_kind="csv"`,
 `mode="additive"`. Manual entry uses `source_kind="manual"`, `source_ref="manual"`.
 

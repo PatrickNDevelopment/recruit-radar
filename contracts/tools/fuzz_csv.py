@@ -65,7 +65,7 @@ POOL: dict[str, list[str]] = {
         'Foo "Bar" Ltd',
         "Cédar Point",
         "Line\nBreak Co",
-        " NBSP Co ",
+        "\u00a0NBSP Co\u00a0",
         "\u0085NEL Co",
         "Zeta",
         "Beta Labs",
@@ -104,7 +104,7 @@ POOL: dict[str, list[str]] = {
         "Remote",
         "l" * 300,
         "l" * 301,
-        " Paris",
+        "\u00a0Paris",
         "\U0001f30d" * 300,
         "\U0001f30d" * 301,
     ],
@@ -119,7 +119,7 @@ POOL: dict[str, list[str]] = {
         "",
         " remote ",
         "Hybrid",
-        "remote ",
+        "remote\u00a0",
     ],
     "department": [
         "Eng",
@@ -158,7 +158,7 @@ POOL: dict[str, list[str]] = {
         "2026-00-10",
         "2026-01-00",
     ],
-    "source_posting_id": ["", "123", " 12 ", "a" * 500, "id-1", "'=1", " x"],
+    "source_posting_id": ["", "123", " 12 ", "a" * 500, "id-1", "'=1", "\u00a0x"],
     "observed_at": [
         "2026-09-01T10:00:00Z",
         "2026-09-01 10:00:00",
@@ -168,7 +168,7 @@ POOL: dict[str, list[str]] = {
         "2026-02-29T00:00:00Z",
         "2026-09-01T24:00:00Z",
         " 2026-09-01T10:00:00Z ",
-        "2026-09-01T10:00:00Z ",
+        "2026-09-01T10:00:00Z\u00a0",
         "2030-01-01T00:00:00Z",
         "1999-12-31T23:59:59Z",
         "2026-10-13T11:59:59Z",
@@ -180,11 +180,11 @@ HEADER_VARIANTS = {
         "Company Name",
         "COMPANY-NAME",
         " company_name ",
-        "company name",
+        "company\u00a0name",
         "company\tname",
         "Company_Name",
         "company  name",
-        "﻿company_name",
+        "\ufeffcompany_name",
     ],
     "title": ["title", "Title", "TITLE", " title", "job title", "job_title"],
 }
@@ -282,7 +282,7 @@ def make_case(rnd: random.Random, index: int) -> dict[str, str]:
     if rnd.random() < 0.5:
         text += eol
     if rnd.random() < 0.15:
-        text = "﻿" + text
+        text = "\ufeff" + text
     if rnd.random() < 0.04:
         text = text.replace(eol, rnd.choice(["\n", "\r\n"]), 1)
     if rnd.random() < 0.02:
@@ -307,8 +307,8 @@ def boundary_cases() -> list[dict[str, str]]:
         {"id": "b-5000-blank", "text": rows(5000, "\n")},
         {"id": "b-1mb-exact", "text": head + "x" * room},
         {"id": "b-1mb-plus1", "text": head + "x" * (room + 1)},
-        {"id": "b-1mb-bom", "text": "﻿" + head + "x" * (room - 3)},
-        {"id": "b-1mb-bom+1", "text": "﻿" + head + "x" * (room - 2)},
+        {"id": "b-1mb-bom", "text": "\ufeff" + head + "x" * (room - 3)},
+        {"id": "b-1mb-bom+1", "text": "\ufeff" + head + "x" * (room - 2)},
         {"id": "b-1mb-2byte", "text": head + "é" * (room // 2)},
         {"id": "b-1mb-2byte+1", "text": head + "é" * (room // 2 + 1)},
     ]

@@ -39,7 +39,7 @@ def expand(spec: Any) -> str:
         )
     if "pad" in spec:
         pad = spec["pad"]
-        prefix = ("﻿" if pad["bom"] else "") + pad["head"]
+        prefix = ("\ufeff" if pad["bom"] else "") + pad["head"]
         remaining = pad["total_bytes"] - len(prefix.encode("utf-8"))
         unit = len(pad["fill"].encode("utf-8"))
         count = remaining // unit

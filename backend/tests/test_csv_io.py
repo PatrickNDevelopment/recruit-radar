@@ -41,7 +41,7 @@ def test_every_line_terminator_is_understood(terminator: str) -> None:
 
 
 def test_bom_is_tolerated() -> None:
-    result = parse("﻿company_name,title\nAcme,Engineer\n")
+    result = parse("\ufeffcompany_name,title\nAcme,Engineer\n")
     assert [r.posting.company_name for r in result.rows] == ["Acme"]
 
 
@@ -286,7 +286,7 @@ def test_whitespace_only_and_quoted_empty_lines_are_blank_lines() -> None:
 
 
 def test_header_names_treat_tabs_and_no_break_spaces_like_spaces() -> None:
-    result = parse("Company\tName,TITLE,Posted At\nAcme,Engineer,2026-09-01\n")
+    result = parse("Company\tName,TITLE,Posted\u00a0At\nAcme,Engineer,2026-09-01\n")
     posting = result.rows[0].posting
     assert (posting.company_name, posting.posted_at) == ("Acme", "2026-09-01")
 

@@ -81,6 +81,9 @@ const CAPABILITIES: Capabilities = {
   exportPostings: false,
 };
 
+/** U+FEFF, written by code point so this file holds no invisible character. */
+const UTF8_BOM = String.fromCharCode(0xfeff);
+
 function unavailable(what: string): SourceError {
   return new SourceError('unavailable', `${what} is only available in local-data mode.`, {
     code: 'unavailable',
@@ -417,7 +420,12 @@ export class RemoteSource implements AnalysisSource {
   }
 
   async exportShortlistCsv(): Promise<string> {
-    return this.request<string>('GET', '/api/shortlist/export.csv', { expect: 'text' });
+    const text = await this.request<string>('GET', '/api/shortlist/export.csv', {
+      expect: 'text',
+    });
+    // `fetch().text()` drops a UTF-8 BOM, and Excel then reads the file as ANSI (names with
+    // accents turn into mojibake). Local-data mode exports with a BOM; connected mode must too.
+    return text.startsWith(UTF8_BOM) ? text : `${UTF8_BOM}${text}`;
   }
 
   exportPostingsCsv(): Promise<string> {

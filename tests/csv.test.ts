@@ -96,7 +96,7 @@ describe('parseCsv (RFC 4180)', () => {
     expect(cells('a, "b, c" ,d')).toEqual([['a', 'b, c', 'd']]);
     expect(cells('  "x"\t,"y"  \n')).toEqual([['x', 'y']]);
     // ...but not other characters, and not inside a field that already has text.
-    expect(cells('a, "b"')).toEqual([['a', ' "b"']]);
+    expect(cells('a,\u00a0"b"')).toEqual([['a', '\u00a0"b"']]);
     expect(cells('a, x"y",z')).toEqual([['a', ' x"y"', 'z']]);
   });
 
@@ -438,7 +438,7 @@ describe('importCsv — row validation', () => {
   });
 
   it('maps tabs and no-break spaces in header names like spaces', () => {
-    const ok = importCsv('Company\tName,TITLE,Posted At\nA,B,2026-09-01\n', OPTIONS);
+    const ok = importCsv('Company\tName,TITLE,Posted\u00a0At\nA,B,2026-09-01\n', OPTIONS);
     expect(ok.accepted).toBe(1);
     expect(ok.snapshots[0]?.postings[0]).toMatchObject({
       company_name: 'A',
