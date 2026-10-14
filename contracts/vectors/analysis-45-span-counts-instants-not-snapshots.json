@@ -1,0 +1,380 @@
+{
+  "name": "span-counts-instants-not-snapshots",
+  "description": "02 s4 writes |T|, min T and max T, so T is a SET of instants. 'Tidewater Freight' has a greenhouse board and a lever board, each with ONE full snapshot, both observed at 2026-10-01T00:00:00Z: T has one element, so span_days is null (a multiset reading would give 0). 'Pier Nine' has the same two boards observed 30 days apart, again one full snapshot each: T has two instants (one per source), span_days is 30 and 'change' is computed; the lever baseline is not an 'added' event, so net is 0 and the value is 500.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [],
+    "snapshots": [
+      {
+        "snapshot_id": "tw-g",
+        "source_kind": "greenhouse",
+        "source_ref": "tidewater",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tidewater",
+            "source_posting_id": "501",
+            "company_name": "Tidewater Freight",
+            "title": "Dock Planner",
+            "location": "Rotterdam",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "tw-l",
+        "source_kind": "lever",
+        "source_ref": "tidewater",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "tidewater",
+            "source_posting_id": "L-501",
+            "company_name": "Tidewater Freight",
+            "title": "Dock Planner",
+            "location": "Rotterdam",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "pn-g",
+        "source_kind": "greenhouse",
+        "source_ref": "pier-nine",
+        "observed_at": "2026-09-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pier-nine",
+            "source_posting_id": "601",
+            "company_name": "Pier Nine",
+            "title": "Berth Planner",
+            "location": "Bergen",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "pn-l",
+        "source_kind": "lever",
+        "source_ref": "pier-nine",
+        "observed_at": "2026-10-01T00:00:00Z",
+        "mode": "full",
+        "postings": [
+          {
+            "source_kind": "lever",
+            "source_ref": "pier-nine",
+            "source_posting_id": "L-601",
+            "company_name": "Pier Nine",
+            "title": "Berth Planner",
+            "location": "Bergen",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_c5a06d96dd90",
+        "key": "tidewater freight",
+        "name": "Tidewater Freight",
+        "aliases": ["Tidewater Freight"],
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 668,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_3b5c8c9668bc",
+        "key": "pier nine",
+        "name": "Pier Nine",
+        "aliases": ["Pier Nine"],
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 626,
+        "coverage": 60,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": 500,
+            "reason_code": null,
+            "inputs": {
+              "added": 0,
+              "removed": 0,
+              "net": 0,
+              "span_days": 30,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 906,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 12
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_7dd98b98dd84",
+        "company_id": "c_c5a06d96dd90",
+        "title": "Dock Planner",
+        "location": "Rotterdam",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 12,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "tidewater",
+            "source_posting_id": "501",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "tidewater",
+            "source_posting_id": "L-501",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_12d20e8fb764",
+        "company_id": "c_3b5c8c9668bc",
+        "title": "Berth Planner",
+        "location": "Bergen",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-09-01T00:00:00Z",
+        "last_seen": "2026-10-01T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 42,
+        "observations": [
+          {
+            "source_kind": "greenhouse",
+            "source_ref": "pier-nine",
+            "source_posting_id": "601",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-09-01T00:00:00Z",
+            "last_seen": "2026-09-01T00:00:00Z"
+          },
+          {
+            "source_kind": "lever",
+            "source_ref": "pier-nine",
+            "source_posting_id": "L-601",
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-01T00:00:00Z",
+            "last_seen": "2026-10-01T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-09-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3b5c8c9668bc",
+        "role_id": "r_12d20e8fb764",
+        "source_kind": "greenhouse",
+        "source_ref": "pier-nine",
+        "title": "Berth Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_3b5c8c9668bc",
+        "role_id": "r_12d20e8fb764",
+        "source_kind": "lever",
+        "source_ref": "pier-nine",
+        "title": "Berth Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_c5a06d96dd90",
+        "role_id": "r_7dd98b98dd84",
+        "source_kind": "greenhouse",
+        "source_ref": "tidewater",
+        "title": "Dock Planner",
+        "fields": null
+      },
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_c5a06d96dd90",
+        "role_id": "r_7dd98b98dd84",
+        "source_kind": "lever",
+        "source_ref": "tidewater",
+        "title": "Dock Planner",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 4,
+      "postings_observed": 4,
+      "companies": 2,
+      "active_roles": 2
+    }
+  }
+}

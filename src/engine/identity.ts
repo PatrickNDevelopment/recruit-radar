@@ -303,7 +303,6 @@ interface CandidateSide {
 export function findMergeCandidates(
   companies: readonly Company[],
   decisions: readonly MergeDecision[],
-  index: MergeIndex,
 ): MergeCandidate[] {
   const sides: CandidateSide[] = companies
     .map((company) => {
@@ -319,19 +318,15 @@ export function findMergeCandidates(
     })
     .sort((a, b) => compareCodePoints(a.key, b.key));
 
-  // `not_same` decisions suppress a pair of groups when any member of one is declared different
-  // from any member of the other.
+  // A `not_same` decision suppresses exactly the pair of keys it names (spec 01 §3.4: a candidate
+  // is emitted for a pair of group canonical keys "not marked not_same"; decisions and candidates
+  // share the `a_key`/`b_key` vocabulary and decisions are created from a candidate's own keys).
+  // A decision that names a non-canonical member of a merged group therefore does not hide the
+  // candidate between the groups' canonical keys. docs/spec/ambiguities/differential.md D-4.
   const separated = new Set<string>();
   for (const decision of decisions) {
     if (decision.decision !== 'not_same') continue;
-    const first = index.find(decision.a_key);
-    const second = index.find(decision.b_key);
-    if (first === second) continue;
-    separated.add(
-      compareCodePoints(first, second) < 0
-        ? `${first}${PAIR_SEPARATOR}${second}`
-        : `${second}${PAIR_SEPARATOR}${first}`,
-    );
+    separated.add(`${decision.a_key}${PAIR_SEPARATOR}${decision.b_key}`);
   }
 
   const found = new Map<string, { i: number; j: number; order: number }>();

@@ -46,8 +46,13 @@ def resolve_canonical_keys(
     """Map every company key in ``present_keys`` to the canonical key of its merge group.
 
     ``merge`` decisions are unioned transitively (union-find). The canonical key of a group is
-    its lexicographically smallest member *that is a company key present in the data*; decision
-    keys that name no company are carried through unions but can never become canonical.
+    its lexicographically smallest *member* key (spec 01 section 3.3): every key a ``merge``
+    decision names is a member, including a key no posting currently has (a stale decision), so
+    such a key can be canonical. Keeping that literal reading is what makes the Python and
+    TypeScript engines and the oracle agree (``docs/spec/ambiguities/differential.md`` D-3).
+
+    The union always attaches the larger root under the smaller one, so a root is always the
+    smallest member of its group and no separate "smallest" pass is needed.
     """
     parent: dict[str, str] = {}
 
@@ -65,16 +70,14 @@ def resolve_canonical_keys(
         if decision.decision != "merge":
             continue
         root_a, root_b = find(decision.a_key), find(decision.b_key)
-        if root_a != root_b:
+        if root_a == root_b:
+            continue
+        if root_a < root_b:
+            parent[root_b] = root_a
+        else:
             parent[root_a] = root_b
 
-    smallest: dict[str, str] = {}
-    for key in present_keys:
-        root = find(key)
-        current = smallest.get(root)
-        if current is None or key < current:
-            smallest[root] = key
-    return {key: smallest[find(key)] for key in present_keys}
+    return {key: find(key) for key in present_keys}
 
 
 def not_same_pairs(decisions: Iterable[ParsedDecision]) -> frozenset[tuple[str, str]]:

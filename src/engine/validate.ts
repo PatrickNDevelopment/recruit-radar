@@ -92,23 +92,23 @@ function truncate(value: string): string {
   return points.length > 40 ? `${points.slice(0, 40).join('')}…` : value;
 }
 
-function hasControlCharacter(text: string): boolean {
-  for (let i = 0; i < text.length; i += 1) {
-    const unit = text.charCodeAt(i);
-    if (unit <= 0x1f || (unit >= 0x7f && unit <= 0x9f)) return true;
-  }
-  return false;
-}
-
-const HTTP_URL = /^https?:\/\/[^\s/?#]/i;
+// No `u` flag on purpose: with it, `i` would use Unicode case folding and let U+017F (long s)
+// pose as the "s" of "https". ASCII case-insensitivity only, exactly like the Python engine's
+// `re.ASCII | re.IGNORECASE`.
+const HTTP_SCHEME = /^https?:/i;
 
 /**
- * True for an absolute `http:` / `https:` URL with a non-empty authority and no control
- * characters. Anything else (`javascript:`, `data:`, `ftp:`, relative or scheme-less values, or a
- * scheme smuggled past a filter with embedded tabs) is not a usable link.
+ * True when `value` starts with the `http:` or `https:` scheme (ASCII case-insensitive).
+ *
+ * Spec 01 section 1 constrains the *scheme* only ("only http:/https: schemes; anything else is
+ * rejected"), so that is all this checks: `javascript:`, `data:`, `ftp:`, relative and scheme-less
+ * values, and a scheme smuggled past a filter with an embedded tab (`ht\ttps:`) are all not
+ * http(s); no further URL grammar is enforced. The Python engine and the backend intake apply the
+ * identical rule (docs/spec/ambiguities/differential.md D-8). Whether a value is also a *usable
+ * link* is a presentation decision (`src/ui/format.ts`), not a validity one.
  */
 export function isHttpUrl(value: string): boolean {
-  return HTTP_URL.test(value) && !hasControlCharacter(value);
+  return HTTP_SCHEME.test(value);
 }
 
 export function checkUrl(raw: unknown, field = 'url'): Check<string | null> {
@@ -134,17 +134,30 @@ export function checkDate(raw: unknown, field: string): Check<string | null> {
   return ok(value);
 }
 
-/** Required `YYYY-MM-DDTHH:MM:SSZ` that must be a real UTC instant. */
-export function checkTimestamp(raw: unknown, field: string): Check<string> {
+/**
+ * Required `YYYY-MM-DDTHH:MM:SSZ` that must be a real UTC instant, taken exactly as written.
+ *
+ * `as_of` and `observed_at` are not `RawPosting` strings, so the "strings are trimmed" rule of
+ * spec 01 section 1 does not reach them: spec 02 section 1 fixes their format and padding
+ * violates it. The Python engine is identical (docs/spec/ambiguities/differential.md D-6).
+ */
+export function checkInstant(raw: unknown, field: string): Check<string> {
   if (raw === undefined || raw === null) return fail(`${field} is required`);
   if (typeof raw !== 'string') return fail(`${field} must be a YYYY-MM-DDTHH:MM:SSZ timestamp`);
-  const value = trimText(raw);
-  if (parseTimestamp(value) === null) {
+  if (parseTimestamp(raw) === null) {
     return fail(
-      `${field} must be a real UTC time in YYYY-MM-DDTHH:MM:SSZ format (got "${truncate(value)}")`,
+      `${field} must be a real UTC time in YYYY-MM-DDTHH:MM:SSZ format (got "${truncate(raw)}")`,
     );
   }
-  return ok(value);
+  return ok(raw);
+}
+
+/**
+ * Like {@link checkInstant} but the text is trimmed first. For values that originate in a CSV
+ * cell or a form field, where every string is a `RawPosting`-style string and is trimmed.
+ */
+export function checkTimestamp(raw: unknown, field: string): Check<string> {
+  return checkInstant(typeof raw === 'string' ? trimText(raw) : raw, field);
 }
 
 /** Optional timestamp: blank or missing means null. */
@@ -214,9 +227,10 @@ const snapshotSchema = z
     ),
     source_kind: sourceKindField('source_kind'),
     source_ref: fromCheck((raw) => checkRequiredText(raw, 'source_ref', LIMITS.source_ref)),
-    observed_at: fromCheck((raw) => checkTimestamp(raw, 'observed_at')),
+    observed_at: fromCheck((raw) => checkInstant(raw, 'observed_at')),
     mode: fromCheck((raw) => checkEnum<SnapshotMode>(raw, 'mode', SNAPSHOT_MODES)),
-    postings: z.array(postingSchema),
+    // Omitted means empty, like `profile` and `decisions` (D-7); `null` is still an error.
+    postings: z.array(postingSchema).default([]),
   })
   .superRefine((snapshot, ctx) => {
     // A posting may repeat its snapshot's source, but must never contradict it.
@@ -274,7 +288,7 @@ const decisionSchema = z
 
 const inputSchema = z
   .object({
-    as_of: fromCheck((raw) => checkTimestamp(raw, 'as_of')),
+    as_of: fromCheck((raw) => checkInstant(raw, 'as_of')),
     profile: z
       .object({
         include_keywords: keywordList('include_keywords').default([]),
@@ -282,7 +296,7 @@ const inputSchema = z
       })
       .default({ include_keywords: [], exclude_keywords: [] }),
     decisions: z.array(decisionSchema).default([]),
-    snapshots: z.array(snapshotSchema),
+    snapshots: z.array(snapshotSchema).default([]),
   })
   .superRefine((input, ctx) => {
     const seen = new Map<string, number>();

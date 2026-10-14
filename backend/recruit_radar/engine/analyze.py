@@ -184,9 +184,11 @@ def analyze(input: Mapping[str, Any]) -> JsonObject:
         name = min(postings)[1]  # earliest observed posting; ties -> smallest raw name
         aliases = sorted({raw for _, raw in postings})
 
+        # T is a *set* of instants (spec 02 section 4 writes |T|, min T, max T): two full
+        # snapshots at one instant are one element, so their span is unknown (null), not 0.
         sources = {m.source for m in members}
-        times = [t for source in sorted(sources) for t in full_times.get(source, [])]
-        span_days = days_between(min(times), max(times)) if len(times) >= 2 else None
+        times = sorted({t for source in sources for t in full_times.get(source, [])})
+        span_days = days_between(times[0], times[-1]) if len(times) >= 2 else None
 
         active_roles = [r for r in roles if r.active]
         score = score_company(

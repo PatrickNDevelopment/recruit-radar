@@ -2663,6 +2663,148 @@ def define_vectors():
         ],
     )
 
+    # ---------------------------------------------------------------------
+    # 45-47 pin readings that the first 44 vectors deliberately left open and that the
+    # differential review (docs/spec/ambiguities/differential.md D-2, D-3, D-4) then DECIDED.
+    # Before they existed the two engines and the oracle each took a different reading and every
+    # vector still passed; these three make the decision part of the contract.
+    # ---------------------------------------------------------------------
+
+    # 45 ------------------------------------------------------------------
+    tg, tl, pg, pl = (
+        src("greenhouse", "tidewater"),
+        src("lever", "tidewater"),
+        src("greenhouse", "pier-nine"),
+        src("lever", "pier-nine"),
+    )
+    add(
+        "span-counts-instants-not-snapshots",
+        "02 s4 writes |T|, min T and max T, so T is a SET of instants. 'Tidewater Freight' has a greenhouse "
+        "board and a lever board, each with ONE full snapshot, both observed at 2026-10-01T00:00:00Z: T has "
+        "one element, so span_days is null (a multiset reading would give 0). 'Pier Nine' has the same two "
+        "boards observed 30 days apart, again one full snapshot each: T has two instants (one per source), "
+        "span_days is 30 and 'change' is computed; the lever baseline is not an 'added' event, so net is 0 "
+        "and the value is 500.",
+        [
+            snap(
+                "tw-g",
+                "greenhouse",
+                "tidewater",
+                "2026-10-01T00:00:00Z",
+                "full",
+                [tg("501", "Tidewater Freight", "Dock Planner", "Rotterdam")],
+            ),
+            snap(
+                "tw-l",
+                "lever",
+                "tidewater",
+                "2026-10-01T00:00:00Z",
+                "full",
+                [tl("L-501", "Tidewater Freight", "Dock Planner", "Rotterdam")],
+            ),
+            snap(
+                "pn-g",
+                "greenhouse",
+                "pier-nine",
+                "2026-09-01T00:00:00Z",
+                "full",
+                [pg("601", "Pier Nine", "Berth Planner", "Bergen")],
+            ),
+            snap(
+                "pn-l",
+                "lever",
+                "pier-nine",
+                "2026-10-01T00:00:00Z",
+                "full",
+                [pl("L-601", "Pier Nine", "Berth Planner", "Bergen")],
+            ),
+        ],
+    )
+
+    # 46 ------------------------------------------------------------------
+    ha, hb = src("csv", "hollow-a"), src("csv", "hollow-b")
+    add(
+        "merge-through-absent-key-names-the-group",
+        "01 s3: the canonical key of a merged group is its lexicographically smallest MEMBER key, and every "
+        "key a merge decision names is a member - including a key no posting has any more (a stale "
+        "decision, e.g. after a source was deleted). 'ardent hollow' has no posting: merging it with "
+        "'birch hollow' and 'cedar hollow' makes it the group's key (and company_id), although it is not "
+        "among the present keys. 'zenith row' is absent too, but larger than both present keys, so the "
+        "group of 'dune row' and 'elm row' that it joins keeps 'dune row'; the merge is transitive "
+        "through an absent key either way. Two roles dedupe across the merged companies (same title and "
+        "location, two sources).",
+        [
+            snap(
+                "hollow-a-1",
+                "csv",
+                "hollow-a",
+                "2026-10-05T00:00:00Z",
+                "additive",
+                [
+                    ha(None, "Birch Hollow", "Kiln Operator", "Delft"),
+                    ha(None, "Dune Row", "Glaze Chemist", "Utrecht"),
+                ],
+            ),
+            snap(
+                "hollow-b-1",
+                "csv",
+                "hollow-b",
+                "2026-10-06T00:00:00Z",
+                "additive",
+                [
+                    hb(None, "Cedar Hollow", "Kiln Operator", "Delft"),
+                    hb(None, "Elm Row", "Glaze Chemist", "Utrecht"),
+                ],
+            ),
+        ],
+        decisions=[
+            {"a_key": "ardent hollow", "b_key": "birch hollow", "decision": "merge"},
+            {"a_key": "ardent hollow", "b_key": "cedar hollow", "decision": "merge"},
+            {"a_key": "dune row", "b_key": "zenith row", "decision": "merge"},
+            {"a_key": "elm row", "b_key": "zenith row", "decision": "merge"},
+        ],
+    )
+
+    # 47 ------------------------------------------------------------------
+    la, lb = src("csv", "list-a"), src("csv", "list-b")
+    add(
+        "not-same-names-the-canonical-pair",
+        "01 s3.4 emits a candidate for a pair of GROUP CANONICAL keys 'not marked not_same'; a decision "
+        "marks exactly the (a_key, b_key) pair it names. 'alpha groupy' is merged into 'alpha group', so "
+        "the pair of groups is ('alpha group', 'alpha groupz') (near_typo). The user's not_same names "
+        "'alpha groupy' / 'alpha groupz' - a MEMBER of the merged group, not the canonical pair - so it "
+        "does not hide that candidate (mapping decision keys to canonical keys first would hide it). The "
+        "not_same for 'delta works' / 'delta workz' names the pair itself and does hide it.",
+        [
+            snap(
+                "list-a-1",
+                "csv",
+                "list-a",
+                "2026-10-12T00:00:00Z",
+                "additive",
+                [
+                    la(None, "Alpha Group", "Engineer", "Lisbon"),
+                    la(None, "Alpha Groupz", "Engineer", "Lisbon"),
+                    la(None, "Delta Works", "Engineer", "Lisbon"),
+                    la(None, "Delta Workz", "Engineer", "Lisbon"),
+                ],
+            ),
+            snap(
+                "list-b-1",
+                "csv",
+                "list-b",
+                "2026-10-12T00:00:00Z",
+                "additive",
+                [lb(None, "Alpha Groupy", "Engineer", "Lisbon")],
+            ),
+        ],
+        decisions=[
+            {"a_key": "alpha group", "b_key": "alpha groupy", "decision": "merge"},
+            {"a_key": "alpha groupy", "b_key": "alpha groupz", "decision": "not_same"},
+            {"a_key": "delta works", "b_key": "delta workz", "decision": "not_same"},
+        ],
+    )
+
 
 def build_analysis():
     define_vectors()

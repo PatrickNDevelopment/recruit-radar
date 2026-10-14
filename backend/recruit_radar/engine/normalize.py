@@ -37,8 +37,10 @@ LEGAL_SUFFIXES: Final[frozenset[str]] = frozenset(
 )
 
 # ECMAScript WhiteSpace + LineTerminator, i.e. exactly what String.prototype.trim() removes.
-# Python's str.strip() differs (it strips U+001C..U+001F and U+0085, and does not strip U+FEFF),
-# and the TypeScript engine trims with trim(), so this set is the one both engines share.
+# Python's str.strip() differs (it strips U+001C..U+001F and U+0085, and does not strip U+FEFF).
+# Spec 01 section 1 says only "strings are trimmed"; spec 05 says a BOM is tolerated, so U+FEFF
+# must be stripped and this is the set. The TypeScript engine carries the same explicit table
+# (src/engine/normalize.ts, SPEC_WHITESPACE); docs/spec/ambiguities/differential.md D-1.
 _JS_WHITESPACE: Final = "".join(
     chr(code_point)
     for code_point in (

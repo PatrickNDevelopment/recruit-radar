@@ -252,7 +252,7 @@ export function analyze(input: unknown): Analysis {
     companies: ordered.map((entry) => entry.analysis),
     roles,
     events,
-    merge_candidates: findMergeCandidates(companies, parsed.decisions, index),
+    merge_candidates: findMergeCandidates(companies, parsed.decisions),
     stats: {
       snapshots: snapshots.length,
       postings_observed: replayed.postings_observed,

@@ -1,0 +1,2189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RecruitRadar API",
+    "description": "Local-only backend of RecruitRadar. It turns public job-posting data (three read-only ATS JSON APIs, CSV files and manual entries) into an evidence-backed view of observed hiring activity. There is no authentication: bind it to a loopback address (the default).",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["health"],
+        "summary": "Liveness and schema version",
+        "operationId": "get_health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "tags": ["profile"],
+        "summary": "Role keywords",
+        "operationId": "get_profile",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["profile"],
+        "summary": "Replace the role keywords",
+        "operationId": "put_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources": {
+      "get": {
+        "tags": ["sources"],
+        "summary": "Sources with their last run",
+        "operationId": "list_sources",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SourceOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Sources"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["sources"],
+        "summary": "Watch an ATS board",
+        "operationId": "create_source",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}": {
+      "delete": {
+        "tags": ["sources"],
+        "summary": "Remove a source and its data",
+        "operationId": "delete_source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Source Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}/refresh": {
+      "post": {
+        "tags": ["sources"],
+        "summary": "One read-only fetch of the board",
+        "description": "Fetches the provider's public JSON once (one request per page), stores a snapshot and returns the run. A failed fetch still returns 200 with `status: failed`; it stores no snapshot and removes nothing. 429 `too_soon` when the source was refreshed within the minimum interval.",
+        "operationId": "refresh_source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Source Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshRunOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}/runs": {
+      "get": {
+        "tags": ["sources"],
+        "summary": "Refresh history, newest first (at most 100)",
+        "operationId": "list_runs",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Source Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RefreshRunOut"
+                  },
+                  "title": "Response List Runs"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/imports/csv": {
+      "post": {
+        "tags": ["imports"],
+        "summary": "Import postings from CSV text",
+        "description": "Rows are validated one by one; valid rows are stored as an additive snapshot and invalid ones come back in `errors` with their 1-based line number. Answers 201 when at least one row was stored and 200 when none was. A file-level problem (empty file, missing header, duplicate header, unterminated quote, over the size limits) is 422 `invalid_csv`.",
+        "operationId": "import_csv",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvImportBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResultOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "No row was valid; nothing stored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResultOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/postings": {
+      "post": {
+        "tags": ["imports"],
+        "summary": "Add one manual posting",
+        "operationId": "create_posting",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostingBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualPostingOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analysis": {
+      "get": {
+        "tags": ["analysis"],
+        "summary": "Companies, roles, events and scores",
+        "description": "Derived by replaying every stored snapshot through the pure analysis engine; nothing derived is stored.",
+        "operationId": "get_analysis",
+        "parameters": [
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored.",
+              "title": "As Of"
+            },
+            "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/companies/{company_id}": {
+      "get": {
+        "tags": ["analysis"],
+        "summary": "One company with its roles, events and per-source freshness",
+        "operationId": "get_company",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Company Id"
+            }
+          },
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored.",
+              "title": "As Of"
+            },
+            "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyDetailOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/merge-decisions": {
+      "get": {
+        "tags": ["merge decisions"],
+        "summary": "All stored decisions",
+        "operationId": "list_merge_decisions",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MergeDecisionOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Merge Decisions"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["merge decisions"],
+        "summary": "Record that two company keys are (or are not) the same company",
+        "operationId": "create_merge_decision",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MergeDecisionOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/merge-decisions/{decision_id}": {
+      "delete": {
+        "tags": ["merge decisions"],
+        "summary": "Undo a decision",
+        "operationId": "delete_merge_decision",
+        "parameters": [
+          {
+            "name": "decision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Decision Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shortlist": {
+      "get": {
+        "tags": ["shortlist"],
+        "summary": "Shortlisted companies",
+        "operationId": "list_shortlist",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ShortlistEntryOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Shortlist"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/companies/{company_id}/shortlist": {
+      "put": {
+        "tags": ["shortlist"],
+        "summary": "Shortlist (or un-shortlist) a company and set its qualification note",
+        "operationId": "put_company_shortlist",
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Company Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShortlistBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortlistStateOut"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shortlist/export.csv": {
+      "get": {
+        "tags": ["shortlist"],
+        "summary": "Shortlist CSV with score and evidence summary",
+        "operationId": "export_shortlist",
+        "parameters": [
+          {
+            "name": "as_of",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored.",
+              "title": "As Of"
+            },
+            "description": "UTC instant YYYY-MM-DDTHH:MM:SSZ the analysis is computed as of. Default: now (whole seconds). Snapshots observed later are ignored."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shortlist as CSV",
+            "content": {
+              "text/csv": {}
+            }
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/data": {
+      "delete": {
+        "tags": ["data"],
+        "summary": "Erase all stored data",
+        "description": "Deletes sources, runs, snapshots, postings, decisions, the shortlist and the profile. Requires `?confirm=erase-all`; anything else is 400 `confirmation_required`.",
+        "operationId": "delete_data",
+        "parameters": [
+          {
+            "name": "confirm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Must be exactly `erase-all`.",
+              "title": "Confirm"
+            },
+            "description": "Must be exactly `erase-all`."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Error envelope (spec 03)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisOut": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "title": "As Of"
+          },
+          "companies": {
+            "items": {
+              "$ref": "#/components/schemas/CompanyOut"
+            },
+            "type": "array",
+            "title": "Companies"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RoleOut"
+            },
+            "type": "array",
+            "title": "Roles"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/EventOut"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "merge_candidates": {
+            "items": {
+              "$ref": "#/components/schemas/MergeCandidateOut"
+            },
+            "type": "array",
+            "title": "Merge Candidates"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/StatsOut"
+          }
+        },
+        "type": "object",
+        "required": ["as_of", "companies", "roles", "events", "merge_candidates", "stats"],
+        "title": "AnalysisOut"
+      },
+      "CompanyDetailOut": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "title": "As Of"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyOut"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RoleOut"
+            },
+            "type": "array",
+            "title": "Roles"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/EventOut"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "source_freshness": {
+            "items": {
+              "$ref": "#/components/schemas/SourceFreshnessOut"
+            },
+            "type": "array",
+            "title": "Source Freshness"
+          },
+          "shortlist": {
+            "$ref": "#/components/schemas/ShortlistStateOut"
+          }
+        },
+        "type": "object",
+        "required": ["as_of", "company", "roles", "events", "source_freshness", "shortlist"],
+        "title": "CompanyDetailOut"
+      },
+      "CompanyOut": {
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases"
+          },
+          "first_seen": {
+            "type": "string",
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Seen"
+          },
+          "active_roles": {
+            "type": "integer",
+            "title": "Active Roles"
+          },
+          "relevant_roles": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relevant Roles"
+          },
+          "removed_roles": {
+            "type": "integer",
+            "title": "Removed Roles"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "coverage": {
+            "type": "integer",
+            "title": "Coverage"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentOut"
+            },
+            "type": "array",
+            "title": "Components"
+          }
+        },
+        "type": "object",
+        "required": [
+          "company_id",
+          "key",
+          "name",
+          "aliases",
+          "first_seen",
+          "last_seen",
+          "active_roles",
+          "relevant_roles",
+          "removed_roles",
+          "score",
+          "coverage",
+          "rank",
+          "components"
+        ],
+        "title": "CompanyOut"
+      },
+      "ComponentOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "role_relevance",
+              "volume",
+              "change",
+              "urgency",
+              "source_confidence",
+              "freshness"
+            ],
+            "title": "Key"
+          },
+          "weight": {
+            "type": "integer",
+            "title": "Weight"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "no_active_roles",
+                  "no_keywords",
+                  "insufficient_history",
+                  "no_scope_roles",
+                  "no_dated_roles"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Code"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Inputs"
+          }
+        },
+        "type": "object",
+        "required": ["key", "weight", "value", "reason_code", "inputs"],
+        "title": "ComponentOut"
+      },
+      "CsvImportBody": {
+        "properties": {
+          "dataset_label": {
+            "type": "string",
+            "title": "Dataset Label",
+            "description": "Becomes the source_ref of the import (1-200)."
+          },
+          "csv_text": {
+            "type": "string",
+            "maxLength": 1048576,
+            "title": "Csv Text",
+            "description": "UTF-8 CSV text, at most 1 MB."
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed At",
+            "description": "YYYY-MM-DDTHH:MM:SSZ; blank means the import time."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["dataset_label", "csv_text"],
+        "title": "CsvImportBody"
+      },
+      "DecisionBody": {
+        "properties": {
+          "a_key": {
+            "type": "string",
+            "title": "A Key",
+            "description": "Company key; must sort strictly before b_key."
+          },
+          "b_key": {
+            "type": "string",
+            "title": "B Key"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["merge", "not_same"],
+            "title": "Decision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["a_key", "b_key", "decision"],
+        "title": "DecisionBody"
+      },
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "Stable snake_case error code."
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": ["code", "message"],
+        "title": "ErrorBody"
+      },
+      "ErrorEnvelope": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "type": "object",
+        "required": ["error"],
+        "title": "ErrorEnvelope",
+        "description": "Every non-2xx answer: ``{\"error\": {\"code\", \"message\", \"details\"?}}``."
+      },
+      "EventOut": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["baseline", "added", "changed", "removed", "reappeared"],
+            "title": "Type"
+          },
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "role_id": {
+            "type": "string",
+            "title": "Role Id"
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": ["greenhouse", "lever", "ashby", "csv", "manual"],
+            "title": "Source Kind"
+          },
+          "source_ref": {
+            "type": "string",
+            "title": "Source Ref"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": ["title", "location", "work_mode", "department", "url", "posted_at"]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "type",
+          "company_id",
+          "role_id",
+          "source_kind",
+          "source_ref",
+          "title",
+          "fields"
+        ],
+        "title": "EventOut"
+      },
+      "HealthOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok", "degraded"],
+            "title": "Status"
+          },
+          "app_version": {
+            "type": "string",
+            "title": "App Version"
+          },
+          "schema_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schema Version"
+          },
+          "db_ok": {
+            "type": "boolean",
+            "title": "Db Ok"
+          }
+        },
+        "type": "object",
+        "required": ["status", "app_version", "schema_version", "db_ok"],
+        "title": "HealthOut"
+      },
+      "ImportResultOut": {
+        "properties": {
+          "snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot Id",
+            "description": "Id of the stored snapshot (the latest when rows carry several observed_at); null when no row was accepted."
+          },
+          "dataset_label": {
+            "type": "string",
+            "title": "Dataset Label"
+          },
+          "accepted": {
+            "type": "integer",
+            "title": "Accepted"
+          },
+          "rejected": {
+            "type": "integer",
+            "title": "Rejected"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/RowErrorOut"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/RowWarningOut"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": ["snapshot_id", "dataset_label", "accepted", "rejected", "errors", "warnings"],
+        "title": "ImportResultOut"
+      },
+      "ManualPostingOut": {
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "title": "Snapshot Id"
+          },
+          "source_kind": {
+            "type": "string",
+            "const": "manual",
+            "title": "Source Kind"
+          },
+          "source_ref": {
+            "type": "string",
+            "title": "Source Ref"
+          },
+          "dataset_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Label"
+          },
+          "observed_at": {
+            "type": "string",
+            "title": "Observed At"
+          },
+          "posting": {
+            "$ref": "#/components/schemas/StoredPostingOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "source_kind",
+          "source_ref",
+          "dataset_label",
+          "observed_at",
+          "posting"
+        ],
+        "title": "ManualPostingOut"
+      },
+      "MergeCandidateOut": {
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "a_key": {
+            "type": "string",
+            "title": "A Key"
+          },
+          "b_key": {
+            "type": "string",
+            "title": "B Key"
+          },
+          "a_name": {
+            "type": "string",
+            "title": "A Name"
+          },
+          "b_name": {
+            "type": "string",
+            "title": "B Name"
+          },
+          "reason": {
+            "type": "string",
+            "enum": ["spacing_variant", "token_overlap", "near_typo"],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": ["candidate_id", "a_key", "b_key", "a_name", "b_name", "reason"],
+        "title": "MergeCandidateOut"
+      },
+      "MergeDecisionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "a_key": {
+            "type": "string",
+            "title": "A Key"
+          },
+          "b_key": {
+            "type": "string",
+            "title": "B Key"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["merge", "not_same"],
+            "title": "Decision"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": ["id", "a_key", "b_key", "decision", "created_at"],
+        "title": "MergeDecisionOut"
+      },
+      "ObservationOut": {
+        "properties": {
+          "source_kind": {
+            "type": "string",
+            "enum": ["greenhouse", "lever", "ashby", "csv", "manual"],
+            "title": "Source Kind"
+          },
+          "source_ref": {
+            "type": "string",
+            "title": "Source Ref"
+          },
+          "source_posting_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Posting Id"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "removed"],
+            "title": "Status"
+          },
+          "first_seen": {
+            "type": "string",
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "type": "string",
+            "title": "Last Seen"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_kind",
+          "source_ref",
+          "source_posting_id",
+          "url",
+          "status",
+          "first_seen",
+          "last_seen"
+        ],
+        "title": "ObservationOut"
+      },
+      "PostingBody": {
+        "properties": {
+          "dataset_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Label",
+            "description": "Free label; 1-200 characters."
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed At",
+            "description": "YYYY-MM-DDTHH:MM:SSZ; blank means now."
+          },
+          "source_posting_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Posting Id"
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "work_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Work Mode",
+            "description": "remote | hybrid | onsite | unknown (blank means unknown)."
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "Only http: and https: URLs."
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At",
+            "description": "YYYY-MM-DD"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["company_name", "title"],
+        "title": "PostingBody"
+      },
+      "ProfileBody": {
+        "properties": {
+          "include_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Include Keywords",
+            "description": "At most 50 keywords of at most 60 characters."
+          },
+          "exclude_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exclude Keywords",
+            "description": "At most 50 keywords of at most 60 characters."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ProfileBody"
+      },
+      "ProfileOut": {
+        "properties": {
+          "include_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Include Keywords"
+          },
+          "exclude_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exclude Keywords"
+          }
+        },
+        "type": "object",
+        "required": ["include_keywords", "exclude_keywords"],
+        "title": "ProfileOut"
+      },
+      "RefreshRunOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "source_id": {
+            "type": "integer",
+            "title": "Source Id"
+          },
+          "started_at": {
+            "type": "string",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "type": "string",
+            "title": "Finished At"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ok", "failed"],
+            "title": "Status"
+          },
+          "error_kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "not_found",
+                  "unauthorized",
+                  "rate_limited",
+                  "server_error",
+                  "network",
+                  "timeout",
+                  "malformed",
+                  "too_large"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Kind"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "retry_after_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retry After S"
+          },
+          "items_seen": {
+            "type": "integer",
+            "title": "Items Seen"
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "changed": {
+            "type": "integer",
+            "title": "Changed"
+          },
+          "removed": {
+            "type": "integer",
+            "title": "Removed"
+          },
+          "reappeared": {
+            "type": "integer",
+            "title": "Reappeared"
+          },
+          "unchanged": {
+            "type": "integer",
+            "title": "Unchanged"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "source_id",
+          "started_at",
+          "finished_at",
+          "status",
+          "error_kind",
+          "http_status",
+          "retry_after_s",
+          "items_seen",
+          "added",
+          "changed",
+          "removed",
+          "reappeared",
+          "unchanged",
+          "message"
+        ],
+        "title": "RefreshRunOut"
+      },
+      "RoleOut": {
+        "properties": {
+          "role_id": {
+            "type": "string",
+            "title": "Role Id"
+          },
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "work_mode": {
+            "type": "string",
+            "enum": ["remote", "hybrid", "onsite", "unknown"],
+            "title": "Work Mode"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "removed"],
+            "title": "Status"
+          },
+          "first_seen": {
+            "type": "string",
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "type": "string",
+            "title": "Last Seen"
+          },
+          "removed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Removed At"
+          },
+          "relevant": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relevant"
+          },
+          "age_days": {
+            "type": "integer",
+            "title": "Age Days"
+          },
+          "observations": {
+            "items": {
+              "$ref": "#/components/schemas/ObservationOut"
+            },
+            "type": "array",
+            "title": "Observations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role_id",
+          "company_id",
+          "title",
+          "location",
+          "work_mode",
+          "department",
+          "posted_at",
+          "status",
+          "first_seen",
+          "last_seen",
+          "removed_at",
+          "relevant",
+          "age_days",
+          "observations"
+        ],
+        "title": "RoleOut"
+      },
+      "RowErrorOut": {
+        "properties": {
+          "line": {
+            "type": "integer",
+            "title": "Line",
+            "description": "1-based CSV line on which the record starts."
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": ["line", "field", "message"],
+        "title": "RowErrorOut"
+      },
+      "RowWarningOut": {
+        "properties": {
+          "line": {
+            "type": "integer",
+            "title": "Line"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": ["line", "message"],
+        "title": "RowWarningOut"
+      },
+      "ShortlistBody": {
+        "properties": {
+          "shortlisted": {
+            "type": "boolean",
+            "title": "Shortlisted"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "Omit to keep the stored note."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["shortlisted"],
+        "title": "ShortlistBody"
+      },
+      "ShortlistEntryOut": {
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "added_at": {
+            "type": "string",
+            "title": "Added At"
+          }
+        },
+        "type": "object",
+        "required": ["company_id", "name", "note", "added_at"],
+        "title": "ShortlistEntryOut"
+      },
+      "ShortlistStateOut": {
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "title": "Company Id"
+          },
+          "shortlisted": {
+            "type": "boolean",
+            "title": "Shortlisted"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "added_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Added At"
+          }
+        },
+        "type": "object",
+        "required": ["company_id", "shortlisted", "name", "note", "added_at"],
+        "title": "ShortlistStateOut"
+      },
+      "SourceBody": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": ["greenhouse", "lever", "ashby"],
+            "title": "Provider"
+          },
+          "token": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,100}$",
+            "title": "Token",
+            "description": "Board token / site / board name (never a URL)."
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "description": "The company this board belongs to (1-200 characters)."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["provider", "token", "company_name"],
+        "title": "SourceBody"
+      },
+      "SourceFreshnessOut": {
+        "properties": {
+          "source_kind": {
+            "type": "string",
+            "enum": ["greenhouse", "lever", "ashby", "csv", "manual"],
+            "title": "Source Kind"
+          },
+          "source_ref": {
+            "type": "string",
+            "title": "Source Ref"
+          },
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id",
+            "description": "The watched ATS source, when there is one."
+          },
+          "active_roles": {
+            "type": "integer",
+            "title": "Active Roles"
+          },
+          "removed_roles": {
+            "type": "integer",
+            "title": "Removed Roles"
+          },
+          "first_seen": {
+            "type": "string",
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "type": "string",
+            "title": "Last Seen"
+          },
+          "last_observed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Observed At",
+            "description": "Newest snapshot of this source at as_of."
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_kind",
+          "source_ref",
+          "source_id",
+          "active_roles",
+          "removed_roles",
+          "first_seen",
+          "last_seen",
+          "last_observed_at"
+        ],
+        "title": "SourceFreshnessOut"
+      },
+      "SourceOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["greenhouse", "lever", "ashby"],
+            "title": "Provider"
+          },
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "base_host": {
+            "type": "string",
+            "title": "Base Host",
+            "description": "The host a refresh of this source contacts."
+          },
+          "last_run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RefreshRunOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_ok_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Ok At",
+            "description": "finished_at of the newest successful run."
+          },
+          "runs_total": {
+            "type": "integer",
+            "title": "Runs Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "provider",
+          "token",
+          "company_name",
+          "created_at",
+          "base_host",
+          "last_run",
+          "last_ok_at",
+          "runs_total"
+        ],
+        "title": "SourceOut"
+      },
+      "StatsOut": {
+        "properties": {
+          "snapshots": {
+            "type": "integer",
+            "title": "Snapshots"
+          },
+          "postings_observed": {
+            "type": "integer",
+            "title": "Postings Observed"
+          },
+          "companies": {
+            "type": "integer",
+            "title": "Companies"
+          },
+          "active_roles": {
+            "type": "integer",
+            "title": "Active Roles"
+          }
+        },
+        "type": "object",
+        "required": ["snapshots", "postings_observed", "companies", "active_roles"],
+        "title": "StatsOut"
+      },
+      "StoredPostingOut": {
+        "properties": {
+          "source_posting_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Posting Id"
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "work_mode": {
+            "type": "string",
+            "enum": ["remote", "hybrid", "onsite", "unknown"],
+            "title": "Work Mode"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_posting_id",
+          "company_name",
+          "title",
+          "location",
+          "work_mode",
+          "department",
+          "url",
+          "posted_at"
+        ],
+        "title": "StoredPostingOut"
+      }
+    }
+  }
+}

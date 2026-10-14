@@ -3,7 +3,7 @@
 Two layers:
 
 * ``*In`` Pydantic models describe the JSON-compatible input of spec 02 section 1 and the
-  ``RawPosting`` rules of spec 01 section 1. They forbid unknown keys and refuse type coercion.
+  ``RawPosting`` rules of spec 01 section 1. They ignore unknown keys and refuse type coercion.
 * ``Parsed*`` frozen dataclasses are what the rest of the engine consumes: trimmed values, empty
   strings mapped to ``None`` and the derived ``company_key`` / ``title_key`` / ``location_key``.
 """
@@ -42,7 +42,15 @@ _HTTP_SCHEME: Final = re.compile(r"https?:", re.IGNORECASE | re.ASCII)
 # Pydantic input models
 # ---------------------------------------------------------------------------------------------
 class _StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
+    """No type coercion and immutable, but unknown keys are ignored.
+
+    ``analyze`` input is not an API request body (spec 03's ``extra="forbid"`` is about those):
+    spec 02 section 1 forbids nothing, and the TypeScript engine ignores unknown properties, so
+    this does too (``docs/spec/ambiguities/differential.md`` D-5). Typed callers cannot misspell
+    a key; the API layer keeps its own ``extra="forbid"`` bodies.
+    """
+
+    model_config = ConfigDict(extra="ignore", strict=True, frozen=True)
 
 
 def _trimmed(value: object) -> object:
@@ -56,9 +64,31 @@ def _trimmed_or_none(value: object) -> object:
     return value
 
 
+KEYWORD_MAX_COUNT: Final = 50
+KEYWORD_MAX_CODE_POINTS: Final = 60
+
+
 class ProfileIn(_StrictModel):
     include_keywords: list[str] = Field(default_factory=list)
     exclude_keywords: list[str] = Field(default_factory=list)
+
+    @field_validator("include_keywords", "exclude_keywords")
+    @classmethod
+    def _keyword_limits(cls, value: list[str]) -> list[str]:
+        """Spec 03 profile limits (at most 50 keywords of at most 60 characters each).
+
+        The same limits the TypeScript engine enforces, applied after trimming and counted in
+        code points. Blank keywords are allowed (they never match). Spec 03 words these as the
+        limits of ``PUT /api/profile`` but "profile" is one concept and the browser-only mode has
+        no API, so both engines apply them (``docs/spec/ambiguities/differential.md`` D-9).
+        """
+        if len(value) > KEYWORD_MAX_COUNT:
+            raise ValueError(f"at most {KEYWORD_MAX_COUNT} keywords are allowed")
+        trimmed = [trim(keyword) for keyword in value]
+        for keyword in trimmed:
+            if len(keyword) > KEYWORD_MAX_CODE_POINTS:
+                raise ValueError(f"a keyword may have at most {KEYWORD_MAX_CODE_POINTS} characters")
+        return trimmed
 
 
 class DecisionIn(_StrictModel):
@@ -94,7 +124,6 @@ class PostingIn(_StrictModel):
         return _trimmed(value)
 
     @field_validator(
-        "source_ref",
         "source_posting_id",
         "location",
         "department",
@@ -107,11 +136,19 @@ class PostingIn(_StrictModel):
     def _trim_optional(cls, value: object) -> object:
         return _trimmed_or_none(value)
 
+    @field_validator("source_ref", mode="before")
+    @classmethod
+    def _trim_source_ref(cls, value: object) -> object:
+        # Trimmed but NOT mapped to null when empty: a posting-level source_ref that is present
+        # is a RawPosting.source_ref ("1..200 after trim"), so "" is invalid, not "absent"
+        # (docs/spec/ambiguities/differential.md D-10).
+        return _trimmed(value)
+
     @field_validator("source_ref")
     @classmethod
     def _source_ref_length(cls, value: str | None) -> str | None:
-        if value is not None and len(value) > 200:
-            raise ValueError("source_ref must be at most 200 characters")
+        if value is not None and not 1 <= len(value) <= 200:
+            raise ValueError("source_ref must be 1..200 characters after trimming")
         return value
 
     @field_validator("company_name")

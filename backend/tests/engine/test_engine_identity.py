@@ -83,10 +83,25 @@ class TestResolveCanonicalKeys:
     def test_not_same_never_merges(self) -> None:
         assert resolve_canonical_keys({"a", "b"}, [not_same("a", "b")]) == {"a": "a", "b": "b"}
 
-    def test_canonical_key_is_always_a_present_key(self) -> None:
-        # "a" appears only in a decision; it must not become the group's canonical key.
+    def test_canonical_key_is_the_smallest_member_even_without_postings(self) -> None:
+        # Spec 01 section 3.3: the canonical key is the smallest *member* key. "a" is a member
+        # because a decision names it, although no posting has it (docs/spec/ambiguities/
+        # differential.md D-3), so it is the group's canonical key.
         result = resolve_canonical_keys({"b", "c"}, [merge("a", "b"), merge("a", "c")])
+        assert result == {"b": "a", "c": "a"}
+
+    def test_an_absent_key_larger_than_every_present_one_does_not_win(self) -> None:
+        result = resolve_canonical_keys({"b", "c"}, [merge("b", "z"), merge("c", "z")])
         assert result == {"b": "b", "c": "b"}
+
+    def test_the_canonical_key_does_not_depend_on_decision_order(self) -> None:
+        decisions = [merge("m", "n"), merge("a", "m"), merge("n", "z"), merge("k", "z")]
+        expected = resolve_canonical_keys({"k", "n", "z"}, decisions)
+        assert set(expected.values()) == {"a"}
+        for rotation in range(len(decisions)):
+            rotated = decisions[rotation:] + decisions[:rotation]
+            assert resolve_canonical_keys({"k", "n", "z"}, rotated) == expected
+            assert resolve_canonical_keys({"k", "n", "z"}, rotated[::-1]) == expected
 
     def test_merge_through_an_absent_key_is_still_transitive(self) -> None:
         result = resolve_canonical_keys({"a", "c"}, [merge("a", "b"), merge("b", "c")])

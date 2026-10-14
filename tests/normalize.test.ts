@@ -163,14 +163,26 @@ describe('tokenSequenceMatch / containsTokenSequence', () => {
 });
 
 describe('code-point helpers', () => {
-  it('trimText strips exactly the Python str.isspace() set', () => {
+  it('trimText strips exactly the ECMAScript WhiteSpace + LineTerminator set', () => {
+    // docs/spec/ambiguities/differential.md D-1: the set String.prototype.trim() removes, written
+    // out as a table; the Python engine carries the identical one (its str.strip() differs).
     expect(trimText('  \t\n x y \u00a0\u3000')).toBe('x y');
-    expect(trimText('\u001c\u001dx\u001f')).toBe('x');
-    expect(trimText('\u0085x\u2028')).toBe('x');
-    // JS trim() would remove U+FEFF; Python's strip() does not, so neither do we.
-    expect(trimText('\ufeffx')).toBe('\ufeffx');
+    expect(trimText('\u0085x\u2028')).toBe('\u0085x');
+    expect(trimText('\u001c\u001dx\u001f')).toBe('\u001c\u001dx\u001f');
+    // A BOM is tolerated (spec 05), so U+FEFF is whitespace for trimming.
+    expect(trimText('\ufeffx\ufeff')).toBe('x');
     expect(trimText('a  b')).toBe('a  b');
     expect(trimText('   ')).toBe('');
+  });
+
+  it('trimText agrees with String.prototype.trim for every code unit', () => {
+    for (let unit = 0; unit <= 0xffff; unit += 1) {
+      if (unit >= 0xd800 && unit <= 0xdfff) continue;
+      const text = `${String.fromCharCode(unit)}x${String.fromCharCode(unit)}`;
+      expect(trimText(text) === 'x', `U+${unit.toString(16).padStart(4, '0')}`).toBe(
+        text.trim() === 'x',
+      );
+    }
   });
 
   it('codePointLength counts astral characters once', () => {

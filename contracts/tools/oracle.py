@@ -1057,6 +1057,21 @@ HAND_DERIVED = {
     "duplicate-keys-last-wins": {
         "acme": (822, 45, 1, [None, 600, None, None, 1000, 1000])
     },
+    # HC-21 .. HC-23: derived by hand (HAND_CHECKS.md) before the oracle was run on them.
+    "span-counts-instants-not-snapshots": {
+        "tidewater freight": (668, 45, 1, [None, 300, None, None, 1000, 906]),
+        "pier nine": (626, 60, 2, [None, 300, 500, None, 1000, 906]),
+    },
+    "merge-through-absent-key-names-the-group": {
+        "ardent hollow": (589, 45, 1, [None, 300, None, None, 700, 1000]),
+        "dune row": (589, 45, 2, [None, 300, None, None, 700, 1000]),
+    },
+    "not-same-names-the-canonical-pair": {
+        "alpha group": (589, 45, 1, [None, 300, None, None, 700, 1000]),
+        "alpha groupz": (556, 45, 2, [None, 300, None, None, 600, 1000]),
+        "delta works": (556, 45, 3, [None, 300, None, None, 600, 1000]),
+        "delta workz": (556, 45, 4, [None, 300, None, None, 600, 1000]),
+    },
 }
 
 
@@ -1101,6 +1116,12 @@ HAND_CANDIDATES = {
     "merge-decision-applies-to-history": [],
     "merge-transitive-canonical-only-candidates": [],
     "name-variants-collapse": [],
+    "span-counts-instants-not-snapshots": [],
+    "merge-through-absent-key-names-the-group": [],
+    # the id is sha256('alpha group|alpha groupz')[:12] from a bare hashlib one-liner
+    "not-same-names-the-canonical-pair": [
+        ("near_typo", "alpha group", "alpha groupz", "3895f6ac16ad")
+    ],
 }
 # vector -> events in output order: (at, type, source_kind, source_ref, title, fields)
 HAND_EVENTS = {
@@ -1375,6 +1396,11 @@ HAND_OBSERVATIONS = {
         },
         {("greenhouse", "support", "202"), ("lever", "support", "L-b")},
     ],
+    # four source roles, two canonical roles: each pairs the hollow-a row with the hollow-b row
+    "merge-through-absent-key-names-the-group": [
+        {("csv", "hollow-a", None), ("csv", "hollow-b", None)},
+        {("csv", "hollow-a", None), ("csv", "hollow-b", None)},
+    ],
 }
 
 
@@ -1431,14 +1457,23 @@ def self_check() -> int:
         ("key_sep", ["\x00", "\x1f", "/", ":"]),
         ("bracket_mode", ["bracket_then_paren", "alternation"]),
         ("bracket_replace", ["space"]),
-        ("not_same", ["mapped"]),
-        ("dangling", ["present_canonical", "ignore"]),
         ("overlap_tokens", ["set"]),
-        ("T", ["multiset"]),
         ("display_members", ["active_if_active"]),
         ("names", ["latest_only"]),
         ("reappeared_title", ["old"]),
     ]
+    # Readings the differential review DECIDED (docs/spec/ambiguities/differential.md D-2, D-3,
+    # D-4) and then pinned with dedicated vectors: the alternative must change exactly those
+    # vectors - proving they are sensitive - and no other one.
+    pinned = {
+        ("T", "multiset"): ["span-counts-instants-not-snapshots"],
+        ("dangling", "present_canonical"): ["merge-through-absent-key-names-the-group"],
+        ("dangling", "ignore"): ["merge-through-absent-key-names-the-group"],
+        ("not_same", "mapped"): ["not-same-names-the-canonical-pair"],
+    }
+    pinned_readings: dict = {}
+    for name, val in pinned:
+        pinned_readings.setdefault(name, []).append(val)
     informational = [
         ("company_first_seen", ["active_roles"]),
         ("relevant_removed", ["null"]),
@@ -1463,20 +1498,31 @@ def self_check() -> int:
             continue  # variants are only meaningful relative to a matching base output
         for problem in check_ids(v["expected"]):
             fail(f"{base}: ids: {problem}")
-        for name, values in must_be_insensitive + informational:
+        for name, values in (
+            must_be_insensitive + informational + list(pinned_readings.items())
+        ):
             for val in values:
                 with reading(**{name: val}):
                     if analyze(v["input"]) != v["expected"]:
                         sensitive.setdefault((name, val), []).append(v["name"])
     for (name, val), vecs in sorted(sensitive.items()):
+        if (name, val) in pinned:
+            continue  # checked against the exact expected set below
         if name in dict(must_be_insensitive):
             fail(f"vectors depend on ambiguous reading {name}={val!r}: {vecs}")
         else:
             notes.append(
                 f"informational: reading {name}={val!r} changes {len(vecs)} vector(s): {vecs}"
             )
+    for (name, val), want in sorted(pinned.items()):
+        got = sorted(sensitive.get((name, val), []))
+        if got != sorted(want):
+            fail(
+                f"decided reading {name}={val!r}: expected it to change {want}, got {got}"
+            )
     notes.append(
-        f"analysis: {len(vectors)} vectors, insensitive to {len(must_be_insensitive)} ambiguous readings"
+        f"analysis: {len(vectors)} vectors, insensitive to {len(must_be_insensitive)} ambiguous "
+        f"readings, {len(pinned)} decided readings pinned by dedicated vectors"
     )
 
     # --- hand-derived values

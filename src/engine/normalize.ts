@@ -11,15 +11,18 @@
 // ---------------------------------------------------------------------------------------------
 
 /**
- * True for the characters Python's `str.isspace()` treats as whitespace. "Strings are trimmed"
- * (spec 01 §1) is defined as stripping exactly this set, so both engines trim identically.
- * (JS `trim()` differs: it also strips U+FEFF and keeps U+001C..U+001F and U+0085.)
+ * True for the characters that "Strings are trimmed" (spec 01 §1) strips: ECMAScript WhiteSpace and
+ * LineTerminator, i.e. exactly what `String.prototype.trim()` removes, written out as a table so
+ * the result never depends on the runtime's Unicode data. Spec 05 says a BOM is tolerated, so
+ * U+FEFF is in the set. The Python engine carries the identical table
+ * (`recruit_radar.engine.normalize._JS_WHITESPACE`); Python's `str.strip()` differs (it strips
+ * U+001C..U+001F and U+0085 and keeps U+FEFF), which is why neither engine uses it.
+ * docs/spec/ambiguities/differential.md D-1.
  */
 export function isSpecWhitespace(codeUnit: number): boolean {
   return (
     (codeUnit >= 0x09 && codeUnit <= 0x0d) ||
-    (codeUnit >= 0x1c && codeUnit <= 0x20) ||
-    codeUnit === 0x85 ||
+    codeUnit === 0x20 ||
     codeUnit === 0xa0 ||
     codeUnit === 0x1680 ||
     (codeUnit >= 0x2000 && codeUnit <= 0x200a) ||
@@ -27,7 +30,8 @@ export function isSpecWhitespace(codeUnit: number): boolean {
     codeUnit === 0x2029 ||
     codeUnit === 0x202f ||
     codeUnit === 0x205f ||
-    codeUnit === 0x3000
+    codeUnit === 0x3000 ||
+    codeUnit === 0xfeff
   );
 }
 

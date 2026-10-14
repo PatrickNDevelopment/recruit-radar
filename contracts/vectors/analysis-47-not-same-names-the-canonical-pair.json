@@ -1,0 +1,608 @@
+{
+  "name": "not-same-names-the-canonical-pair",
+  "description": "01 s3.4 emits a candidate for a pair of GROUP CANONICAL keys 'not marked not_same'; a decision marks exactly the (a_key, b_key) pair it names. 'alpha groupy' is merged into 'alpha group', so the pair of groups is ('alpha group', 'alpha groupz') (near_typo). The user's not_same names 'alpha groupy' / 'alpha groupz' - a MEMBER of the merged group, not the canonical pair - so it does not hide that candidate (mapping decision keys to canonical keys first would hide it). The not_same for 'delta works' / 'delta workz' names the pair itself and does hide it.",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [
+      {
+        "a_key": "alpha group",
+        "b_key": "alpha groupy",
+        "decision": "merge"
+      },
+      {
+        "a_key": "alpha groupy",
+        "b_key": "alpha groupz",
+        "decision": "not_same"
+      },
+      {
+        "a_key": "delta works",
+        "b_key": "delta workz",
+        "decision": "not_same"
+      }
+    ],
+    "snapshots": [
+      {
+        "snapshot_id": "list-a-1",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "observed_at": "2026-10-12T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "company_name": "Alpha Group",
+            "title": "Engineer",
+            "location": "Lisbon",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "company_name": "Alpha Groupz",
+            "title": "Engineer",
+            "location": "Lisbon",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "company_name": "Delta Works",
+            "title": "Engineer",
+            "location": "Lisbon",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "company_name": "Delta Workz",
+            "title": "Engineer",
+            "location": "Lisbon",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "list-b-1",
+        "source_kind": "csv",
+        "source_ref": "list-b",
+        "observed_at": "2026-10-12T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-b",
+            "source_posting_id": null,
+            "company_name": "Alpha Groupy",
+            "title": "Engineer",
+            "location": "Lisbon",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_de88b36fa15f",
+        "key": "alpha group",
+        "name": "Alpha Group",
+        "aliases": ["Alpha Group", "Alpha Groupy"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 589,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 700,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_eaf67d7a2148",
+        "key": "alpha groupz",
+        "name": "Alpha Groupz",
+        "aliases": ["Alpha Groupz"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_1e9aec876f68",
+        "key": "delta works",
+        "name": "Delta Works",
+        "aliases": ["Delta Works"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 3,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_8870f8f81f16",
+        "key": "delta workz",
+        "name": "Delta Workz",
+        "aliases": ["Delta Workz"],
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 556,
+        "coverage": 45,
+        "rank": 4,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 600,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 0
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 1
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_f586422e88cf",
+        "company_id": "c_de88b36fa15f",
+        "title": "Engineer",
+        "location": "Lisbon",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "list-b",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_f6099421e875",
+        "company_id": "c_eaf67d7a2148",
+        "title": "Engineer",
+        "location": "Lisbon",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_bb12b02f8641",
+        "company_id": "c_1e9aec876f68",
+        "title": "Engineer",
+        "location": "Lisbon",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_786642c23401",
+        "company_id": "c_8870f8f81f16",
+        "title": "Engineer",
+        "location": "Lisbon",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-12T00:00:00Z",
+        "last_seen": "2026-10-12T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 1,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "list-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-12T00:00:00Z",
+            "last_seen": "2026-10-12T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_de88b36fa15f",
+        "role_id": "r_f586422e88cf",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_eaf67d7a2148",
+        "role_id": "r_f6099421e875",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_1e9aec876f68",
+        "role_id": "r_bb12b02f8641",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_8870f8f81f16",
+        "role_id": "r_786642c23401",
+        "source_kind": "csv",
+        "source_ref": "list-a",
+        "title": "Engineer",
+        "fields": null
+      },
+      {
+        "at": "2026-10-12T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_de88b36fa15f",
+        "role_id": "r_f586422e88cf",
+        "source_kind": "csv",
+        "source_ref": "list-b",
+        "title": "Engineer",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [
+      {
+        "candidate_id": "3895f6ac16ad",
+        "a_key": "alpha group",
+        "b_key": "alpha groupz",
+        "a_name": "Alpha Group",
+        "b_name": "Alpha Groupz",
+        "reason": "near_typo"
+      }
+    ],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 5,
+      "companies": 4,
+      "active_roles": 4
+    }
+  }
+}

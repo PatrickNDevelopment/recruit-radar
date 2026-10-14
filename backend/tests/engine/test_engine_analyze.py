@@ -477,16 +477,34 @@ class TestSpanBoundaries:
         change = component(company(analyze(make_input(snaps)), "acme"), "change")
         assert change["inputs"]["span_days"] is None
 
-    def test_two_full_snapshots_with_the_same_instant_give_a_zero_day_span(self) -> None:
-        # |T| counts snapshots, so two of them at one instant is a span of 0 days (see the
-        # ambiguity log); change is still insufficient because 0 < 14.
+    def test_two_full_snapshots_with_the_same_instant_have_no_span(self) -> None:
+        # T is a *set* of instants (spec 02 section 4 writes |T|, min T, max T), so two full
+        # snapshots at one instant are one element: the span is unknown (null), not 0
+        # (docs/spec/ambiguities/differential.md D-2).
         snaps = [
             snapshot("a", "2026-10-01T00:00:00Z", [posting(pid="1")]),
             snapshot("b", "2026-10-01T00:00:00Z", [posting(pid="1")]),
         ]
         change = component(company(analyze(make_input(snaps)), "acme"), "change")
         assert change["reason_code"] == "insufficient_history"
-        assert change["inputs"]["span_days"] == 0
+        assert change["inputs"]["span_days"] is None
+
+    def test_one_instant_shared_by_two_sources_is_still_one_instant(self) -> None:
+        # The same instant reached through two different sources is one element of T as well.
+        snaps = [
+            snapshot("g", "2026-10-01T00:00:00Z", [posting("Acme", pid="1")], ref="acme"),
+            snapshot("l", "2026-10-01T00:00:00Z", [posting("Acme", pid="9")], kind="lever"),
+        ]
+        change = component(company(analyze(make_input(snaps)), "acme"), "change")
+        assert change["inputs"]["span_days"] is None
+
+    def test_a_distinct_instant_from_a_second_source_does_form_a_span(self) -> None:
+        snaps = [
+            snapshot("g", "2026-09-01T00:00:00Z", [posting("Acme", pid="1")], ref="acme"),
+            snapshot("l", "2026-09-20T00:00:00Z", [posting("Acme", pid="9")], kind="lever"),
+        ]
+        change = component(company(analyze(make_input(snaps)), "acme"), "change")
+        assert change["inputs"]["span_days"] == 19
 
     def test_span_uses_every_full_snapshot_of_every_supplying_source(self) -> None:
         snaps = [

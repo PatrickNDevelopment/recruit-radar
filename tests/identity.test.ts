@@ -1,12 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { analyze, EngineInputError, type MergeDecision } from '../src/engine';
-import {
-  findMergeCandidates,
-  MergeIndex,
-  withinOneEdit,
-  type Company,
-} from '../src/engine/identity';
+import { findMergeCandidates, withinOneEdit, type Company } from '../src/engine/identity';
 import { compareCodePoints } from '../src/engine/normalize';
 import { company, makeInput, mulberry32, post, rolesOf, snap } from './helpers';
 
@@ -151,37 +146,69 @@ describe('company identity (spec 01 §3, §5)', () => {
     expect(analysis.merge_candidates).toEqual([]);
   });
 
-  it('keeps a not_same decision effective after one of its keys is merged elsewhere', () => {
-    // "alpha groupy" != "alpha groupz" was declared; "alpha groupy" was later merged into
-    // "alpha group". The merged group's canonical key ("alpha group") is one edit away from
-    // "alpha groupz", but the user's decision about a member must still suppress the pair.
+  it('applies a not_same decision to exactly the pair of canonical keys it names', () => {
+    // docs/spec/ambiguities/differential.md D-4. Spec 01 section 3.4 emits a candidate for a pair
+    // of group canonical keys "not marked not_same", and a decision marks the pair `a_key`/`b_key`
+    // it names. "alpha groupy" was merged into "alpha group", so the candidate is reported for
+    // ("alpha group", "alpha groupz"): a not_same recorded against the *member* "alpha groupy"
+    // does not name that pair and so does not hide it; the same decision against the canonical
+    // pair does. (Both engines and the oracle agree; the earlier "any member" reading was the
+    // TypeScript engine's alone.)
     const postings = [
       post('Alpha Group', 'Engineer'),
       post('Alpha Groupy', 'Engineer'),
       post('Alpha Groupz', 'Engineer'),
     ];
     const merge: MergeDecision = { a_key: 'alpha group', b_key: 'alpha groupy', decision: 'merge' };
-    const notSame: MergeDecision = {
+    const memberNotSame: MergeDecision = {
       a_key: 'alpha groupy',
       b_key: 'alpha groupz',
       decision: 'not_same',
     };
-    const without = analyze(
-      makeInput([snap('s1', 'csv', 'x', T1, 'additive', postings)], { decisions: [merge] }),
-    );
-    expect(without.merge_candidates).toMatchObject([
-      { a_key: 'alpha group', b_key: 'alpha groupz', reason: 'near_typo' },
-    ]);
-    const withDecision = analyze(
-      makeInput([snap('s1', 'csv', 'x', T1, 'additive', postings)], {
-        decisions: [merge, notSame],
-      }),
-    );
-    expect(withDecision.companies.map((c) => c.key).sort()).toEqual([
+    const canonicalNotSame: MergeDecision = {
+      a_key: 'alpha group',
+      b_key: 'alpha groupz',
+      decision: 'not_same',
+    };
+    const run = (decisions: MergeDecision[]) =>
+      analyze(makeInput([snap('s1', 'csv', 'x', T1, 'additive', postings)], { decisions }));
+
+    const expected = [{ a_key: 'alpha group', b_key: 'alpha groupz', reason: 'near_typo' }];
+    expect(run([merge]).merge_candidates).toMatchObject(expected);
+    const viaMember = run([merge, memberNotSame]);
+    expect(viaMember.companies.map((c) => c.key).sort()).toEqual(['alpha group', 'alpha groupz']);
+    expect(viaMember.merge_candidates).toMatchObject(expected);
+    const viaCanonical = run([merge, canonicalNotSame]);
+    expect(viaCanonical.companies.map((c) => c.key).sort()).toEqual([
       'alpha group',
       'alpha groupz',
     ]);
-    expect(withDecision.merge_candidates).toEqual([]);
+    expect(viaCanonical.merge_candidates).toEqual([]);
+  });
+
+  it('lets a merge through a key that has no postings make that key canonical', () => {
+    // D-3: the canonical key is the smallest *member* key; a decision names members, including a
+    // key no posting currently has, so "aardvark" (absent) becomes the key of the merged group.
+    const analysis = analyze(
+      makeInput(
+        [
+          snap('s1', 'csv', 'x', T1, 'additive', [
+            post('Beta', 'Engineer'),
+            post('Gamma', 'Engineer'),
+          ]),
+        ],
+        {
+          decisions: [
+            { a_key: 'aardvark', b_key: 'beta', decision: 'merge' },
+            { a_key: 'aardvark', b_key: 'gamma', decision: 'merge' },
+          ],
+        },
+      ),
+    );
+    expect(analysis.companies).toHaveLength(1);
+    expect(analysis.companies[0]?.key).toBe('aardvark');
+    expect(analysis.companies[0]?.company_id).toBe(`c_${sha12('aardvark')}`);
+    expect(analysis.companies[0]?.aliases).toEqual(['Beta', 'Gamma']);
   });
 
   it('rejects decisions whose keys are not in ascending order', () => {
@@ -378,11 +405,7 @@ describe('findMergeCandidates against a brute-force reference', () => {
       const companies = unique.map(
         (key) => ({ key, name: key.toUpperCase() }) as unknown as Company,
       );
-      const actual = findMergeCandidates(companies, [], new MergeIndex()).map((c) => [
-        c.a_key,
-        c.b_key,
-        c.reason,
-      ]);
+      const actual = findMergeCandidates(companies, []).map((c) => [c.a_key, c.b_key, c.reason]);
       expect(actual, unique.join(' | ')).toEqual(reference(unique));
     }
   });

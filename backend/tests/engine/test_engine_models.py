@@ -53,10 +53,12 @@ class TestTopLevelShape:
     def test_as_of_is_required(self) -> None:
         rejects({"snapshots": []}, "as_of")
 
-    def test_unknown_top_level_key_is_rejected(self) -> None:
+    def test_unknown_top_level_key_is_ignored(self) -> None:
+        # D-5: spec 02 section 1 forbids nothing and the TypeScript engine ignores unknown
+        # properties; `extra="forbid"` of spec 03 is about API request bodies, not analyze().
         payload = make_input([])
         payload["version"] = 1
-        rejects(payload, "version")
+        assert analyze(payload) == analyze(make_input([]))
 
     @pytest.mark.parametrize(
         "bad",
@@ -90,10 +92,10 @@ class TestTopLevelShape:
 
 
 class TestProfileAndDecisions:
-    def test_profile_extras_rejected(self) -> None:
+    def test_profile_extras_ignored(self) -> None:
         payload = make_input([])
         payload["profile"]["match_all"] = True
-        rejects(payload, "match_all")
+        assert analyze(payload) == analyze(make_input([]))
 
     def test_keywords_must_be_strings(self) -> None:
         payload = make_input([])
@@ -109,9 +111,12 @@ class TestProfileAndDecisions:
     def test_decision_kind(self) -> None:
         rejects(make_input([], decisions=[{"a_key": "a", "b_key": "b", "decision": "maybe"}]))
 
-    def test_decision_extras_rejected(self) -> None:
+    def test_decision_extras_ignored(self) -> None:
         extra = {"a_key": "a", "b_key": "b", "decision": "merge", "id": 7}
-        rejects(make_input([], decisions=[extra]), "id")
+        plain = {"a_key": "a", "b_key": "b", "decision": "merge"}
+        assert analyze(make_input([], decisions=[extra])) == analyze(
+            make_input([], decisions=[plain])
+        )
 
     def test_decision_ordering_is_by_code_point(self) -> None:
         upper_first = {"a_key": "Z", "b_key": "a", "decision": "merge"}
@@ -144,10 +149,11 @@ class TestSnapshotValidation:
     def test_bad_observed_at(self) -> None:
         rejects(make_input([snapshot("s", "2026-10-01", [])]), "observed_at")
 
-    def test_snapshot_extras_rejected(self) -> None:
+    def test_snapshot_extras_ignored(self) -> None:
         snap = snapshot("s", "2026-10-01T00:00:00Z", [])
+        plain = dict(snap)
         snap["note"] = "x"
-        rejects(make_input([snap]), "note")
+        assert analyze(make_input([snap])) == analyze(make_input([plain]))
 
     def test_snapshot_without_postings_key(self) -> None:
         snap = snapshot("s", "2026-10-01T00:00:00Z", [])
@@ -233,11 +239,15 @@ class TestPostingValidation:
             ({"posted_at": "2026/10/01"}, "posted_at"),
             ({"posted_at": "2026-1-1"}, "posted_at"),
             ({"source_posting_id": 123}, "source_posting_id"),
-            ({"nonsense": "x"}, "nonsense"),
         ],
     )
     def test_invalid_posting_fields(self, overrides: dict[str, Any], fragment: str) -> None:
         rejects(one_posting_input(**overrides), fragment)
+
+    def test_unknown_posting_key_is_ignored(self) -> None:
+        # D-5 again, at the posting level (a description field, for instance, is not stored).
+        with_extra = one_posting_input(nonsense="x")
+        assert analyze(with_extra) == analyze(one_posting_input())
 
     @pytest.mark.parametrize(
         "overrides",

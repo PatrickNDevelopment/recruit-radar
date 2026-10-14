@@ -1,22 +1,23 @@
 # Hand checks
 
-How the oracle was cross-checked. For 18 of the smallest analysis vectors (34 company results) plus the
+How the oracle was cross-checked. For 21 of the smallest analysis vectors (42 company results) plus the
 candidate lists, event orders, observation pairing and role timestamps of 8 more, the per-component values,
 coverage, score and rank were derived
 **by hand from `docs/spec/02` sections 4-5 and the vector's input only**, and typed into
 `contracts/tools/oracle.py` (`HAND_DERIVED`, `HAND_CANDIDATES`, `HAND_EVENTS`, `HAND_OBSERVATIONS`,
 `HAND_ROLE_TIMES`) _before_ the oracle was first run on these vectors. `oracle.py --self-check` asserts every number below against the committed files.
 
-**Result: all 34 company results, 8 candidate lists (with independently computed ids), 7 event orders, 1
-observation pairing and 1 set of role timestamps agreed with the oracle on the first run. No oracle change
-was needed.** (Vectors added or changed after the first round - HC-17 to HC-20 and the d=61/d=400 rows of
+**Result: all 42 company results, 11 candidate lists (with independently computed ids), 7 event orders, 2
+observation pairings and 1 set of role timestamps agreed with the oracle on the first run. No oracle change
+was needed.** (Vectors added or changed after the first round - HC-17 to HC-23 and the d=61/d=400 rows of
 HC-03 - were hand-derived the same way, before the oracle saw them, and agreed as well.) (The self-check was also shown to
 fail when a hand value or a vector file is deliberately corrupted.)
 
 What this does and does not prove: hand derivation and oracle were written by the same author from the same
 reading of the spec, so this catches arithmetic and coding slips (rounding, boundary operators, ordering) but
 not a _shared misreading_. Those risks are listed, with the reading taken, in
-`docs/spec/ambiguities/vectors.md`, and every vector is proven insensitive to the alternatives that could be
+`docs/spec/ambiguities/vectors.md`, and every vector except the three added after the differential review
+(45-47, which _pin_ a decided reading, see README) is proven insensitive to the alternatives that could be
 machine-checked.
 
 Notation: `rhu(n,d) = floor((2n+d)/(2d))`. `days(a,b) = floor((b-a)/86400 s)`. `as_of = 2026-10-13T12:00:00Z`
@@ -340,3 +341,75 @@ additive 09-05 [Optics Engineer]; lever/prism full: 09-20 [L9 Legacy Analyst], 1
   09-05T00:00 -> 38 d 12 h -> d = 38; rhu(22000,53) = floor(44053/106) = **415**.
 - W = 20+15+15+10 = **60**. Sum = 6000+3000+9000+4150 = 22150. score = floor((44300+60)/120) =
   floor(369.7) = **369**. Oracle: agreed (role timestamps asserted through `HAND_ROLE_TIMES`).
+
+## HC-21 `span-counts-instants-not-snapshots` - `tidewater freight`, `pier nine`
+
+Added after the differential review (D-2), derived by hand before the oracle saw the vector. No keywords.
+
+Tidewater: greenhouse/tidewater full 10-01T00:00 [501], lever/tidewater full 10-01T00:00 [L-501]; both
+"Dock Planner", Rotterdam.
+
+- One canonical role with two active observations (two distinct sources): A = 1. T = _set_ of full-snapshot
+  instants = {10-01T00:00}: |T| = 1 -> change null `insufficient_history`, `span_days` **null** (a multiset
+  would count two entries and report 0).
+- relevance null `no_keywords`. volume table[1] = **300**. urgency: no posted_at, span null -> null
+  `no_dated_roles`. confidence: best 1000, two sources -> min(1000,1100) = **1000**, corroborated 1.
+  freshness: last_seen 10-01T00:00 -> 12 d 12 h -> d = 12; rhu(48000,53) = floor(96053/106) = **906**.
+- W = 20+15+10 = **45**. Sum = 6000+15000+9060 = 30060. score = floor((60120+45)/90) = floor(668.5) =
+  **668**. rank 1.
+
+Pier Nine: greenhouse/pier-nine full 09-01T00:00 [601], lever/pier-nine full 10-01T00:00 [L-601]; both "Berth
+Planner", Bergen.
+
+- A = 1 (gh + lever). T = {09-01T00:00, 10-01T00:00}: span = days(09-01, 10-01) = 30 >= 14 -> change is
+  computed. Window (09-13T12:00 < at <= 10-13T12:00): the lever `baseline` (10-01) is in the window but
+  baselines never count; gh's baseline is 09-01 (outside). added 0, removed 0, net 0 -> **500**.
+- urgency: span 30 < 45 -> no first_seen rule, no posted_at -> null `no_dated_roles`. volume **300**.
+  confidence **1000** (corroborated 1). freshness: active members' max last_seen = lever 10-01 -> d = 12
+  -> **906**.
+- W = 20+15+15+10 = **60**. Sum = 6000+7500+15000+9060 = 37560. score = floor((75120+60)/120) =
+  floor(626.5) = **626**. rank 2. Oracle: agreed on the first run.
+
+## HC-22 `merge-through-absent-key-names-the-group` - `ardent hollow`, `dune row`
+
+Added after the differential review (D-3). csv/hollow-a additive 10-05T00:00 [Birch Hollow Kiln Operator Delft,
+Dune Row Glaze Chemist Utrecht]; csv/hollow-b additive 10-06T00:00 [Cedar Hollow Kiln Operator Delft, Elm Row
+Glaze Chemist Utrecht]. Decisions: merge(ardent hollow, birch hollow), merge(ardent hollow, cedar hollow),
+merge(dune row, zenith row), merge(elm row, zenith row). Present keys: birch hollow, cedar hollow, dune row,
+elm row. `ardent hollow` and `zenith row` have no posting.
+
+- Union-find over every key a decision names: {ardent hollow, birch hollow, cedar hollow} -> smallest member
+  **ardent hollow** (absent, but a member); {dune row, elm row, zenith row} -> smallest member **dune row**.
+  Two companies, no merge candidate between them (no shared token, far apart).
+- Names: ardent hollow's earliest posting is Birch Hollow (10-05) -> name `Birch Hollow`, aliases `Birch
+Hollow`, `Cedar Hollow`; dune row -> `Dune Row`, aliases `Dune Row`, `Elm Row`.
+- Each company: Kiln Operator (resp. Glaze Chemist) appears in both csv sources with the same company (after
+  merge), title and location, one row per source -> ONE canonical role with two observations. A = 1.
+- volume **300**. T = {} (both additive): change null, span null. urgency null `no_dated_roles`. confidence:
+  csv 600, two distinct sources -> 700 -> **700**, corroborated 1. freshness: last_seen max = 10-06T00:00 ->
+  7 d 12 h -> d = 7 <= 7 -> **1000**.
+- W = 45. Sum = 6000+10500+10000 = 26500. score = floor((53000+45)/90) = floor(589.4) = **589** for both;
+  tie -> key order: `ardent hollow` rank 1, `dune row` rank 2.
+  Oracle: agreed (the two role pairings are asserted through `HAND_OBSERVATIONS`).
+
+## HC-23 `not-same-names-the-canonical-pair` - four companies
+
+Added after the differential review (D-4). csv/list-a additive 10-12T00:00 [Alpha Group, Alpha Groupz, Delta
+Works, Delta Workz - all "Engineer", Lisbon]; csv/list-b additive 10-12T00:00 [Alpha Groupy Engineer Lisbon].
+Decisions: merge(alpha group, alpha groupy); not_same(alpha groupy, alpha groupz); not_same(delta works, delta
+workz).
+
+- Groups: {alpha group, alpha groupy} -> canonical `alpha group`; the others stand alone. Distinct canonical
+  keys: alpha group, alpha groupz, delta works, delta workz.
+- Candidates: (alpha group, alpha groupz): lengths 11 and 12, Levenshtein 1 -> `near_typo`; tokens
+  {alpha,group} vs {alpha,groupz}: 1/3 < 75% so not token_overlap. The decision names (alpha groupy,
+  alpha groupz), not this pair -> **emitted**. (delta works, delta workz): `near_typo`, but the decision names
+  exactly this pair -> hidden. Other pairs are far apart. `candidate_id` = sha256("alpha group|alpha
+  groupz")[:12] = `3895f6ac16ad` (bare hashlib). a_name: both raw names at 10-12T00:00 -> smaller by code
+  point `Alpha Group` (prefix of `Alpha Groupy`); b_name `Alpha Groupz`.
+- alpha group: Engineer/Lisbon from list-a and list-b (one row per source) -> one canonical role, 2
+  observations; volume **300**, confidence 600 -> 700 -> **700**, freshness d = 1 -> **1000**; W = 45, sum =
+  6000+10500+10000 = 26500 -> **589**.
+- The three others: one csv role each: volume 300, confidence **600**, freshness **1000**: sum = 6000+9000+
+  10000 = 25000; score = floor((50000+45)/90) = floor(556.06) = **556**. Ties on 556 -> key order: `alpha
+groupz` (2), `delta works` (3), `delta workz` (4; `s` < `z`). Oracle: agreed.

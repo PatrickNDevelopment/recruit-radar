@@ -1,0 +1,383 @@
+{
+  "name": "merge-through-absent-key-names-the-group",
+  "description": "01 s3: the canonical key of a merged group is its lexicographically smallest MEMBER key, and every key a merge decision names is a member - including a key no posting has any more (a stale decision, e.g. after a source was deleted). 'ardent hollow' has no posting: merging it with 'birch hollow' and 'cedar hollow' makes it the group's key (and company_id), although it is not among the present keys. 'zenith row' is absent too, but larger than both present keys, so the group of 'dune row' and 'elm row' that it joins keeps 'dune row'; the merge is transitive through an absent key either way. Two roles dedupe across the merged companies (same title and location, two sources).",
+  "input": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "profile": {
+      "include_keywords": [],
+      "exclude_keywords": []
+    },
+    "decisions": [
+      {
+        "a_key": "ardent hollow",
+        "b_key": "birch hollow",
+        "decision": "merge"
+      },
+      {
+        "a_key": "ardent hollow",
+        "b_key": "cedar hollow",
+        "decision": "merge"
+      },
+      {
+        "a_key": "dune row",
+        "b_key": "zenith row",
+        "decision": "merge"
+      },
+      {
+        "a_key": "elm row",
+        "b_key": "zenith row",
+        "decision": "merge"
+      }
+    ],
+    "snapshots": [
+      {
+        "snapshot_id": "hollow-a-1",
+        "source_kind": "csv",
+        "source_ref": "hollow-a",
+        "observed_at": "2026-10-05T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-a",
+            "source_posting_id": null,
+            "company_name": "Birch Hollow",
+            "title": "Kiln Operator",
+            "location": "Delft",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-a",
+            "source_posting_id": null,
+            "company_name": "Dune Row",
+            "title": "Glaze Chemist",
+            "location": "Utrecht",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      },
+      {
+        "snapshot_id": "hollow-b-1",
+        "source_kind": "csv",
+        "source_ref": "hollow-b",
+        "observed_at": "2026-10-06T00:00:00Z",
+        "mode": "additive",
+        "postings": [
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-b",
+            "source_posting_id": null,
+            "company_name": "Cedar Hollow",
+            "title": "Kiln Operator",
+            "location": "Delft",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-b",
+            "source_posting_id": null,
+            "company_name": "Elm Row",
+            "title": "Glaze Chemist",
+            "location": "Utrecht",
+            "work_mode": "unknown",
+            "department": null,
+            "url": null,
+            "posted_at": null
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "as_of": "2026-10-13T12:00:00Z",
+    "companies": [
+      {
+        "company_id": "c_260b16b82a6b",
+        "key": "ardent hollow",
+        "name": "Birch Hollow",
+        "aliases": ["Birch Hollow", "Cedar Hollow"],
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 589,
+        "coverage": 45,
+        "rank": 1,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 700,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 7
+            }
+          }
+        ]
+      },
+      {
+        "company_id": "c_686235c38b60",
+        "key": "dune row",
+        "name": "Dune Row",
+        "aliases": ["Dune Row", "Elm Row"],
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "active_roles": 1,
+        "relevant_roles": null,
+        "removed_roles": 0,
+        "score": 589,
+        "coverage": 45,
+        "rank": 2,
+        "components": [
+          {
+            "key": "role_relevance",
+            "weight": 30,
+            "value": null,
+            "reason_code": "no_keywords",
+            "inputs": {
+              "relevant": null,
+              "active": 1
+            }
+          },
+          {
+            "key": "volume",
+            "weight": 20,
+            "value": 300,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1
+            }
+          },
+          {
+            "key": "change",
+            "weight": 15,
+            "value": null,
+            "reason_code": "insufficient_history",
+            "inputs": {
+              "added": null,
+              "removed": null,
+              "net": null,
+              "span_days": null,
+              "window_days": 30
+            }
+          },
+          {
+            "key": "urgency",
+            "weight": 10,
+            "value": null,
+            "reason_code": "no_dated_roles",
+            "inputs": {
+              "aged": 0,
+              "known": 0,
+              "threshold_days": 45
+            }
+          },
+          {
+            "key": "source_confidence",
+            "weight": 15,
+            "value": 700,
+            "reason_code": null,
+            "inputs": {
+              "scope_roles": 1,
+              "corroborated": 1
+            }
+          },
+          {
+            "key": "freshness",
+            "weight": 10,
+            "value": 1000,
+            "reason_code": null,
+            "inputs": {
+              "days_since_last_seen": 7
+            }
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "role_id": "r_eaa4d7dfa3fd",
+        "company_id": "c_260b16b82a6b",
+        "title": "Kiln Operator",
+        "location": "Delft",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 8,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-b",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-06T00:00:00Z",
+            "last_seen": "2026-10-06T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "role_id": "r_e58e16498d4f",
+        "company_id": "c_686235c38b60",
+        "title": "Glaze Chemist",
+        "location": "Utrecht",
+        "work_mode": "unknown",
+        "department": null,
+        "posted_at": null,
+        "status": "active",
+        "first_seen": "2026-10-05T00:00:00Z",
+        "last_seen": "2026-10-06T00:00:00Z",
+        "removed_at": null,
+        "relevant": null,
+        "age_days": 8,
+        "observations": [
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-a",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-05T00:00:00Z",
+            "last_seen": "2026-10-05T00:00:00Z"
+          },
+          {
+            "source_kind": "csv",
+            "source_ref": "hollow-b",
+            "source_posting_id": null,
+            "url": null,
+            "status": "active",
+            "first_seen": "2026-10-06T00:00:00Z",
+            "last_seen": "2026-10-06T00:00:00Z"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_260b16b82a6b",
+        "role_id": "r_eaa4d7dfa3fd",
+        "source_kind": "csv",
+        "source_ref": "hollow-a",
+        "title": "Kiln Operator",
+        "fields": null
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_686235c38b60",
+        "role_id": "r_e58e16498d4f",
+        "source_kind": "csv",
+        "source_ref": "hollow-a",
+        "title": "Glaze Chemist",
+        "fields": null
+      },
+      {
+        "at": "2026-10-06T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_260b16b82a6b",
+        "role_id": "r_eaa4d7dfa3fd",
+        "source_kind": "csv",
+        "source_ref": "hollow-b",
+        "title": "Kiln Operator",
+        "fields": null
+      },
+      {
+        "at": "2026-10-06T00:00:00Z",
+        "type": "baseline",
+        "company_id": "c_686235c38b60",
+        "role_id": "r_e58e16498d4f",
+        "source_kind": "csv",
+        "source_ref": "hollow-b",
+        "title": "Glaze Chemist",
+        "fields": null
+      }
+    ],
+    "merge_candidates": [],
+    "stats": {
+      "snapshots": 2,
+      "postings_observed": 4,
+      "companies": 2,
+      "active_roles": 2
+    }
+  }
+}

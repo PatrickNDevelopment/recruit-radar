@@ -11,7 +11,7 @@ contracts/vectors/
   README.md                          this file
   HAND_CHECKS.md                     step-by-step hand derivations and whether the oracle agreed
   normalization.json                 173 cases for six functions
-  analysis-NN-<name>.json            44 vectors, ONE vector per file
+  analysis-NN-<name>.json            47 vectors, ONE vector per file
 contracts/tools/
   oracle.py                          reference implementation + `--self-check`
   generate_vectors.py                the only writer of the files above
@@ -136,7 +136,10 @@ Places where two independent implementations of this spec most likely diverge:
 | spacing_variant / token_overlap / near_typo, never auto-merged               | `vec:merge-candidates-three-reasons`, `vec:candidate-reason-precedence`, `vec:near-typo-boundaries`                 |
 | Candidate key ordering by code point                                         | `vec:candidate-code-point-order`                                                                                    |
 | `not_same` hides a candidate                                                 | `vec:not-same-hides-candidate`                                                                                      |
+| `not_same` hides exactly the canonical pair it names (decided, D-4)          | `vec:not-same-names-the-canonical-pair`                                                                             |
 | Merge decision applied to history; transitive; canonical keys only           | `vec:merge-decision-applies-to-history`, `vec:merge-transitive-canonical-only-candidates`                           |
+| A merge through a key with no postings; it can be the canonical key (D-3)    | `vec:merge-through-absent-key-names-the-group`                                                                      |
+| `T` is a set of instants: one instant from two sources is no span (D-2)      | `vec:span-counts-instants-not-snapshots`                                                                            |
 | Identical-title headcounts stay separate; i-th role pairing across sources   | `vec:headcounts-two-roles-same-source`, `vec:csv-null-id-rows-collapse`, `vec:headcounts-match-across-sources`      |
 | Cross-source corroboration and its cap                                       | `vec:cross-source-corroboration`, `vec:corroboration-needs-two-active-observations`, `vec:many-sources-one-company` |
 | Canonical role last_seen / removed_at from members                           | `vec:canonical-last-seen-ignores-removed-members`                                                                   |
@@ -177,3 +180,13 @@ all ids derive from their keys and every reference resolves; validates that ever
 `01`/`02`; re-runs every vector under each alternative reading of an ambiguous spec sentence and
 fails if any committed vector's `expected` changes (so no vector silently depends on an ambiguity);
 compares the files with a fresh build; and asserts the hand-derived values of `HAND_CHECKS.md`.
+
+### Pinned readings (vectors 45-47)
+
+Vectors 1-44 were proven _insensitive_ to every ambiguous reading, which is exactly why the Python
+engine, the TypeScript engine and the oracle could each take a different reading of three sentences
+and still pass all of them (found by the differential fuzz, `contracts/tools/fuzz_diff.py`). Those three
+readings were then decided from the spec text (`docs/spec/ambiguities/differential.md` D-2, D-3, D-4)
+and are pinned by vectors 45-47. For these, `--self-check` asserts the opposite of insensitivity: the
+alternative reading (`T=multiset`, `dangling=present_canonical|ignore`, `not_same=mapped`) must change
+_exactly_ the pinning vector and no other. The remaining ambiguous readings stay insensitive.
