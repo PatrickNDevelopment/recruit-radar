@@ -12,6 +12,7 @@ from typing import Any, Final
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import OperationalError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ..errors import AppError
@@ -105,8 +106,35 @@ def _unexpected(request: Request, exc: Exception) -> JSONResponse:
     )
 
 
+def _is_lock_timeout(exc: OperationalError) -> bool:
+    text = str(exc.orig if exc.orig is not None else exc).lower()
+    return "database is locked" in text or "database table is locked" in text
+
+
+def _database_error(request: Request, exc: Exception) -> JSONResponse:
+    """SQLite errors. A lock held past the busy timeout is the caller's to retry (503); every
+    other database error is an unexpected one (500). Registered for this class on purpose: a
+    handler for plain ``Exception`` re-raises after answering, a specific one does not."""
+    assert isinstance(exc, OperationalError)
+    if not _is_lock_timeout(exc):
+        return _unexpected(request, exc)
+    # Another process kept the file locked for longer than the busy timeout. The transaction
+    # rolled back, nothing was written, and the caller can simply try again.
+    log.warning("database busy during %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=503,
+        content=envelope(
+            "database_busy",
+            "The database is locked by another program, so nothing was saved. "
+            "Close whatever else has it open and try again.",
+        ),
+        headers={"Retry-After": "5"},
+    )
+
+
 def install_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppError, _app_error)
     app.add_exception_handler(RequestValidationError, _validation_error)
     app.add_exception_handler(StarletteHTTPException, _http_error)
+    app.add_exception_handler(OperationalError, _database_error)
     app.add_exception_handler(Exception, _unexpected)

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from urllib.parse import urlsplit
 
 import httpx
 from fastapi import FastAPI, Request, Response
@@ -25,6 +26,16 @@ from .routers import analysis, data, decisions, health, imports, profile, shortl
 from .state import AppState
 
 _SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
+
+
+def host_name(header: str) -> str | None:
+    """The host of a ``Host`` header (``127.0.0.1:8787`` -> ``127.0.0.1``, ``[::1]:8787`` ->
+    ``::1``), lower case; ``None`` when the header cannot be parsed."""
+    try:
+        return urlsplit("//" + header.strip()).hostname
+    except ValueError:
+        return None
+
 
 DESCRIPTION = (
     "Local-only backend of RecruitRadar. It turns public job-posting data (three read-only ATS "
@@ -111,6 +122,28 @@ def create_app(
         expose_headers=["Retry-After", "Content-Disposition"],
         allow_credentials=False,
     )
+
+    served_hosts = config.served_hosts()
+
+    @app.middleware("http")
+    async def reject_unknown_hosts(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """DNS-rebinding guard: a hostile page can point its own domain at 127.0.0.1 and then
+        read this API as "same origin". Its requests still carry that domain in ``Host``, so
+        anything but loopback, the bind address and RECRUIT_RADAR_ALLOWED_HOSTS is refused,
+        before CORS or routing sees it. (Registered last, so it is the outermost layer.)"""
+        raw = request.headers.get("host")
+        if raw is not None and host_name(raw) not in served_hosts:
+            return JSONResponse(
+                status_code=400,
+                content=envelope(
+                    "host_not_allowed",
+                    f"Host {raw!r} is not served by this backend. It answers to localhost, "
+                    "127.0.0.1, ::1, its bind address and RECRUIT_RADAR_ALLOWED_HOSTS.",
+                ),
+            )
+        return await call_next(request)
 
     for module in (health, profile, sources, imports, analysis, decisions, shortlist, data):
         app.include_router(module.router, prefix="/api")

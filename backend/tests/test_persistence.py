@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import sqlite3
 from collections.abc import Callable
+from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from rr_support import (
@@ -13,10 +16,13 @@ from rr_support import (
     analysis,
     company_named,
     csv_of,
+    error_of,
     gh_job,
     import_csv,
     refresh,
 )
+
+from recruit_radar.db import session as session_module
 
 
 def restart(
@@ -120,3 +126,31 @@ def test_two_apps_on_one_database_see_each_others_writes(
     assert other.get("/api/profile").json()["include_keywords"] == ["from-first"]
     import_csv(other, csv_of(("Acme", "Engineer", "", "")))
     assert [c["name"] for c in analysis(client)["companies"]] == ["Acme"]
+
+
+def test_a_database_locked_by_another_program_is_503_database_busy_and_loses_nothing(
+    make_app: Callable[..., FastAPI],
+    client_factory: Callable[..., TestClient],
+    db_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Another process holds the write lock longer than the busy timeout (shortened here, before
+    # the app opens its connections: the pragma is applied when a connection is created).
+    monkeypatch.setattr(session_module, "BUSY_TIMEOUT_MS", 50)
+    client = client_factory(make_app())
+    import_csv(client, csv_of(("Before", "Engineer", "", "")))
+    holder = sqlite3.connect(db_path, isolation_level=None, timeout=1)
+    try:
+        holder.execute("BEGIN IMMEDIATE")
+        blocked = client.post("/api/postings", json={"company_name": "Locked Co", "title": "x"})
+        reading = client.get("/api/analysis")
+    finally:
+        holder.execute("ROLLBACK")
+        holder.close()
+    assert blocked.status_code == 503
+    assert blocked.headers["retry-after"] == "5"
+    assert error_of(blocked)["code"] == "database_busy"
+    assert reading.status_code == 200  # WAL: readers are never blocked by a writer
+    again = client.post("/api/postings", json={"company_name": "After Co", "title": "x"})
+    assert again.status_code == 201
+    assert sorted(c["name"] for c in analysis(client)["companies"]) == ["After Co", "Before"]

@@ -53,7 +53,8 @@ floating point. Missing information is displayed, never scored as zero.
 | Storage  | SQLite (WAL, foreign keys on, busy timeout), SQLAlchemy 2 typed models, Alembic `0001_initial`                    |
 | Refresh  | one request per page, sequential; failed runs recorded but store no snapshot and remove nothing                   |
 | Counters | refresh counters are the diff of engine events before/after the new snapshot (not a second implementation)        |
-| Ordering | snapshot ids are zero-padded and monotonic, so same-second snapshots replay in insertion order                    |
+| Ordering | backend snapshot ids are zero-padded and monotonic, so same-second snapshots replay in insertion order            |
+| Hosts    | `Host` header must be loopback, the bind address or `RECRUIT_RADAR_ALLOWED_HOSTS` (DNS-rebinding guard)           |
 | API      | Pydantic `extra="forbid"`, uniform error envelope, OpenAPI exported to `contracts/openapi.json` with a drift test |
 | Security | token-only inputs, fixed hosts, GET only, size/time/item caps, loopback bind, strict CORS                         |
 

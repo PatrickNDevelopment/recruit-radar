@@ -39,7 +39,8 @@ def db_path(tmp_path: Path) -> Path:
 @pytest.fixture
 def settings(db_path: Path) -> Settings:
     # The default 60 s interval, so the spec behaviour is what the tests see unless they opt out.
-    return Settings(db_path=db_path)
+    # "testserver" is the Host header of Starlette's TestClient.
+    return Settings(db_path=db_path, allowed_hosts=("testserver",))
 
 
 AppFactory = Callable[..., FastAPI]

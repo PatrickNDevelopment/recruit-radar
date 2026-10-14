@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
@@ -110,6 +111,32 @@ def test_timeouts_map_to_timeout(exc: Exception) -> None:
     error = fetch_error(boom)
     assert error.kind == "timeout"
     assert error.http_status is None
+
+
+class _SlowDrip(httpx.SyncByteStream):
+    """A body that never stalls long enough for the per-read timeout, but never ends either."""
+
+    def __init__(self, interval_s: float, chunks: int) -> None:
+        self._interval_s = interval_s
+        self._chunks = chunks
+
+    def __iter__(self) -> Iterator[bytes]:
+        for _ in range(self._chunks):
+            time.sleep(self._interval_s)
+            yield b" "
+
+
+def test_a_provider_that_drips_its_answer_hits_the_total_deadline() -> None:
+    # Every read arrives well inside the 15 s per-read timeout, yet the sum is unbounded.
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, stream=_SlowDrip(0.02, 500))
+
+    started = time.monotonic()
+    error = fetch_error(handler, total_timeout_s=0.1)
+    assert time.monotonic() - started < 2.0
+    assert error.kind == "timeout"
+    assert error.http_status == 200
+    assert "still sending" in error.message
 
 
 @pytest.mark.parametrize(

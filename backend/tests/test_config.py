@@ -112,3 +112,26 @@ def test_settings_object_validates_itself() -> None:
         Settings(base_urls={"greenhouse": "https://evil.example"})
     overridden = Settings().with_overrides(port=1234)
     assert overridden.port == 1234
+
+
+def test_allowed_hosts_are_bare_lower_case_names() -> None:
+    assert Settings.from_env({}).allowed_hosts == ()
+    parsed = Settings.from_env(
+        {"RECRUIT_RADAR_ALLOWED_HOSTS": " Radar.LAN , 192.168.1.20,radar.lan,"}
+    )
+    assert parsed.allowed_hosts == ("radar.lan", "192.168.1.20")
+    assert {"radar.lan", "192.168.1.20", "localhost", "127.0.0.1", "::1"} <= parsed.served_hosts()
+
+
+@pytest.mark.parametrize(
+    "value", ["*", "http://radar.lan", "radar.lan:8787", "radar.lan/path", "a b"]
+)
+def test_allowed_hosts_refuse_wildcards_schemes_ports_and_paths(value: str) -> None:
+    with pytest.raises(ConfigError):
+        Settings.from_env({"RECRUIT_RADAR_ALLOWED_HOSTS": value})
+
+
+def test_served_hosts_include_the_bind_address_unless_it_is_a_wildcard() -> None:
+    assert "192.168.1.20" in Settings(host="192.168.1.20").served_hosts()
+    assert "0.0.0.0" not in Settings(host="0.0.0.0").served_hosts()
+    assert Settings(host="[::1]").served_hosts() == Settings().served_hosts()

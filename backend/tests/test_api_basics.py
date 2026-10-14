@@ -238,3 +238,62 @@ def test_bodies_are_not_leaked_back_in_errors_beyond_the_field_message(client: T
     response = client.put("/api/profile", json=secret)
     assert response.status_code == 422
     assert "x" * 200 not in response.text
+
+
+# -- Host guard (DNS rebinding) ----------------------------------------------------------------
+def test_a_request_whose_host_header_names_another_site_is_refused(client: TestClient) -> None:
+    for host in (
+        "evil.example",
+        "evil.example:8787",
+        "127.0.0.1.evil.example",
+        "localhost.evil.test",
+    ):
+        response = client.get("/api/analysis", headers={"Host": host})
+        assert response.status_code == 400, host
+        assert error_of(response)["code"] == "host_not_allowed"
+        assert "access-control-allow-origin" not in response.headers
+
+
+def test_the_host_guard_runs_before_cors_and_routing(client: TestClient) -> None:
+    preflight = client.options(
+        "/api/profile",
+        headers={
+            "Host": "evil.example",
+            "Origin": ALLOWED,
+            "Access-Control-Request-Method": "PUT",
+        },
+    )
+    assert preflight.status_code == 400
+    assert error_of(preflight)["code"] == "host_not_allowed"
+    unknown_route = client.get("/api/nope", headers={"Host": "evil.example"})
+    assert error_of(unknown_route)["code"] == "host_not_allowed"
+
+
+@pytest.mark.parametrize(
+    "host",
+    ["127.0.0.1", "127.0.0.1:8787", "localhost", "LOCALHOST:5173", "[::1]:8787", "testserver"],
+)
+def test_loopback_names_and_the_configured_hosts_are_served(client: TestClient, host: str) -> None:
+    assert client.get("/api/health", headers={"Host": host}).status_code == 200
+
+
+def test_extra_hosts_come_from_the_settings_and_the_bind_address(
+    make_app: Callable[..., FastAPI],
+    settings: Settings,
+    client_factory: Callable[..., TestClient],
+) -> None:
+    custom = settings.with_overrides(host="192.168.1.20", allowed_hosts=("radar.lan", "testserver"))
+    client = client_factory(make_app(settings=custom))
+    assert client.get("/api/health", headers={"Host": "192.168.1.20:8787"}).status_code == 200
+    assert client.get("/api/health", headers={"Host": "radar.lan"}).status_code == 200
+    assert client.get("/api/health", headers={"Host": "192.168.1.21"}).status_code == 400
+
+
+def test_a_wildcard_bind_address_does_not_open_the_api_to_every_host(
+    make_app: Callable[..., FastAPI],
+    settings: Settings,
+    client_factory: Callable[..., TestClient],
+) -> None:
+    client = client_factory(make_app(settings=settings.with_overrides(host="0.0.0.0")))
+    assert client.get("/api/health", headers={"Host": "evil.example"}).status_code == 400
+    assert client.get("/api/health", headers={"Host": "0.0.0.0"}).status_code == 400

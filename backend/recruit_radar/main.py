@@ -8,6 +8,8 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import uvicorn
+from alembic.util.exc import CommandError
+from sqlalchemy.exc import SQLAlchemyError
 
 from .api import create_app
 from .config import LOOPBACK_HOSTS, ConfigError, Settings
@@ -50,6 +52,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Binding to %s: the API has no authentication and is meant for loopback only",
             settings.host,
         )
-    app = create_app(settings)
+    try:
+        app = create_app(settings)
+    except (SQLAlchemyError, CommandError, OSError) as exc:
+        # A garbage file, a read-only folder or a full disk: say which file and why, not a trace.
+        print(
+            f"recruit_radar: cannot open the database at {settings.db_path}: "
+            f"{type(exc).__name__}: {exc}"
+        )
+        return 2
     uvicorn.run(app, host=settings.host, port=settings.port, log_level="info")
     return 0

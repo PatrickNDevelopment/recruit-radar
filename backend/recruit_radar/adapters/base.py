@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass, field
@@ -38,6 +39,9 @@ ErrorKind = Literal[
 
 USER_AGENT: Final = f"RecruitRadar/{__version__} (+read-only)"
 TIMEOUT_S: Final = 15.0
+# One request may not take longer than this in total, however slowly the provider drips bytes
+# (the 15 s timeout above bounds every single read, not the sum of them).
+TOTAL_TIMEOUT_S: Final = 60.0
 MAX_RESPONSE_BYTES: Final = 10 * 1024 * 1024
 MAX_ITEMS: Final = 5000
 MAX_REDIRECTS: Final = 3
@@ -111,10 +115,12 @@ class PoliteClient:
         *,
         transport: httpx.BaseTransport | None = None,
         timeout_s: float = TIMEOUT_S,
+        total_timeout_s: float = TOTAL_TIMEOUT_S,
         max_bytes: int = MAX_RESPONSE_BYTES,
         max_redirects: int = MAX_REDIRECTS,
     ) -> None:
         self._timeout_s = timeout_s
+        self._total_timeout_s = total_timeout_s
         self._max_bytes = max_bytes
         self._max_redirects = max_redirects
         self.requests = 0
@@ -143,11 +149,12 @@ class PoliteClient:
     def get_json(self, url: str, params: Mapping[str, str] | None = None) -> JsonResponse:
         target = httpx.URL(url, params=dict(params)) if params else httpx.URL(url)
         origin = _origin(target)
+        deadline = time.monotonic() + self._total_timeout_s
         for _ in range(self._max_redirects + 1):
             try:
                 self.requests += 1
                 with self._client.stream("GET", target) as response:
-                    outcome = self._interpret(response, target, origin)
+                    outcome = self._interpret(response, target, origin, deadline)
             except httpx.TimeoutException as exc:
                 raise AdapterError(
                     "timeout", f"{target.host} did not answer within {self._timeout_s:g} s"
@@ -168,7 +175,11 @@ class PoliteClient:
         )
 
     def _interpret(
-        self, response: httpx.Response, target: httpx.URL, origin: tuple[str, str, int | None]
+        self,
+        response: httpx.Response,
+        target: httpx.URL,
+        origin: tuple[str, str, int | None],
+        deadline: float,
     ) -> JsonResponse | httpx.URL:
         status = response.status_code
         host = target.host
@@ -210,9 +221,9 @@ class PoliteClient:
             raise AdapterError(
                 "malformed", f"{host} answered an unexpected HTTP {status}", http_status=status
             )
-        return JsonResponse(self._read_json(response, host), status)
+        return JsonResponse(self._read_json(response, host, deadline), status)
 
-    def _read_json(self, response: httpx.Response, host: str) -> object:
+    def _read_json(self, response: httpx.Response, host: str, deadline: float) -> object:
         declared = response.headers.get("content-length", "")
         if declared.isdigit() and int(declared) > self._max_bytes:
             raise AdapterError(
@@ -223,6 +234,12 @@ class PoliteClient:
         body = bytearray()
         for chunk in response.iter_bytes():
             body.extend(chunk)
+            if time.monotonic() > deadline:
+                raise AdapterError(
+                    "timeout",
+                    f"{host} was still sending after {self._total_timeout_s:g} s",
+                    http_status=response.status_code,
+                )
             if len(body) > self._max_bytes:
                 raise AdapterError(
                     "too_large",
