@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { SessionStore } from './data/session';
 import { browserStorage } from './data/storage';
+import { ErrorBoundary } from './ui/ErrorBoundary';
 import { pageHostname } from './ui/environment';
 import './styles.css';
 
@@ -18,6 +19,8 @@ if (container === null) throw new Error('The page has no #root element to render
 
 createRoot(container).render(
   <StrictMode>
-    <App store={store} />
+    <ErrorBoundary>
+      <App store={store} />
+    </ErrorBoundary>
   </StrictMode>,
 );

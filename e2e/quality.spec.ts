@@ -298,3 +298,32 @@ test('navigation stays operable: every tab opens and the active tab is announced
     );
   }
 });
+
+test('an unexpected rendering error shows an explanation, not a blank page', async ({ page }) => {
+  await startLocal(page);
+  await loadSample(page);
+  await openTab(page, 'Radar');
+  await expect(page.getByTestId('radar-row').first()).toBeVisible();
+
+  // Make the next render throw: ordering the radar rows is part of drawing the table.
+  await page.evaluate(() => {
+    Array.prototype.sort = function failingSort(): never {
+      throw new Error('simulated rendering failure');
+    };
+  });
+  await page
+    .getByRole('button', { name: /^Active roles/ })
+    .first()
+    .click();
+
+  const fallback = page.getByTestId('render-error');
+  await expect(fallback).toBeVisible();
+  await expect(fallback).toContainText('Something went wrong');
+  await expect(fallback).toContainText('Nothing you stored was changed');
+  await expect(fallback).toContainText('simulated rendering failure');
+  await expect(fallback.getByRole('button', { name: 'Reload the page' })).toBeVisible();
+
+  // Rendering never touches storage: after a reload the same data is back.
+  await page.reload();
+  await expect(page.getByTestId('radar-row').first()).toBeVisible();
+});
