@@ -4,7 +4,7 @@ Hiring-market intelligence from public job postings: normalized postings, compan
 
 ![RecruitRadar radar view on desktop](docs/screenshots/desktop-radar.png)
 
-> **Status:** local build, not deployed. There is no hosted demo; run it locally (below).
+> **Status:** v0.1, published. **[Try the demo](https://patrickndevelopment.github.io/recruit-radar/)** (local-data mode) or run it locally (below).
 > The static demo (local-data mode) runs entirely in the browser on data **you** load. All sample
 > data is synthetic and labeled as such. Scores describe _observed hiring activity_ only. They are
 > not evidence that a company needs, or will use, an outside recruiter.

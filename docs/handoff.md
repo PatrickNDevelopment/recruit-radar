@@ -2,7 +2,7 @@
 
 **State:** v0.1 built locally on branch `phase/02a-build`, then independently reviewed and corrected
 in an independent acceptance review (2026-10-14, see `docs/test-report.md`). Gate G2 is met: status
-`ready_for_publication_review`. Not pushed, not deployed, no remote exists.
+`ready_for_publication_review`. Published on GitHub; static demo at https://patrickndevelopment.github.io/recruit-radar/.
 
 ## Run
 
@@ -31,20 +31,16 @@ npm run verify                               # full gate (or scripts/verify.ps1 
 
 ## What is absent
 
-- No hosted demo; the Pages and CI workflows have never run (no remote).
+- The hosted demo has no backend (local-data mode only); CI and Pages have run on GitHub (2026-10-15).
 - No scheduled refresh, no auth (loopback only), no HTML scraping, no candidate data (by design).
 - Connected mode cannot remove a single dataset or export raw postings (no backend endpoint).
 - No automated provider-traffic test (the 02B live check was a one-off, recorded in the report).
 
 ## Release blockers before publication
 
-1. Owner review of README, screenshots, limitations, license and secrets scan (gate G3).
-2. Owner approval to create the public repo, push, and enable Pages (MIT and the
-   `PatrickNDevelopment` account are already confirmed, decision D-005).
-3. Run the CI and Pages workflows on a real remote (never executed locally; Python 3.11/3.12 and
-   Linux were not available to the reviewers).
-4. Decide whether to rewrite the git author e-mail in history before publishing (the commits carry
-   the local author e-mail address).
+Published; no remaining release blockers. Open items are listed in `docs/known-limitations.md`.
+Note: commits made before publication carry the author name `patno` with the owner's e-mail address
+(history was deliberately not rewritten, owner decision D-006).
 
 ## Next exact step
 

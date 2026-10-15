@@ -246,5 +246,18 @@ Playwright). The commit therefore contains everything the gate needs.
 - Firefox and Safari; screen readers; 200% zoom.
 - Real provider traffic (all provider payloads are synthetic, in the documented shapes), since
   checked once by the 02B review (Part 1).
-- The GitHub Actions workflows (never executed; no remote).
+- The GitHub Actions workflows had not run at review time; first runs are in Part 3.
 - Python versions other than 3.14 locally (CI targets 3.12).
+
+# Part 3: post-publication (2026-10-15)
+
+- First CI run on GitHub (Ubuntu, Python 3.12, Node, Chromium) failed at `backend:lint`: ruff EXE001
+  (four `contracts/tools/*.py` files had a shebang but were not executable in git). Fixed by setting
+  the executable bit (no rule was disabled). Second run: frontend, backend and e2e all passed.
+  Run: https://github.com/PatrickNDevelopment/recruit-radar/actions/runs/38783465791
+- Python 3.12 (CI) passed the golden-vector and backend tests, so no Unicode-database skew appeared.
+- GitHub Pages: deployed after Pages was enabled with the Actions source (first Pages run failed
+  only because Pages was not yet enabled; it passed on re-run).
+- Live check of https://patrickndevelopment.github.io/recruit-radar/ (Edge via Playwright): loads under `/recruit-radar/`; refresh works; all
+  assets 200; no console errors; no request to localhost; Data, Load sample data, Radar shows 10
+  companies in local-data mode, still 10 after reload.

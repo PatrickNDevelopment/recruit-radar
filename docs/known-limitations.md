@@ -1,6 +1,6 @@
 # Known limitations
 
-- **No hosted demo.** The Pages workflow exists but has never run (no remote).
+- **Hosted demo is local-data mode only.** https://patrickndevelopment.github.io/recruit-radar/ is static GitHub Pages; connected mode needs the local backend.
 - **The static demo cannot refresh from ATS APIs.** Browsers would hit CORS/policy limits and it
   would put third-party calls in a public page. Live refresh needs the local backend.
 - **Provider facts come from documentation, not recorded traffic.** Payload shapes were taken from
