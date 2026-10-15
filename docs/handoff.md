@@ -1,7 +1,7 @@
 # Handoff
 
 **State:** v0.1 built locally on branch `phase/02a-build`, then independently reviewed and corrected
-in Prompt 02B (2026-10-14, see `docs/test-report.md`). Gate G2 is met: status
+in an independent acceptance review (2026-10-14, see `docs/test-report.md`). Gate G2 is met: status
 `ready_for_publication_review`. Not pushed, not deployed, no remote exists.
 
 ## Run
@@ -48,8 +48,7 @@ npm run verify                               # full gate (or scripts/verify.ps1 
 
 ## Next exact step
 
-Owner review (G3). If approved, the next prompt in the chain is **03A (SourceTrace)**; publishing
-this repository is a separate, explicitly approved action.
+Owner review (G3). Publishing this repository is a separate, explicitly approved action.
 
 ## Gotchas
 

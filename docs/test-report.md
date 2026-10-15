@@ -1,6 +1,6 @@
 # Test report
 
-Two reports live here. **Part 1** is the independent acceptance review (Prompt 02B, 2026-10-14): a
+Two reports live here. **Part 1** is the independent acceptance review (2026-10-14): a
 separate session that did not write the code, reran everything, attacked it, fixed what it found and
 reran the gate. **Part 2** is the builder's original 02A report, kept for the record; where the two
 differ, Part 1 is the later evidence.
@@ -11,7 +11,7 @@ Environment: Windows 10 (10.0.19045), Node.js v24.20.0, npm 11.19.0, Python 3.14
 
 ---
 
-# Part 1: independent acceptance (Prompt 02B)
+# Part 1: independent acceptance
 
 ## Verdict
 
@@ -181,7 +181,7 @@ e-mail address in commit metadata, above).
 
 ---
 
-# Part 2: builder's report (Prompt 02A), unchanged
+# Part 2: builder's report, unchanged
 
 This is the **builder's** evidence.
 
