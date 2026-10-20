@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { eraseBackend, ghJob, openTab, setBoard, startConnected, startLocal } from './helpers';
 
+// Documentation screenshots come from Chromium only (Firefox and WebKit render fonts differently).
+test.skip(
+  ({ browserName }) => browserName !== 'chromium',
+  'documentation screenshots come from Chromium',
+);
+
 // Generates the committed screenshots from the real production build. Inspect them visually.
 test('desktop and mobile screenshots (local-data mode)', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });

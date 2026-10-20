@@ -62,8 +62,10 @@ jobs:
           cache-dependency-path: backend/requirements.lock.txt
       - run: npm ci
       - run: pip install -r backend/requirements.lock.txt
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run e2e
+        env:
+          PW_EXTRA_BROWSERS: firefox,webkit
       - uses: actions/upload-artifact@v7
         if: failure()
         with:

@@ -7,7 +7,7 @@ import { defineConfig } from '@playwright/test';
  * End-to-end tests run against the PRODUCTION build under the Pages prefix (/recruit-radar/),
  * a real FastAPI backend on a fresh temp SQLite database, and a local fake ATS server that
  * stands in for Greenhouse / Lever / Ashby (the adapters' base URLs are env-overridable for this).
- * Locally we reuse the installed Microsoft Edge (no download); CI installs Chromium.
+ * Locally we reuse the installed Microsoft Edge (no download); CI installs Chromium, Firefox and WebKit.
  */
 const BACKEND_PORT = 8787;
 const ATS_PORT = 8788;
@@ -24,6 +24,11 @@ const py = `"${python}"`;
 const dataDir = mkdtempSync(join(tmpdir(), 'recruit-radar-e2e-'));
 const ats = `http://127.0.0.1:${ATS_PORT}`;
 
+const EXTRA_BROWSERS = (process.env['PW_EXTRA_BROWSERS'] ?? '')
+  .split(',')
+  .map((b) => b.trim())
+  .filter((b): b is 'firefox' | 'webkit' => b === 'firefox' || b === 'webkit');
+
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: false,
@@ -34,9 +39,17 @@ export default defineConfig({
   reporter: [['list']],
   use: {
     baseURL: `http://localhost:${WEB_PORT}/recruit-radar/`,
-    channel: process.env['CI'] ? undefined : 'msedge',
     trace: 'retain-on-failure',
   },
+  projects: [
+    // Chromium is the gate everywhere (installed Edge locally, Chromium in CI). Firefox and WebKit run
+    // when PW_EXTRA_BROWSERS lists them, as the CI workflow does.
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium', channel: process.env['CI'] ? undefined : 'msedge' },
+    },
+    ...EXTRA_BROWSERS.map((name) => ({ name, use: { browserName: name } })),
+  ],
   webServer: [
     {
       command: `${py} e2e/fake-ats/server.py --port ${ATS_PORT}`,

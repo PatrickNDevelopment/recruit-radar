@@ -49,5 +49,11 @@
 - **Accessibility** is covered by automated checks (names, keyboard focus visibility, overflow at
   320/375 px, WCAG AA text contrast in light and dark) and screenshot review; there has been no
   screen-reader session or 200% zoom audit.
-- **Browsers tested:** Microsoft Edge (Chromium) locally, Chromium in CI. Firefox and Safari are
-  untested.
+- **Browsers:** the end-to-end suite runs in Chromium, Firefox and WebKit (Safari's engine) in CI
+  and was run in all three locally on 2026-10-20 (Edge for Chromium). WebKit is not Safari itself, and
+  there has been no screen-reader session. In WebKit, as in Safari by default, Tab skips links.
+- **Shared browser storage on the demo site.** All ten portfolio demos are served from
+  `patrickndevelopment.github.io`, so they share one browser storage quota (about 5 MB). Each app
+  uses its own `recruit-radar.*` keys and only reacts to changes of its own keys, but a very large workspace
+  in one demo can make saving fail in another (the app then shows its save-failed notice). A local
+  run has its own origin and is not affected.

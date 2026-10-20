@@ -71,6 +71,7 @@ test.describe('persistence and recovery (local-data mode)', () => {
 test.describe('accessibility and layout', () => {
   test('keyboard only: skip link, tab order reaches navigation and a company, focus is visible', async ({
     page,
+    browserName,
   }) => {
     await startLocal(page);
     await loadSample(page);
@@ -79,8 +80,15 @@ test.describe('accessibility and layout', () => {
     // A fresh load starts keyboard focus at the top of the document: the skip link is first.
     await page.reload();
     await expect(page.getByTestId('radar-row').first()).toBeVisible();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
+    const skip = page.getByRole('link', { name: 'Skip to main content' });
+    if (browserName === 'webkit') {
+      // WebKit follows Safari: Tab skips links unless the user turns on "Press Tab to highlight
+      // each item", so focus the skip link directly; the rest of the walk is the same.
+      await skip.focus();
+    } else {
+      await page.keyboard.press('Tab');
+    }
+    await expect(skip).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('#main')).toBeFocused();
 
