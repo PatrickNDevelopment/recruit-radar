@@ -682,6 +682,14 @@ textarea {
   border-radius: var(--radius-sm);
 }
 
+/* Native file pickers have a wide intrinsic size (about 314 px in WebKit on Linux); without this
+   they widen their grid column and push a 320 px page sideways. */
+input[type='file'] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
 textarea {
   min-height: 6rem;
   resize: vertical;
