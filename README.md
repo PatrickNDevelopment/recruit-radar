@@ -50,12 +50,24 @@ npm run dev        # http://localhost:5173/recruit-radar/
 
 With the backend (connected mode, live read-only ATS refresh). Requires Python 3.11+:
 
-```bash
+Windows PowerShell:
+
+```powershell
 python -m venv .venv
-.venv/Scripts/python -m pip install -r backend/requirements.lock.txt   # Windows
-# source .venv/bin/activate && pip install -r backend/requirements.lock.txt   # macOS/Linux
-cd backend && ../.venv/Scripts/python -m recruit_radar                 # http://127.0.0.1:8787
+.\.venv\Scripts\python -m pip install -r backend\requirements.lock.txt
+cd backend ; ..\.venv\Scripts\python -m recruit_radar    # http://127.0.0.1:8787
 ```
+
+macOS or Linux:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.lock.txt
+cd backend && ../.venv/bin/python -m recruit_radar         # http://127.0.0.1:8787
+```
+
+`npm run verify` uses the same `.venv` for the backend checks, so create it before running the full
+gate.
 
 Open the app; in Settings, choose **Automatic** (uses the backend when it answers) or **Use the
 backend**.
